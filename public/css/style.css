@@ -1,8 +1,84 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: 'Marvel', sans-serif;
+  font-weight: 400;
 }
 
 a {
   color: #00B7FF;
+}
+#nav {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+}
+#nav nav.navbar-default {
+	background-color: #262626;
+}
+.navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand {
+	margin-left: 0;
+}
+#nav nav.navbar {
+	border-radius: 0px;
+	border: none;
+	margin: 0;
+}
+.navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+	-webkit-transition: color 200ms;
+	-moz-transition: color 200ms;
+	-o-transition: color 200ms;
+	-ms-transition: color 200ms;   
+	transition: color 200ms;
+	background: #262626;
+	color: #bbb;
+}
+.navbar-default .navbar-nav > li > a {
+	-webkit-transition: all 200ms ease-out;
+	-moz-transition: all 200ms ease-out;
+	-o-transition: all 200ms ease-out;
+	-ms-transition: all 200ms ease-out;   
+	transition: all 200ms ease-out;
+	text-transform: uppercase;
+	font-weight: 700;
+}
+.navbar-nav > li > a {
+	padding: 18px 16px 18px 16px;
+}
+.navbar-default a.navbar-brand img {
+	max-height: 100%;
+}
+.navbar-default a.navbar-brand {
+	width: 220px;
+	height: 56px;
+}
+.navbar-default .navbar-brand {
+	padding: 13px;
+}
+.navbar-default .navbar-toggle {
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+	background: #313131;
+}
+.navbar-default .navbar-toggle {
+	border: none;
+}
+.navbar-default .navbar-nav > li > a.social-network {
+	color: #ddd;
+	font-size: 23px;
+	padding: 15px 12px 15px 12px;
+}
+.navbar-default .navbar-nav > li > a.social-network:focus, .navbar-default .navbar-nav > li > a.social-network:hover {
+	font-size: 23px;
+}
+#facebook-link:focus, #facebook-link:hover {
+	color: #3b5998;
+}
+#twitter-link:focus, #twitter-link:hover {
+	color: #00aced;
+}
+.navbar-social-networks {
+	margin-right: -15px;
 }

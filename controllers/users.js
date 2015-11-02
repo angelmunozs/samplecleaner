@@ -50,7 +50,7 @@ module.exports.create = function(req, res, next) {
             	cb()
             })
             .catch(cb)
-        }
+        },
 		//	Asigna el grupo de usuario básico
         function assignGroup(cb) {
             Query("SELECT idGroup FROM groups WHERE group LIKE ?", ['basic'])

@@ -15,61 +15,28 @@
         </title>
 
         <!-- Favicon -->
-        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/disc.ico" />
 
         <!-- Bootstrap CSS -->
-        <link rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.min.css' />
+        <link rel='stylesheet' href='/components/bootstrap/dist/css/bootstrap.min.css' />
         <!-- FontAwesome CSS -->
-        <link rel='stylesheet' href='/bower_components/fontawesome/css/font-awesome.min.css' />
+        <link rel='stylesheet' href='/components/fontawesome/css/font-awesome.min.css' />
+        <!-- Google fonts -->
+        <link href='https://fonts.googleapis.com/css?family=Marvel:400,700' rel='stylesheet' type='text/css'>
         <!-- Own CSS -->
         <link rel='stylesheet' href='/css/style.css' />
 
         <!-- jQuery -->
-        <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="/components/jquery/dist/jquery.min.js"></script>
         <!-- Bootstrap -->
-        <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/components/bootstrap/dist/js/bootstrap.min.js"></script>
         <!-- Own Javascript -->
         <script type="text/javascript" src="/js/app.js"></script>
     </head>
 
     <body>
-        <!-- Nav -->
-        <div id="nav">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-nav" aria-expanded="false">
-                            <span class="sr-only">Menú desplegable</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a href="" class="navbar-brand no-href hidden-sm hidden-md hidden-lg">
-                            <img src="img/letras.simple.jpg" style="max-height: 100%">
-                        </a>
-                    </div>
 
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="main-nav">
-                        <ul class="nav navbar-nav">
-                            <li id="section-1-li" class="active">
-                                <a id="section-1-link" href="#section-tiptop" class="no-href menu-link"># Tip Top <span class="sr-only">(actual)</span></a>
-                            </li>
-                            <li id="section-2-li">
-                                <a id="section-2-link" href="#section-servicios" class="no-href menu-link"># Servicios</a>
-                            </li>
-                            <li id="section-3-li">
-                                <a id="section-3-link" href="#section-espacios" class="no-href menu-link"># Espacios</a>
-                            </li>
-                            <li id="section-4-li">
-                                <a id="section-4-link" href="#section-contacto" class="no-href menu-link"># Contacto</a>
-                            </li>
-                        </ul>
-                    </div><!-- /.navbar-collapse -->
-                </div><!-- /.container-fluid -->
-            </nav>
-        </div>
+        <% include menu %>
 
         <div class="container">
             <%- body %>
