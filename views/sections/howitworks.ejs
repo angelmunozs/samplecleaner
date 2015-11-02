@@ -1,15 +1,28 @@
 <div class="section col-xs-12">
 	<div class="row">
 		<h2>
-			Who are we
+			How it works
 		</h2>
 
-		<p>Sample Cleaner has been designed to clean the sound recordings of your vinyl discs and cassettes.</p>
+		<h4>Sample Cleaner uses a technique called <a href="https://en.wikipedia.org/wiki/Noise_gate" target="_blank">spectral noise gating</a>.</h4>
 
-		<p>Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in, eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos. Eu sit tincidunt incorrupte definitionem, vis mutat affert percipit cu, eirmod consectetuer signiferumque eu per. In usu latine equidem dolores. Quo no falli viris intellegam, ut fugit veritus placerat per.</p>
+		<p>The audio signal you upload to the server (1) is windowed and each window is processed individually (2). For each windowed sample, we take the FFT of size 2048, so 1025 frequency bands are analyzed, and then the mean power of each band is calculated (3). Every frequency band is compared to the same frequency band of the noise you selected (which has been previously analyzed, and its statistics are stored in the server). The next step is spectral noise gating.</p>
 
-		<p>Ius id vidit volumus mandamus, vide veritus democritum te nec, ei eos debet libris consulatu. No mei ferri graeco dicunt, ad cum veri accommodare. Sed at malis omnesque delicata, usu et iusto zzril meliore. Dicunt maiorum eloquentiam cum cu, sit summo dolor essent te. Ne quodsi nusquam legendos has, ea dicit voluptua eloquentiam pro, ad sit quas qualisque. Eos vocibus deserunt quaestio ei.</p>
-		
-		<p>Blandit incorrupte quaerendum in quo, nibh impedit id vis, vel no nullam semper audiam. Ei populo graeci consulatu mei, has ea stet modus phaedrum. Inani oblique ne has, duo et veritus detraxit. Tota ludus oratio ea mel, offendit persequeris ei vim. Eos dicat oratio partem ut, id cum ignota senserit intellegat. Sit inani ubique graecis ad, quando graecis liberavisse et cum, dicit option eruditi at duo. Homero salutatus suscipiantur eum id, tamquam voluptaria expetendis ad sed, nobis feugiat similique usu ex.</p>
+		<p>Frequency smoothing is then applied, and the windowed signal is reconstructed by taking the inverse FFT. When all the windowed samples have been processed, the audio signal is pieced together and time smoothing is applied (4).</p>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-3 work-step">
+			<div class="work-step-img">(1)</div>
+		</div>
+		<div class="col-xs-3 work-step">
+			<div class="work-step-img">(2)</div>
+		</div>
+		<div class="col-xs-3 work-step">
+			<div class="work-step-img">(3)</div>
+		</div>
+		<div class="col-xs-3 work-step">
+			<div class="work-step-img">(4)</div>
+		</div>
 	</div>
 </div>

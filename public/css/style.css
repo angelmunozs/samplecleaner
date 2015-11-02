@@ -1,5 +1,5 @@
 body {
-  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 17px "Lucida Grande", Helvetica, Arial, sans-serif;
   font-family: 'Marvel', sans-serif;
   font-weight: 400;
 }
@@ -161,4 +161,14 @@ b.step-number {
 	border-radius: 6px;
 	height: 300px;
 	padding-top: 80px;
+}
+/* Section 2: how it works */
+.work-step {
+	margin-top: 10px;
+	padding: 0px 20px 0px 0px;
+}
+.work-step-img {
+	padding: 10px;
+	height: 200px;
+	background: #ccc;
 }
