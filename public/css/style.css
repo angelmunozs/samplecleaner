@@ -7,6 +7,11 @@ body {
 a {
   color: #00B7FF;
 }
+.container-fluid {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+/* Navbar */
 #nav {
 	position: fixed;
 	left: 0;
@@ -15,6 +20,8 @@ a {
 }
 #nav nav.navbar-default {
 	background-color: #262626;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 .navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand {
 	margin-left: 0;
@@ -81,4 +88,77 @@ a {
 }
 .navbar-social-networks {
 	margin-right: -15px;
+}
+/* Footer */
+.footer {
+	min-height: 200px;
+	background: #333;
+}
+/* All sections */
+.section {
+	width: 100%;
+	z-index: -1;
+	padding: 40px 15px 40px 15px;
+}
+.row {
+	max-width: 1170px;
+	margin: 0px auto;
+}
+.section:nth-child(3) {
+	background: #eee;
+}
+h2 {
+	margin-top: 0px;
+	color: #ff3337;
+}
+.hidden {
+	display: none;
+}
+/* 	Section 0: Intro */
+@keyframes animatedBackground {
+	from {
+		background-position: 100% 0;
+	}
+	to {
+		background-position: 0 0;
+	}
+}
+.intro {
+	height: 140px;
+	background-image: url(../img/signal.small.gray.png);
+	background-position: 0px 0px;
+	background-repeat: repeat-x;
+	padding: 15px 0px 15px 0px;
+	animation: animatedBackground 100s linear infinite;
+}
+/* 	Section 1: Clean your recording */
+.step-box {
+	margin: 0;
+	padding: 0;
+}
+b.step-number {
+	font-size: 2em;
+	margin-right: 6px;
+}
+.step-box h4 {
+	color: #bbb;
+	font-size: 18px;
+}
+.step-box h4.active {
+	color: #333;
+	font-size: 18px;
+}
+.step {
+	margin-top: 10px;
+	width: 100%;
+	min-height: 300px;
+}
+#step1 {
+	border: 3px dotted #ddd;
+	color: #999;
+	font-size: 20px;
+	text-align: center;
+	border-radius: 6px;
+	height: 300px;
+	padding-top: 80px;
 }
