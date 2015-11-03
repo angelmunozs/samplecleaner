@@ -10,4 +10,6 @@ module.exports = function(app) {
 	app.get('/api/user', api.users.info)
 	//	Usuario
 	app.post('/api/user', api.auth.require.not_logged, controllers.users.create, api.users.create)
+	//	Mailing list
+	app.get('/api/list/:email', api.auth.require.not_logged, controllers.users.mailingList, api.users.mailingList)
 }

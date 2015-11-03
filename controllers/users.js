@@ -1,10 +1,11 @@
 //	Requirements
-var _ 		= require('underscore')
-var async 	= require('async')
-var site 	= require('../controllers')
-var crypt 	= require('../tools/crypt')
-var date 	= require('../tools/dates')
-var utils 	= require('../tools/utils')
+var _ 			= require('underscore')
+var async 		= require('async')
+var site 		= require('../controllers')
+var crypt 		= require('../tools/crypt')
+var date 		= require('../tools/dates')
+var utils 		= require('../tools/utils')
+var validate 	= require('../tools/validate')
 
 //	Create user
 module.exports.create = function(req, res, next) {
@@ -22,6 +23,11 @@ module.exports.create = function(req, res, next) {
 
 	if(utils.emptyFields(user)) {
 		req.error = Errores.CAMPOS_VACIOS
+		return next()
+	}
+
+	if(!validate.email(user.email)) {
+		req.error = Errores.EMAIL_INCORRECTO
 		return next()
 	}
 
@@ -60,6 +66,50 @@ module.exports.create = function(req, res, next) {
             })
             .catch(cb)
         }
+	], function (error, data) {
+		if (error) {
+			req.error = error
+			return next()
+		}
+		return next()
+	})
+}
+
+//	Join mailing list
+module.exports.mailingList = function(req, res, next) {
+
+	if(!req.params.email || !req.params.email.length) {
+		req.error = Errores.NO_PARAMS
+		return next()
+	}
+
+	var email = req.params.email || null
+
+	if(!validate.email(email)) {
+		req.error = Errores.EMAIL_INCORRECTO
+		return next()
+	}
+
+	async.series([
+		//	Check if it has already been inserted
+		function checkIfExists (cb) {
+			Query('SELECT email FROM mailing_list WHERE email LIKE ?', [email])
+			.then(function (rows) {
+				if(rows[0].length) {
+					return cb(Errores.YA_EN_LA_LISTA)
+				}
+				cb()
+			})
+			.catch(cb)
+		},
+		//	Insert new email
+		function joinMailinglist (cb) {
+			Query('INSERT INTO mailing_list (email, createdAt, disabled) VALUES (?, ?, ?)', [email, date.toMysql(new Date()), 0])
+			.then(function () {
+				cb()
+			})
+			.catch(cb)
+		}
 	], function (error, data) {
 		if (error) {
 			req.error = error

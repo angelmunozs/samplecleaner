@@ -9,6 +9,14 @@ module.exports.create = function(req, res) {
     res.api.ok()
 }
 
+//  Unirse a la lista de email
+module.exports.mailingList = function(req, res) {
+    if(req.error)
+        return res.api.error(req.error)
+
+    res.api.ok()
+}
+
 //	Obtener user logeado
 module.exports.info = function(req, res) {
     if(!req.user)
