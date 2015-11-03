@@ -19,5 +19,6 @@ module.exports = {
 	USUARIO_NO_LOGEADO : 			{ code : 305, message : 'You must be logged' },
 	ERROR_LOGIN : 					{ code : 306, message : 'Login error' },
 	USUARIO_EXISTE : 				{ code : 307, message : 'User already exists' },
-	YA_EN_LA_LISTA : 				{ code : 308, message : 'E-mail already on the list' }
+	YA_EN_LA_LISTA : 				{ code : 308, message : 'E-mail already on the list' },
+	EMAIL_INCORRECTO : 				{ code : 309, message : 'Incorrect e-mail' }
 }
