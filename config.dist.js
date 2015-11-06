@@ -13,5 +13,9 @@ module.exports = {
 	BASE_TITLE			: 'Sample Cleaner',
 	PAGE_TITLE_DEFAULT	: 'Home',
 	//	Session
-	SESSION_SECRET		: ''
+	SESSION_SECRET		: '',
+	//	Nodemailer
+	EMAIL_SERVICE		: 'Gmail',
+	EMAIL_USER			: '',
+	EMAIL_PASS			: ''
 }

@@ -26,6 +26,7 @@
     "express-session": "~1.11.3",
     "passport": "~0.2.1",
     "passport-local": "~1.0.0",
-    "bower": "~1.6.5"
+    "bower": "~1.6.5",
+    "nodemailer": "~1.8.0"
   }
 }
