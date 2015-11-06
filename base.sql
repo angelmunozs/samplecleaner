@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 03-11-2015 a las 10:43:39
+-- Tiempo de generación: 06-11-2015 a las 18:39:31
 -- Versión del servidor: 5.5.43-0ubuntu0.14.04.1
 -- Versión de PHP: 5.5.9-1ubuntu4.9
 
@@ -19,6 +19,23 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `samplecleaner`
 --
+CREATE DATABASE IF NOT EXISTS `samplecleaner` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `samplecleaner`;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `contact`
+--
+
+DROP TABLE IF EXISTS `contact`;
+CREATE TABLE IF NOT EXISTS `contact` (
+  `idContact` int(11) NOT NULL AUTO_INCREMENT,
+  `email` text,
+  `message` text,
+  `createdAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`idContact`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -32,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `group` text,
   `createdAt` datetime DEFAULT NULL,
   PRIMARY KEY (`idGroup`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Volcado de datos para la tabla `groups`
@@ -53,9 +70,10 @@ CREATE TABLE IF NOT EXISTS `mailing_list` (
   `idList` int(11) NOT NULL AUTO_INCREMENT,
   `email` text,
   `createdAt` datetime DEFAULT NULL,
+  `token` text,
   `disabled` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idList`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
