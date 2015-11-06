@@ -1,18 +1,64 @@
-//	Global variables
+//	File to deal with
 var file = ''
 
-//	Global functions
-function validateEmail (email) {
+//	Validate an e-mail
+var validateEmail = function (email) {
 	return  /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(email)
 }
 
 $(document).ready(function() {
 	//	Get main nav height
 	var navHeight = parseInt($('#nav').css('height'));
-	//	Print selected file name
+	//	Positions of page sections
+	var positions = [
+		{
+			section : 'cleaner',
+			offset : $('#section-cleaner').offset().top - navHeight - 1
+		},
+		{
+			section : 'howitworks',
+			offset : $('#section-howitworks').offset().top - navHeight - 1
+		},
+		{
+			section : 'contact',
+			offset : $('#section-contact').offset().top - navHeight - 1
+		},
+		{
+			section : '',
+			offset : $(document).height()
+		}
+	]
+	//	Change section of page depending on the offset
+	var changeSection = function(offset) {
+		//	Take actual position
+		var actualPos = $(document).scrollTop()
+		if(actualPos < positions[0].offset) {
+			$(".navbar-nav li.active").removeClass("active")
+		}
+		//	Check intervals
+		for(var i = 0; i < positions.length - 1; i++) {
+			if(actualPos >= positions[i].offset && actualPos < positions[i + 1].offset) {
+				$(".navbar-nav li.active").removeClass("active")
+				$('#section-' + positions[i].section + '-li').addClass('active')
+				window.location.hash = '#' + positions[i].section
+				return true
+			}
+		}
+	}
+	//	Main functionality
+	//	Step 1
 	$('#dirty').on('change', function () {
 		file = $('#dirty').val()
-		$('#file-name').html(file)
+		$('.file-name').html(file)
+		//	Step 2
+		if(file && file.length) {
+			//	Update active step title
+			$('.step-header').removeClass('active')
+			$('#step2-header').addClass('active')
+			//	Change section
+			$('#step1').hide()
+			$('#step2').fadeIn('fast')
+		}
 	})
 	//	'Send' button from section 'Contact'
 	$('#contact-button').on('click', function () {

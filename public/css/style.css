@@ -1,5 +1,5 @@
 body {
-	font: 17px "Lucida Grande", Helvetica, Arial, sans-serif;
+	font-size: 17px;
 	font-family: 'Marvel', sans-serif;
 	font-weight: 400;
 }
@@ -21,6 +21,7 @@ a:hover, a:focus {
 	right: 0;
 	top: 0;
 	z-index: 1000;
+	font-family: 'Homenaje';
 }
 #nav nav.navbar-default {
 	background-color: #262626;
@@ -51,7 +52,7 @@ a:hover, a:focus {
 	-ms-transition: all 200ms ease-out;
 	transition: all 200ms ease-out;
 	text-transform: uppercase;
-	font-weight: 700;
+	font-weight: 400;
 }
 .navbar-nav > li > a {
 	padding: 18px 16px 18px 16px;
@@ -97,7 +98,7 @@ a:hover, a:focus {
 .section {
 	z-index: 1;
 	width: 100%;
-	padding: 50px 15px 50px 15px;
+	padding: 30px 15px 50px 15px;
 }
 .row {
 	width: 1170px;
@@ -151,14 +152,15 @@ b.step-number {
 	margin-top: 10px;
 	width: 100%;
 	min-height: 270px;
-}
-#step1 {
+	padding-left: 0px;
+	padding-right: 0px;
 	border: 3px dotted #ddd;
 	color: #999;
 	font-size: 20px;
 	text-align: center;
 	border-radius: 6px;
-	height: 260px;
+}
+#step1 {
 	padding-top: 55px;
 	-webkit-transition: all 200ms ease-out;
 	-moz-transition: all 200ms ease-out;
@@ -198,7 +200,7 @@ b.step-number {
 	color: #bbb;
 	background: #eee;
 }
-#file-name {
+.file-name {
 	margin-top: 15px;
 	font-size: 0.8em;
 	color: #444;
