@@ -9,7 +9,8 @@ module.exports = function(app) {
 	app.post('/api/logout', controllers.auth.logout, api.auth.auth)
 	app.get('/api/user', api.users.info)
 	//	Usuario
-	app.post('/api/user', api.auth.require.not_logged, controllers.users.create, api.users.create)
+	app.post('/api/user', api.auth.require.not_logged, controllers.users.create, api.users.generic)
 	//	Mailing list
-	app.get('/api/list/:email', api.auth.require.not_logged, controllers.users.mailingList, api.users.mailingList)
+	app.get('/api/list/enter/:email', api.auth.require.not_logged, controllers.users.enterMailingList, api.users.generic)
+	app.get('/api/list/quit/:email', api.auth.require.not_logged, controllers.users.quitMailingList, api.users.generic)
 }

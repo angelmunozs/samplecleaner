@@ -76,7 +76,7 @@ module.exports.create = function(req, res, next) {
 }
 
 //	Join mailing list
-module.exports.mailingList = function(req, res, next) {
+module.exports.enterMailingList = function(req, res, next) {
 
 	if(!req.params.email || !req.params.email.length) {
 		req.error = Errores.NO_PARAMS
@@ -105,6 +105,50 @@ module.exports.mailingList = function(req, res, next) {
 		//	Insert new email
 		function joinMailinglist (cb) {
 			Query('INSERT INTO mailing_list (email, createdAt, disabled) VALUES (?, ?, ?)', [email, date.toMysql(new Date()), 0])
+			.then(function () {
+				cb()
+			})
+			.catch(cb)
+		}
+	], function (error, data) {
+		if (error) {
+			req.error = error
+			return next()
+		}
+		return next()
+	})
+}
+
+//	Quit mailing list
+module.exports.quitMailingList = function(req, res, next) {
+
+	if(!req.params.email || !req.params.email.length) {
+		req.error = Errores.NO_PARAMS
+		return next()
+	}
+
+	var email = req.params.email || null
+
+	if(!validate.email(email)) {
+		req.error = Errores.EMAIL_INCORRECTO
+		return next()
+	}
+
+	async.series([
+		//	Check if it's on the list
+		function checkIfExists (cb) {
+			Query('SELECT email FROM mailing_list WHERE email LIKE ?', [email])
+			.then(function (rows) {
+				if(!rows[0].length) {
+					return cb(Errores.NO_EN_LA_LISTA)
+				}
+				cb()
+			})
+			.catch(cb)
+		},
+		//	Disable email
+		function joinMailinglist (cb) {
+			Query('UPDATE mailing_list SET disabled = ? WHERE email LIKE ?', [1, email])
 			.then(function () {
 				cb()
 			})
