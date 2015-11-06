@@ -6,4 +6,6 @@ var render 		= require('../render')
 module.exports = function(app) {
 	//	Autenticación
 	app.get('/', controllers.render('index'))
+	//	TODO:
+	//	app.get('/list/quit')
 }

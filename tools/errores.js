@@ -21,5 +21,6 @@ module.exports = {
 	USUARIO_EXISTE : 				{ code : 307, message : 'User already exists' },
 	YA_EN_LA_LISTA : 				{ code : 308, message : 'E-mail already on the list' },
 	NO_EN_LA_LISTA : 				{ code : 309, message : 'E-mail not on the list' },
-	EMAIL_INCORRECTO : 				{ code : 310, message : 'Incorrect e-mail' }
+	EMAIL_INCORRECTO : 				{ code : 310, message : 'Incorrect e-mail' },
+	TOKEN_INCORRECTO : 				{ code : 311, message : 'Incorrect token' }
 }
