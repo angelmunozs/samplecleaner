@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `group` text,
   `createdAt` datetime DEFAULT NULL,
   PRIMARY KEY (`idGroup`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- Volcado de datos para la tabla `groups`
