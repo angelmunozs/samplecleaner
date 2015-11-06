@@ -2,14 +2,6 @@
 var api = require('../api')
 var errores = require('../tools/errores')
 
-//	Genérica
-module.exports.auth = function(req, res) {
-    if(req.error)
-        return res.api.error(req.error)
-
-    res.api.ok()
-}
-
 //  Authentication Requirements
 module.exports.require = {
     user : function(req, res, next) {
