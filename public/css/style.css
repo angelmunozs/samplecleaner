@@ -105,7 +105,7 @@ a:hover, a:focus {
 	padding: 50px 15px 50px 15px;
 }
 .row {
-	max-width: 1170px;
+	width: 1170px;
 	margin: 0px auto;
 }
 .section:nth-child(3) {
@@ -252,7 +252,7 @@ b.step-number {
 	border-radius: 0px;
 	padding: 10px 20px 10px 20px;
 }
-.btn-send:hover {
+.btn-send:hover, .btn-send:focus {
 	background: #bc2629;
 	color: #fff;
 }
