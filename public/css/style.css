@@ -251,6 +251,7 @@ b.step-number {
 	border: none;
 	border-radius: 0px;
 	padding: 10px 20px 10px 20px;
+	width: 90px;
 }
 .btn-send:hover, .btn-send:focus {
 	background: #bc2629;
@@ -261,9 +262,13 @@ b.step-number {
 	font-size: 15px;
 	color: #bbb;
 	font-style: italic;
+	text-align: right;
 }
 .form-end {
 	margin-top: 20px;
 	padding: 0px;
 	text-align: left;
+}
+.error-msg {
+	font-size: 19px;
 }
