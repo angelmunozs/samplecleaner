@@ -7,7 +7,7 @@ var validate 	= require('../tools/validate')
 //	Contact
 module.exports.send = function(req, res, next) {
 
-	if(!req.body.email || !req.body.email.length || !req.body.message || !req.body.message.length) {
+	if(!req.body.email || !req.body.email.length || !req.body.message || req.body.message.length < 5) {
 		req.error = Errores.NO_PARAMS
 		return next()
 	}

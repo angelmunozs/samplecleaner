@@ -67,9 +67,9 @@ $(document).ready(function() {
 		$('#contact-button').html('<i class="fa fa-spinner fa-spin"></i>')
 		var contact = {
 			email : $('#contact-email').val(),
-			message : $('#contact-email').val()
+			message : $('#contact-message').val()
 		}
-		if(validateEmail(contact.email) && contact.message.length > 1) {
+		if(validateEmail(contact.email) && contact.message.length > 4) {
 			$.post("/api/contact", {
 				email : contact.email,
 				message : contact.message
