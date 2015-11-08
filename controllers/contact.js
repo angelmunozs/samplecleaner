@@ -36,7 +36,7 @@ module.exports.send = function(req, res, next) {
 						'<div style="font-family:Arial; font-size:15px; margin-bottom: 5px;"><b>Remitente</b>: ' + email + '</div>' +
 						'<div style="font-family:Arial; font-size:15px; margin-bottom: 20px;"><b>Fecha</b>: ' + date.toMysql(new Date()) + '</div>' +
 						'<hr style="color: #ddd">' +
-						'<div style="font-family:Arial; font-size:15px; margin-top: 20px;"><p><b>Consulta</b></p><p>: ' + message + '</p></div>'
+						'<div style="font-family:Arial; font-size:15px; margin-top: 20px;"><p><b>Consulta</b>:</p><p>' + message + '</p></div>'
 
 			var mailOptions = {
 				from: email,
