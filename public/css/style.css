@@ -111,7 +111,7 @@ h2 {
 	margin-top: 0px;
 	color: #ff3337;
 }
-.hidden {
+.hdn {
 	display: none;
 }
 /* 	Section 0: Intro */
@@ -162,15 +162,6 @@ b.step-number {
 }
 #step1 {
 	padding-top: 55px;
-	-webkit-transition: all 200ms ease-out;
-	-moz-transition: all 200ms ease-out;
-	-o-transition: all 200ms ease-out;
-	-ms-transition: all 200ms ease-out;
-	transition: all 200ms ease-out;
-}
-#step1:hover {
-	transition: color 0.3s;
-	color: #bbb;
 }
 #step1 .file-upload input {
 	position: absolute;
@@ -200,11 +191,21 @@ b.step-number {
 	color: #bbb;
 	background: #eee;
 }
-.file-name {
-	margin-top: 15px;
+#step2 {
+	padding-top: 30px;
+}
+#file-name {
+	margin-bottom: 10px;
 	font-size: 0.8em;
 	color: #444;
 	font-style: italic;
+}
+#noise-type {
+	width: 30%;
+	background: #fff;
+	color: #777;
+	padding: 6px 10px 6px 10px;
+	border: 1px solid #aaa;
 }
 /* Section 2: How it works */
 .work-step {

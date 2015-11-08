@@ -45,11 +45,39 @@ $(document).ready(function() {
 			}
 		}
 	}
+	//	Actualización de link pulsado conforme se desciende por la página
+	$(document).on('scroll', function() {
+		return changeSection(navHeight)
+	})
+	//	Menu links
+	$('.menu-link').click(function (e) {
+		//	Prevent default behavior
+		e.preventDefault()
+		//	Deactivate scrolling
+		$(document).off("scroll")
+		//	Update element with class 'active'
+		$(".navbar-nav li.active").removeClass("active")
+		$(this).parent().addClass('active')
+		//	Locate target
+		var target = $(this).attr('href')
+		var target_clean = target.split('-')[1]
+		//	Animate scrolling
+		$('html, body').stop().animate({
+			'scrollTop': $(target).offset().top - navHeight
+		}, 400, 'swing', function() {
+			//	Update hash
+			window.location.hash = target_clean
+			//	Reactivate scrolling
+			$(document).on('scroll', function() {
+				return changeSection(navHeight)
+			});
+		});
+	})
 	//	Main functionality
 	//	Step 1
 	$('#dirty').on('change', function () {
 		file = $('#dirty').val()
-		$('.file-name').html(file)
+		$('#file-name').html(file)
 		//	Step 2
 		if(file && file.length) {
 			//	Update active step title
@@ -57,7 +85,21 @@ $(document).ready(function() {
 			$('#step2-header').addClass('active')
 			//	Change section
 			$('#step1').hide()
-			$('#step2').fadeIn('fast')
+			$('#step2').show()
+			//	Populate select box
+			var options = ''
+			$.get('/api/noise/profiles', function (data) {
+				console.log(data)
+				for(var i in data) {
+					for(var j in data[i]) {
+						for(var k in data[i][j]) {
+							var value = j + ' - ' + data[i][j][k]
+							options += '<option value="' + value + '">' + value + '</option>'
+						}
+					}
+				}
+				$('#noise-type').html(options)
+			})
 		}
 	})
 	//	'Send' button from section 'Contact'
@@ -67,7 +109,7 @@ $(document).ready(function() {
 		$('#contact-button').html('<i class="fa fa-spinner fa-spin"></i>')
 		var contact = {
 			email : $('#contact-email').val(),
-			message : $('#contact-message').val()
+			message : $('#contact-message').val().replace(/\n/gi, '<br>')
 		}
 		if(validateEmail(contact.email) && contact.message.length > 4) {
 			$.post("/api/contact", {
@@ -149,33 +191,5 @@ $(document).ready(function() {
 			//	Re-enable button
 			$('#list-button').removeAttr('disabled')
 		}
-	})
-	//	Actualización de link pulsado conforme se desciende por la página
-	$(document).on('scroll', function() {
-		return changeSection(navHeight)
-	})
-	//	Menu links
-	$('.menu-link').click(function (e) {
-		//	Prevent default behavior
-		e.preventDefault()
-		//	Deactivate scrolling
-		$(document).off("scroll")
-		//	Update element with class 'active'
-		$(".navbar-nav li.active").removeClass("active")
-		$(this).parent().addClass('active')
-		//	Locate target
-		var target = $(this).attr('href')
-		var target_clean = target.split('-')[1]
-		//	Animate scrolling
-		$('html, body').stop().animate({
-			'scrollTop': $(target).offset().top - navHeight
-		}, 400, 'swing', function() {
-			//	Update hash
-			window.location.hash = target_clean
-			//	Reactivate scrolling
-			$(document).on('scroll', function() {
-				return changeSection(navHeight)
-			});
-		});
 	})
 })

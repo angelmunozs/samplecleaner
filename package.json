@@ -27,6 +27,7 @@
     "passport": "~0.2.1",
     "passport-local": "~1.0.0",
     "bower": "~1.6.5",
-    "nodemailer": "~1.8.0"
+    "nodemailer": "~1.8.0",
+    "python-shell": "~0.2.0"
   }
 }

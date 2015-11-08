@@ -32,11 +32,11 @@ module.exports.send = function(req, res, next) {
 		//	Send e-mail to us
 		function mailUs (cb) {
 
-			var html = '<img style="margin-bottom: 20px;" src="http://i.imgur.com/eWEE4zI.png" alt="Sample Cleaner">' +
-						'<div style="font-family:Arial; font-size:15px; margin-bottom: 8px;"><b>Remitente</b>: ' + email + '</div>' +
+			var html = '<img style="margin-bottom: 20px; max-height: 33px;" src="http://i.imgur.com/eWEE4zI.png" alt="Sample Cleaner">' +
+						'<div style="font-family:Arial; font-size:15px; margin-bottom: 5px;"><b>Remitente</b>: ' + email + '</div>' +
 						'<div style="font-family:Arial; font-size:15px; margin-bottom: 20px;"><b>Fecha</b>: ' + date.toMysql(new Date()) + '</div>' +
 						'<hr style="color: #ddd">' +
-						'<div style="font-family:Arial; font-size:15px; margin-top: 20px;"><b>Consulta</b>: ' + message + '</div>'
+						'<div style="font-family:Arial; font-size:15px; margin-top: 20px;"><p><b>Consulta</b></p><p>: ' + message + '</p></div>'
 
 			var mailOptions = {
 				from: email,

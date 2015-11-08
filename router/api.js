@@ -15,4 +15,7 @@ module.exports = function(app) {
 	app.post('/api/list/quit', api.auth.require.not_logged, controllers.mailingList.quit, api.common.generic)
 	//	Contact
 	app.post('/api/contact', controllers.contact.send, api.common.generic)
+	//	Get noise profiles
+	app.get('/api/noise/samples', controllers.noise.samples, api.common.data)
+	app.get('/api/noise/profiles', controllers.noise.profiles, api.common.data)
 }
