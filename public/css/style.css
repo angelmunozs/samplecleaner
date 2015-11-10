@@ -210,7 +210,7 @@ b.step-number {
 	margin-left: 10px;
 	margin-right: 10px;
 	display: inline-block;
-	height: 125px;
+	vertical-align: top;
 }
 .rslider-tip {
 	font-size: 15px;
@@ -222,6 +222,9 @@ b.step-number {
 	font-style: italic;
 	margin-top: 6px;
 	color: #ff0000;
+}
+.advanced {
+	margin-left: 30px;
 }
 .rs-range-color {
 	background-color: #ff3337;

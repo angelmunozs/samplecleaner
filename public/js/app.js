@@ -118,7 +118,7 @@ $(document).ready(function() {
 					//	Get info from API
 					var years = Object.keys(data.data)
 					//	Default year selected
-					var defaultValue = 80
+					var defaultValue = 70
 					//	Noise year
 					$("#noise-year").roundSlider({
 						min: Number(years[0].split('s')[0]),
@@ -126,7 +126,7 @@ $(document).ready(function() {
 						step: 10,
 						value: defaultValue,
 						sliderType: "min-range",
-						handleShape: "square",
+						handleShape: "round",
 						handleSize: 20,
 						radius: 50
 					})
@@ -137,7 +137,7 @@ $(document).ready(function() {
 						step: 1,
 						value: 1,
 						sliderType: "min-range",
-						handleShape: "square",
+						handleShape: "round",
 						handleSize: 20,
 						radius: 50
 					})
@@ -149,10 +149,40 @@ $(document).ready(function() {
 							step: 1,
 							value: 1,
 							sliderType: "min-range",
-							handleShape: "square",
+							handleShape: "round",
 							handleSize: 20,
 							radius: 50
 						})
+					})
+					//	Advanced
+					var reduceGain = $('#reduce-gain')
+					var smoothingBands = $('#smoothing-bands')
+					//	Create sliders
+					noUiSlider.create(reduceGain, {
+						start: 20,
+						connect: "lower",
+						range: {
+							min: 10,
+							max: 50
+						},
+						pips: {
+							mode: 'values',
+							density: 4,
+							values: [10, 20, 30, 40, 50]
+						}
+					})
+					noUiSlider.create(smoothingBands, {
+						start: 20,
+						connect: "lower",
+						range: {
+							min: 1,
+							max: 5
+						},
+						pips: {
+							mode: 'values',
+							density: 4,
+							values: [1, 2, 3, 4, 5]
+						}
 					})
 				})
 				//	Jump to next section
