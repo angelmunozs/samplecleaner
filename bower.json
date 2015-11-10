@@ -17,8 +17,7 @@
     "crypto": "http://crypto-js.googlecode.com/files/CryptoJS%20v3.1.2.zip",
     "bootstrap": "~3.1.1",
     "fontawesome": "~4.3.0",
-    "bootstrap3-typeahead": "https://github.com/bassjobsen/Bootstrap-3-Typeahead.git#master",
-    "jquery-ui": "1.10.3",
-    "Chart.js": "~1.0.2"
+    "roundslider": "roundSlider#~1.0.1",
+    "nouislider": "~8.1.0"
   }
 }
