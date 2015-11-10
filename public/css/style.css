@@ -192,7 +192,7 @@ b.step-number {
 	background: #eee;
 }
 #step2 {
-	padding-top: 30px;
+	padding-top: 20px;
 }
 #file-name {
 	margin-bottom: 10px;
@@ -200,12 +200,31 @@ b.step-number {
 	color: #444;
 	font-style: italic;
 }
-#noise-type {
-	width: 30%;
+.noise-type {
 	background: #fff;
 	color: #777;
 	padding: 6px 10px 6px 10px;
-	border: 1px solid #aaa;
+	text-align: center;
+}
+.rslider {
+	margin-left: 10px;
+	margin-right: 10px;
+	display: inline-block;
+	height: 125px;
+}
+.rslider-tip {
+	font-size: 15px;
+	color: #aaa;
+	margin-bottom: 3px;
+}
+.section-error {
+	font-size: 16px;
+	font-style: italic;
+	margin-top: 6px;
+	color: #ff0000;
+}
+.rs-range-color {
+	background-color: #ff3337;
 }
 /* Section 2: How it works */
 .work-step {

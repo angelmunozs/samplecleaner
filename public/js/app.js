@@ -1,5 +1,5 @@
-//	File to deal with
 var file = ''
+var allowedExts = ['wav', 'mp3']
 
 //	Validate an e-mail
 var validateEmail = function (email) {
@@ -70,37 +70,113 @@ $(document).ready(function() {
 			//	Reactivate scrolling
 			$(document).on('scroll', function() {
 				return changeSection(navHeight)
-			});
-		});
+			})
+		})
 	})
-	//	Main functionality
+	//	Validate sections
+	var validateSection = function (n, params) {
+		switch(n) {
+			case 1 :
+				var file = params[0]
+				var parts = params[1]
+				return file && file.length && allowedExts.indexOf(parts[parts.length - 1].toLowerCase()) != -1
+			case 2 :
+				return false
+			case 3 :
+				return
+			case 4 :
+				return
+			default :
+				return
+		}
+	}
+	//	Section behavior
+	var section = function (n) {
+		switch(n) {
+			case 1 :
+				var file = $('#dirty').val()
+				var parts = file.split('.')
+				$('#file-name').html(file)
+				//	Jump to next section
+				if(validateSection(1, [file, parts])) {
+					//	Update active step title
+					$('.step-header').removeClass('active')
+					$('#step2-header').addClass('active')
+					//	Change section
+					$('#step1').hide()
+					$('#step2').show()
+					//	Call to next step
+					section(2)
+				}
+				else {
+					$('#section-error-1').html(parts[parts.length - 1] + ' is not a supported audio file')
+				}
+			case 2 :
+				//	Populate select box
+				var options = ''
+				$.get('/api/noise/profiles', function (data) {
+					//	Get info from API
+					var years = Object.keys(data.data)
+					//	Default year selected
+					var defaultValue = 80
+					//	Noise year
+					$("#noise-year").roundSlider({
+						min: Number(years[0].split('s')[0]),
+						max: Number(years[years.length - 1].split('s')[0]),
+						step: 10,
+						value: defaultValue,
+						sliderType: "min-range",
+						handleShape: "square",
+						handleSize: 20,
+						radius: 50
+					})
+					//	Noise profile
+					$("#noise-profile").roundSlider({
+						min: 1,
+						max: data.data[defaultValue + 's'].length,
+						step: 1,
+						value: 1,
+						sliderType: "min-range",
+						handleShape: "square",
+						handleSize: 20,
+						radius: 50
+					})
+					//	Change functionality
+					$("#noise-year").change(function () {
+						$("#noise-profile").roundSlider({
+							min: 1,
+							max: data.data[$('input[name=noise-year]').val() + 's'].length,
+							step: 1,
+							value: 1,
+							sliderType: "min-range",
+							handleShape: "square",
+							handleSize: 20,
+							radius: 50
+						})
+					})
+				})
+				//	Jump to next section
+				if(validateSection(2)) {
+					//	Update active step title
+					$('.step-header').removeClass('active')
+					$('#step3-header').addClass('active')
+					//	Change section
+					$('#step2').hide()
+					$('#step3').show()
+					//	Call to next step
+					section(3)
+				}
+			case 3 :
+				return
+			case 4 :
+				return
+			default :
+				return
+		}
+	}
 	//	Step 1
 	$('#dirty').on('change', function () {
-		file = $('#dirty').val()
-		$('#file-name').html(file)
-		//	Step 2
-		if(file && file.length) {
-			//	Update active step title
-			$('.step-header').removeClass('active')
-			$('#step2-header').addClass('active')
-			//	Change section
-			$('#step1').hide()
-			$('#step2').show()
-			//	Populate select box
-			var options = ''
-			$.get('/api/noise/profiles', function (data) {
-				console.log(data)
-				for(var i in data) {
-					for(var j in data[i]) {
-						for(var k in data[i][j]) {
-							var value = j + ' - ' + data[i][j][k]
-							options += '<option value="' + value + '">' + value + '</option>'
-						}
-					}
-				}
-				$('#noise-type').html(options)
-			})
-		}
+		section(1)
 	})
 	//	'Send' button from section 'Contact'
 	$('#contact-button').on('click', function () {

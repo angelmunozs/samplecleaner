@@ -42,20 +42,34 @@
 					<span>Select file</span>
 					<input id="dirty" name="dirty" type="file">
 				</div>
+				<div id="section-error-1" class="section-error"></div>
 			</div>
 			<div id="step2" class="hdn">
 				<p>File: <span id="file-name"></span></p>
-				<p>Select the type of noise that affects your recording</p>
-				<div>
-					<select id="noise-type"></select>
+				<div class="noise-type">
+					<div class="rslider">
+						<div class="rslider-tip">Year:</div>
+						<div id="noise-year"></div>
+					</div>
+					<div class="rslider">
+						<div class="rslider-tip">Type of noise:</div>
+						<div id="noise-profile"></div>
+					</div>
+					<div class="rslider">
+						<div class="rslider-tip">Advanced (optional):</div>
+						<div class="advanced">
+							<div id="reduce-gain" class="slider"></div>
+							<div id="smoothing-bands" class="slider"></div>
+						</div>
+					</div>
 				</div>
-				<div class="col-xs-6"></div>
+				<div id="section-error-2" class="section-error"></div>
 			</div>
 			<div id="step3" class="hdn">
-				
+				<div id="section-error-3" class="section-error"></div>
 			</div>
 			<div id="step4" class="hdn">
-				
+				<div id="section-error-4" class="section-error"></div>
 			</div>
 		</div>
 	</div>
