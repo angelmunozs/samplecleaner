@@ -49,17 +49,26 @@
 				<div class="noise-type">
 					<div class="rslider">
 						<div class="rslider-tip">Decade:</div>
-						<div id="noise-year"></div>
+						<div id="noise-year" class="rslider-slider"></div>
 					</div>
-					<div class="rslider">
+					<div class="rslider basic">
 						<div class="rslider-tip">Type of noise:</div>
-						<div id="noise-profile"></div>
+						<div id="noise-profile" class="rslider-slider"></div>
 					</div>
 					<div class="rslider advanced">
-						<div class="rslider-tip">Advanced (optional):</div>
+						<div class="rslider-tip-advanced">
+							<input type="checkbox" id="advanced-settings" value="advanced-settings">
+							Advanced settings:
+						</div>
 						<div>
-							<div id="reduce-gain"></div>
-							<div id="smoothing-bands"></div>
+							<div class="rslider">
+								<div class="rslider-tip">Reduce gain (dB):</div>
+								<div id="reduce-gain" class="rslider-slider"></div>
+							</div>
+							<div class="rslider">
+								<div class="rslider-tip">Smoothing bands:</div>
+								<div id="smoothing-bands" class="rslider-slider"></div>
+							</div>
 						</div>
 					</div>
 				</div>

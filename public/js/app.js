@@ -9,6 +9,8 @@ var validateEmail = function (email) {
 $(document).ready(function() {
 	//	Get main nav height
 	var navHeight = parseInt($('#nav').css('height'));
+	//	Set checkbox unchecked
+	$('#advanced-settings').attr('checked', false)
 	//	Positions of page sections
 	var positions = [
 		{
@@ -119,31 +121,64 @@ $(document).ready(function() {
 					var years = Object.keys(data.data)
 					//	Default year selected
 					var defaultValue = 70
+					//	DOM elements
+					var noiseYear = $("#noise-year")
+					var noiseProfile = $("#noise-profile")
+					var reduceGain = $('#reduce-gain')
+					var smoothingBands = $('#smoothing-bands')
 					//	Noise year
-					$("#noise-year").roundSlider({
+					noiseYear.roundSlider({
 						min: Number(years[0].split('s')[0]),
 						max: Number(years[years.length - 1].split('s')[0]),
 						step: 10,
 						value: defaultValue,
 						sliderType: "min-range",
 						handleShape: "round",
-						handleSize: 20,
-						radius: 50
+						handleSize: 16,
+						radius: 55,
+						width: 16
 					})
 					//	Noise profile
-					$("#noise-profile").roundSlider({
+					noiseProfile.roundSlider({
 						min: 1,
 						max: data.data[defaultValue + 's'].length,
 						step: 1,
 						value: 1,
 						sliderType: "min-range",
 						handleShape: "round",
-						handleSize: 20,
-						radius: 50
+						handleSize: 16,
+						radius: 55,
+						width: 16
+					})
+					//	Reduce gain (advanced)
+					reduceGain.roundSlider({
+						min: 10,
+						max: 40,
+						step: 1,
+						value: 20,
+						sliderType: "min-range",
+						handleShape: "round",
+						handleSize: 10,
+						width: 8,
+						radius: 38,
+						disabled: true
+					})
+					//	Smoothing bands (advanced)
+					smoothingBands.roundSlider({
+						min: 0,
+						max: 5,
+						step: 1,
+						value: 3,
+						sliderType: "min-range",
+						handleShape: "round",
+						handleSize: 10,
+						width: 8,
+						radius: 38,
+						disabled: true
 					})
 					//	Change functionality
-					$("#noise-year").change(function () {
-						$("#noise-profile").roundSlider({
+					noiseYear.change(function () {
+						noiseProfile.roundSlider({
 							min: 1,
 							max: data.data[$('input[name=noise-year]').val() + 's'].length,
 							step: 1,
@@ -154,34 +189,21 @@ $(document).ready(function() {
 							radius: 50
 						})
 					})
-					//	Advanced
-					var reduceGain = $('#reduce-gain')
-					var smoothingBands = $('#smoothing-bands')
-					//	Create sliders
-					noUiSlider.create(reduceGain, {
-						start: 20,
-						connect: "lower",
-						range: {
-							min: 10,
-							max: 50
-						},
-						pips: {
-							mode: 'values',
-							density: 4,
-							values: [10, 20, 30, 40, 50]
+					//	Enable/disable advanced settings
+					$('#advanced-settings').change(function () {
+						if($(this).is(":checked")) {
+							//	Color of the title
+							$('.rslider-tip-advanced').css('color', '#555')
+							//	Enable sliders
+							reduceGain.roundSlider('enable')
+							smoothingBands.roundSlider('enable')
 						}
-					})
-					noUiSlider.create(smoothingBands, {
-						start: 20,
-						connect: "lower",
-						range: {
-							min: 1,
-							max: 5
-						},
-						pips: {
-							mode: 'values',
-							density: 4,
-							values: [1, 2, 3, 4, 5]
+						else {
+							//	Color of the title
+							$('.rslider-tip-advanced').css('color', '#aaa')
+							//	Disable sliders
+							reduceGain.roundSlider('disable')
+							smoothingBands.roundSlider('disable')
 						}
 					})
 				})
