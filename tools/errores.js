@@ -7,6 +7,7 @@ module.exports = {
 	CAMPOS_INCORRECTOS : 			{ code : 104, message : 'Wrong fields' },
 	PASSWORD_FORMATO_INCORRECTO : 	{ code : 105, message : 'Wrong format of password' },
 	NO_PARAMS : 					{ code : 106, message : 'Empty parameters' },
+	NO_FILE_FOUND : 				{ code : 107, message : 'File not found' },
 	//	Error en la petición
 	PUNTO_ACCESO_DESCONOCIDO : 		{ code : 200, message : 'Unknown access point' },
 	SINTAXIS_INCORRECTA : 			{ code : 201, message : 'Wrong syntax' },

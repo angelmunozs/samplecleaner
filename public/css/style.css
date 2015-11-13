@@ -43,7 +43,7 @@ a:hover, a:focus {
 	-ms-transition: color 200ms;
 	transition: color 200ms;
 	background: #262626;
-	color: #bbb;
+	color: #999;
 }
 .navbar-default .navbar-nav > li > a {
 	-webkit-transition: all 200ms ease-out;
@@ -78,7 +78,7 @@ a:hover, a:focus {
 	border: none;
 }
 .navbar-default .navbar-nav > li > a.social-network {
-	color: #ddd;
+	color: #eee;
 	font-size: 23px;
 	padding: 17px 12px 16px 12px;
 }
@@ -141,7 +141,7 @@ b.step-number {
 	margin-right: 6px;
 }
 .step-box h4 {
-	color: #bbb;
+	color: #999;
 	font-size: 18px;
 }
 .step-box h4.active {
@@ -188,7 +188,7 @@ b.step-number {
 	margin-left: 6px;
 }
 #step1 .btn:hover {
-	color: #bbb;
+	color: #999;
 	background: #eee;
 }
 #step2 {
@@ -217,12 +217,12 @@ b.step-number {
 }
 .rslider-tip {
 	font-size: 15px;
-	color: #aaa;
+	color: #999;
 	margin-bottom: 3px;
 }
 .rslider-tip-advanced {
 	font-size: 17px;
-	color: #aaa;
+	color: #999;
 	margin-bottom: 6px;
 }
 .section-error {
@@ -243,6 +243,22 @@ b.step-number {
 }
 .advanced .rs-range-color  {
 	background-color: #81DAF5;
+}
+.step2-tip {
+	padding-right: 20px;
+	text-align: right;
+}
+.player {
+	padding-left: 20px;
+	text-align: left;
+}
+#year-desc {
+	color: #444;
+	font-weight: bold;
+	font-size: 16px;
+}
+#profile-desc {
+	font-size: 16px;
 }
 /* Section 2: How it works */
 .work-step {
@@ -295,7 +311,7 @@ b.step-number {
 .nota-legal {
 	line-height: 20px;
 	font-size: 15px;
-	color: #bbb;
+	color: #999;
 	font-style: italic;
 	text-align: right;
 }

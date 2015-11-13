@@ -16,3 +16,11 @@ module.exports.data = function(req, res) {
 
     res.api.ok(req.data)
 }
+
+//	API response to retrieve a file
+module.exports.file = function(req, res) {
+	if(req.error)
+		return res.api.error(req.error)
+
+	res.sendFile(req.file)
+}

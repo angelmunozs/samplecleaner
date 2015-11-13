@@ -18,4 +18,9 @@ module.exports = function(app) {
 	//	Get noise profiles
 	app.get('/api/noise/samples', controllers.noise.samples, api.common.data)
 	app.get('/api/noise/profiles', controllers.noise.profiles, api.common.data)
+	//	Get info from year and profile
+	app.get('/api/info/year', controllers.noise.info_year, api.common.data)
+	app.get('/api/info/profile', controllers.noise.info_profile, api.common.data)
+	//	Get wav file for preview of noise samples
+	app.get('/api/noise/audio/:extension', controllers.noise.audio, api.common.file)
 }
