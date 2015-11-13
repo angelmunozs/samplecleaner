@@ -242,15 +242,41 @@ b.step-number {
 	background-color: #ff3337;
 }
 .advanced .rs-range-color  {
-	background-color: #81DAF5;
+	background-color: #7F1610;
 }
 .step2-tip {
 	padding-right: 20px;
 	text-align: right;
 }
 .player {
-	padding-left: 20px;
+	padding-left: 10px;
 	text-align: left;
+	display: table;
+}
+audio {
+	background-color: #fff;
+}
+.bb-play {
+	width: 45px;
+	height: 45px;
+}
+.bbplayer {
+	width: 46px;
+	height: 46px;
+}
+.bbplayer, .player-tip, .player-btn {
+	display: inline-block;
+}
+.player-tip {
+	margin-top: 10px;
+	font-style: italic;
+	font-size: 16px;
+}
+.player-btn, .player-tip {
+	vertical-align: top;
+}
+.player-btn {
+	margin-right: 15px;
 }
 #year-desc {
 	color: #444;

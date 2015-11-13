@@ -69,15 +69,27 @@
 								<div class="rslider-tip">Smoothing bands:</div>
 								<div id="smoothing-bands" class="rslider-slider"></div>
 							</div>
+					        <!-- roundSlider Javascript -->
+					        <script type="text/javascript" src="/components/roundslider/dist/roundslider.min.js"></script>
 						</div>
 					</div>
-					<div class="col-xs-12" style="margin-top: 15px;">
+					<div class="col-xs-12" style="margin-top: 20px;">
 						<div class="step2-tip col-xs-6">
 							<div id="year-desc"></div>
 							<div id="profile-desc"></div>
 						</div>
-						<div id="player" class="player col-xs-6">
-							
+						<div class="player col-xs-6">
+							<div class="player-btn">
+								<button id="doit" class="btn btn-send">Clean it!</button>
+							</div>
+							<div class="bbplayer">
+								<span class="bb-play"></span>
+								<span class="bb-trackTitle"></span>
+								<audio id="player"></audio>
+							</div>
+							<div class="player-tip">Press play to hear a sample</div>
+							<!-- bbplayer Javascript -->
+							<script src="/components/bbplayer/js/bbplayer.js"></script>
 						</div>
 					</div>
 				</div>

@@ -17,6 +17,7 @@
     "crypto": "http://crypto-js.googlecode.com/files/CryptoJS%20v3.1.2.zip",
     "bootstrap": "~3.1.1",
     "fontawesome": "~4.3.0",
-    "roundslider": "roundSlider#~1.0.1"
+    "roundslider": "roundSlider#~1.0.1",
+    "bbplayer": "https://github.com/73rhodes/bbplayer.git"
   }
 }
