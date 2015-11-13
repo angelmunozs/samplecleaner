@@ -94,10 +94,6 @@ $(document).ready(function() {
 				var validateSmoothingBands = /[0-5]{1,1}/.test(smoothingBands) // 0-5
 
 				return validateNoiseYear && validateNoiseProfile && validateReduceGain && validateSmoothingBands
-			case 3 :
-				return
-			case 4 :
-				return
 			default :
 				return
 		}
@@ -106,17 +102,12 @@ $(document).ready(function() {
 	var section = function (n) {
 		switch(n) {
 			case 1 :
-				var file = $('#dirty').val()
-				var parts = file.split('.')
-				$('#file-name').html(file)
+				_file = $('#dirty').val()
+				var parts = _file.split('.')
 				//	Jump to next section
-				if(validateSection(1, [file, parts])) {
-					//	Update active step title
-					$('.step-header').removeClass('active')
-					$('#step2-header').addClass('active')
-					//	Change section
-					$('#step1').hide()
-					$('#step2').show()
+				if(validateSection(1, [_file, parts])) {
+					//	Assign value to file
+					file = _file
 					//	Call to next step
 					section(2)
 				}
@@ -124,6 +115,14 @@ $(document).ready(function() {
 					$('#section-error-1').html(parts[parts.length - 1] + ' is not a supported audio file')
 				}
 			case 2 :
+				//	Update active step title
+				$('.step-header').removeClass('active')
+				$('#step2-header').addClass('active')
+				//	Change section
+				$('#step1').hide()
+				$('#step2').show()
+				//	File name
+				$('#file-name').html(_file)
 				//	Populate select box
 				var options = ''
 				$.get('/api/noise/profiles', function (data) {
@@ -140,14 +139,14 @@ $(document).ready(function() {
 					var year = $('input[name=noise-year]').val()
 					var profile = $('input[name=noise-profile]').val()
 					//	Player variables
-					var audio_location = '/api/noise/audio/wav?year=' + year + '&profile=' + profile
+					var audio_location = '/api/noise/wav/' + year + '/' + profile
 					var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
 					//	APIs to get info
-					$.get('/api/info/year?year=' + year)
+					$.get('/api/info/year/' + year)
 					.done(function (info) {
 						$('#year-desc').html(info.data)
 					})
-					$.get('/api/info/profile?year=' + year + '&profile=' + profile)
+					$.get('/api/info/profile/' + year + '/' + profile)
 					.done(function (info) {
 						$('#profile-desc').html(info.data)
 					})
@@ -211,15 +210,15 @@ $(document).ready(function() {
 					noiseYear.change(function () {
 						var year = $('input[name=noise-year]').val()
 						var profile = $('input[name=noise-profile]').val()
-						var audio_location = '/api/noise/audio/wav?year=' + year + '&profile=' + profile
+						var audio_location = '/api/noise/wav/' + year + '/' + profile
 						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
 						//	Update year info
-						$.get('/api/info/year?year=' + year)
+						$.get('/api/info/year/' + year)
 						.done(function (info) {
 							$('#year-desc').html(info.data)
 						})
 						//	Update profile info
-						$.get('/api/info/profile?year=' + year + '&profile=' + profile)
+						$.get('/api/info/profile/' + year + '/' + profile)
 						.done(function (info) {
 							$('#profile-desc').html(info.data)
 						})
@@ -243,10 +242,10 @@ $(document).ready(function() {
 					noiseProfile.change(function () {
 						var year = $('input[name=noise-year]').val()
 						var profile = $('input[name=noise-profile]').val()
-						var audio_location = '/api/noise/audio/wav?year=' + year + '&profile=' + profile
+						var audio_location = '/api/noise/wav/' + year + '/' + profile
 						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
 						//	Update profile info
-						$.get('/api/info/profile?year=' + year + '&profile=' + profile)
+						$.get('/api/info/profile/' + year + '/' + profile)
 						.done(function (info) {
 							$('#profile-desc').html(info.data)
 						})
@@ -273,38 +272,47 @@ $(document).ready(function() {
 						}
 					})
 				})
-				//	Jump to next section
-				if(validateSection(2)) {
-					//	Update active step title
-					$('.step-header').removeClass('active')
-					$('#step3-header').addClass('active')
-					//	Change section
-					$('#step2').hide()
-					$('#step3').show()
-					//	Call to next step
-					section(3)
-				}
+				$('#go').click(function () {
+					//	Jump to next section
+					if(validateSection(2)) {
+						//	Call to next step
+						section(3)
+					}
+					else {
+						alert('Wrong fields')
+					}
+				})
 			case 3 :
-				//	Jump to next section
-				if(validateSection(3)) {
-					//	Update active step title
-					$('.step-header').removeClass('active')
-					$('#step4-header').addClass('active')
-					//	Change section
-					$('#step3').hide()
-					$('#step4').show()
-					//	Call to next step
-					section(4)
-				}
+				//	Update active step title
+				$('.step-header').removeClass('active')
+				$('#step3-header').addClass('active')
+				//	Change section
+				$('#step2').hide()
+				$('#step3').show()
+				//	Wait for the server to return the file
+				$.post('/api/clean', {
+					file : file
+				})
+				.done(function (data) {
+					if(data.error) {
+						$('#section-error-3').html(data.error)
+					}
+					else {
+						//	Call to next step
+						section(4)
+					}
+				})
+				.fail(function () {
+					$('#section-error-3').html('There was an error while processing your request. Please, try again later.')
+				})
 			case 4 :
-				//	Jump to next section
-				if(validateSection(4)) {
-					//	Post audio file
-					$.post('/api/clean')
-					.done(function (data) {
-
-					})
-				}
+				//	Update active step title
+				$('.step-header').removeClass('active')
+				$('#step4-header').addClass('active')
+				//	Change section
+				$('#step3').hide()
+				$('#step4').show()
+				return
 			default :
 				return
 		}
@@ -346,7 +354,7 @@ $(document).ready(function() {
 					$('#contact-button').html('Send')
 				}
 			})
-			.fail(function(data) {
+			.fail(function () {
 				$('#error-msg').css('color', '#ff0000');
 				$('#error-msg').html('Something went wrong. please, try again later.');
 				//	Re-enable button
@@ -389,7 +397,7 @@ $(document).ready(function() {
 					$('#list-button').removeAttr('disabled')
 				}
 			})
-			.fail(function(data) {
+			.fail(function () {
 				$('#status-icon').css('color', '#999')
 				$('#status-icon').html('<i class="fa fa-times"></i>')
 				//	Re-enable button

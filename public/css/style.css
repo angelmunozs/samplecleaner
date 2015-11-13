@@ -160,7 +160,7 @@ b.step-number {
 	text-align: center;
 	border-radius: 6px;
 }
-#step1 {
+#step1, #step3 {
 	padding-top: 70px;
 }
 #step1 .file-upload input {

@@ -57,12 +57,12 @@ module.exports.info_year = function(req, res, next) {
 
 	var allowedYears = ['40', '50', '60', '70', '80', '90']
 
-	if(!req.query.year) {
+	if(!req.params.year) {
 		req.error = Errores.NO_PARAMS
 		return next()
 	}
 
-	var year = req.query.year || null
+	var year = req.params.year || null
 
 	if(allowedYears.indexOf(year) == -1) {
 		req.error = Errores.PARAMETROS_INCORRECTOS
@@ -85,13 +85,13 @@ module.exports.info_profile = function(req, res, next) {
 	var allowedYears = ['40', '50', '60', '70', '80', '90']
 	var allowedProfiles = ['1', '2', '3', '4', '5', '6', '7', '8']
 
-	if(!req.query.profile || !req.query.year) {
+	if(!req.params.profile || !req.params.year) {
 		req.error = Errores.NO_PARAMS
 		return next()
 	}
 
-	var profile = req.query.profile || null
-	var year = req.query.year || null
+	var profile = req.params.profile || null
+	var year = req.params.year || null
 
 	if(allowedYears.indexOf(year) == -1 || allowedProfiles.indexOf(profile) == -1) {
 		req.error = Errores.PARAMETROS_INCORRECTOS
@@ -114,13 +114,13 @@ module.exports.audio = function(req, res, next) {
 	var allowedYears = ['40', '50', '60', '70', '80', '90']
 	var allowedProfiles = ['1', '2', '3', '4', '5', '6', '7', '8']
 
-	if(!req.query.profile || !req.query.year || !req.params.extension) {
+	if(!req.params.profile || !req.params.year || !req.params.extension) {
 		req.error = Errores.NO_PARAMS
 		return next()
 	}
 
-	var profile = req.query.profile || null
-	var year = req.query.year || null
+	var profile = req.params.profile || null
+	var year = req.params.year || null
 	var extension = req.params.extension || null
 
 	if(allowedYears.indexOf(year) == -1 || allowedProfiles.indexOf(profile) == -1) {
