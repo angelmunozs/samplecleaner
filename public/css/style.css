@@ -286,6 +286,32 @@ audio {
 #profile-desc {
 	font-size: 16px;
 }
+.btn-download {
+	background: #ff3337;
+	color: #fff;
+	font-size: 26px;
+	border: none;
+	border-radius: 0px;
+	padding: 10px 20px 10px 20px;
+	width: 180px;
+}
+.btn-download:hover, .btn-download:focus {
+	background: #bc2629;
+	color: #fff;
+}
+#step4 {
+	margin-top: 80px;
+}
+#step4-tip, #step4-tip a {
+	margin-top: 8px;
+	font-size: 14px;
+	color: #222;
+}
+#step4-tip a:hover, #step4-tip a:focus {
+	cursor: pointer;
+	color: #111;
+	text-decoration: underline;
+}
 /* Section 2: How it works */
 .work-step {
 	margin-top: 10px;
