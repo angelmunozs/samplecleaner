@@ -1,0 +1,21 @@
+Web
+
+-	Arreglar subida de archivos de audio
+-	Instalación de la shell de Python
+-	Script de Python que convierta a WAV el audio subido
+-	Script de Python que procese el audio en WAV y lo devuelva también en WAV
+
+Python
+
+-	Script que procese el audio
+
+Research
+
+-	Técnicas de vinilo para los tips del paso 2 del cleaner
+-	Obtención de perfiles
+-	Reescribir correctamente la sección 'How it works'
+
+En el futuro
+
+-	Devolver la canción en WAV y en MP3
+-	Limpieza automática
