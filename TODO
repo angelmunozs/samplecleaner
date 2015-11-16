@@ -4,7 +4,9 @@ Web
 -	Instalación de la shell de Python
 -	Script de Python que convierta a WAV el audio subido
 -	Script de Python que procese el audio en WAV y lo devuelva también en WAV
--	Logs
+-	Logs de acciones y canciones limpias
+-	Canción sólo descargable por usuario que la ha subido
+-	Borrar canción limpia una vez limpia
 
 Python
 
