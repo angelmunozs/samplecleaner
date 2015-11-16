@@ -10,6 +10,8 @@ var validateEmail = function (email) {
 $(document).ready(function() {
 	//	Get main nav height
 	var navHeight = parseInt($('#nav').css('height'));
+	//	Element to drop files in
+	var drop = $('#step1')
 	//	Set checkbox unchecked
 	$('#advanced-settings').attr('checked', false)
 	//	Positions of page sections
@@ -442,5 +444,52 @@ $(document).ready(function() {
 			//	Re-enable button
 			$('#list-button').removeAttr('disabled')
 		}
+	})
+	//	File dragging
+	if(window.FileReader) {
+		addEventHandler(window, 'load', function() {
+			
+			function cancel(e) {
+				if (e.preventDefault) {
+					e.preventDefault()
+				}
+				return false
+			}
+
+			// Tells the browser that we *can* drop on this target
+			addEventHandler(drop, 'dragover', cancel)
+			addEventHandler(drop, 'dragenter', cancel)
+		})
+	}
+	function addEventHandler(object, event, handler) {
+		if(object.addEventListener) {
+			// W3C method
+			object.addEventListener(event, handler, false)
+		}
+		else if(object.attachEvent) {
+			// IE method
+			object.attachEvent('on' + event, handler)
+		}
+		else {
+			// Old school method
+			object['on' + event] = handler
+		}
+	}
+	addEventHandler(drop, 'drop', function (e) {
+		e = e || window.event // Get window.event if e argument missing (in IE)
+		if (e.preventDefault) {
+			e.preventDefault()
+		}
+
+		var dt = e.dataTransfer
+		var files = dt.files
+
+		for (var i = 0; i < files.length; i++) {
+			var file = files[i]
+			var reader = new FileReader()
+			$('#dirty').val(file)
+			reader.readAsDataURL(file)
+		}
+		return false
 	})
 })
