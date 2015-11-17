@@ -26,5 +26,5 @@ module.exports = function(app) {
 	//	Clean a song
 	app.post('/api/clean', controllers.cleaner.upload, controllers.cleaner.convert, controllers.cleaner.clean, api.common.data)
 	//	Download a song
-	app.get('/api/song/:name', controllers.cleaner.download, api.common.file)
+	app.get('/api/song/:id', controllers.cleaner.download, api.common.file)
 }

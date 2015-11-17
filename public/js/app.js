@@ -479,8 +479,8 @@ $(document).ready(function() {
 				break
 			case 4 :
 				//	Update form action
-				$('#download').attr('href', '/api/song/' + clean)
-				$('#download').attr('download', name)
+				$('#download').attr('href', '/api/song/' + clean.id)
+				$('#download').attr('download', clean.name)
 				//	Update active step title
 				$('.step-header').removeClass('active')
 				$('#step4-header').addClass('active')
