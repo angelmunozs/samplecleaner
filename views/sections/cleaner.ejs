@@ -35,76 +35,78 @@
 		</div>
 		<!-- Step box -->
 		<div class="step col-xs-12">
-			<div id="step1" class="step-container">
-				<i class="fa fa-plus fa-4x"></i><br>
-				Drag file here, or
-				<div class="file-upload btn btn-upload">
-					<span>Select file</span>
-					<input id="dirty" name="dirty" type="file">
+			<form enctype="multipart/form-data" id="upload">
+				<div id="step1" class="step-container">
+					<i class="fa fa-plus fa-4x"></i><br>
+					Drag file here, or
+					<div class="file-upload btn btn-upload">
+						<span>Select file</span>
+						<input id="file" type="file" name="file" title="Click to add file">
+					</div>
+					<div id="section-error-1" class="section-error"></div>
 				</div>
-				<div id="section-error-1" class="section-error"></div>
-			</div>
-			<div id="step2" class="hdn" class="step-container">
-				<p>File: <span id="file-name"></span></p>
-				<div class="noise-type">
-					<div class="rslider">
-						<div class="rslider-tip">Decade:</div>
-						<div id="noise-year" class="rslider-slider"></div>
-					</div>
-					<div class="rslider basic">
-						<div class="rslider-tip">Type of noise:</div>
-						<div id="noise-profile" class="rslider-slider"></div>
-					</div>
-					<div class="rslider advanced">
-						<div class="rslider-tip-advanced">
-							<input type="checkbox" id="advanced-settings" value="advanced-settings">
-							Advanced settings:
+				<div id="step2" class="hdn" class="step-container">
+					<p>File: <span id="file-name"></span></p>
+					<div class="noise-type">
+						<div class="rslider">
+							<div class="rslider-tip">Decade:</div>
+							<div id="noise-year" class="rslider-slider"></div>
 						</div>
-						<div>
-							<div class="rslider">
-								<div class="rslider-tip">Reduce gain (dB):</div>
-								<div id="reduce-gain" class="rslider-slider"></div>
+						<div class="rslider basic">
+							<div class="rslider-tip">Type of noise:</div>
+							<div id="noise-profile" class="rslider-slider"></div>
+						</div>
+						<div class="rslider advanced">
+							<div class="rslider-tip-advanced">
+								<input type="checkbox" id="advanced-settings" value="advanced-settings">
+								Advanced settings:
 							</div>
-							<div class="rslider">
-								<div class="rslider-tip">Smoothing bands:</div>
-								<div id="smoothing-bands" class="rslider-slider"></div>
+							<div>
+								<div class="rslider">
+									<div class="rslider-tip">Reduce gain (dB):</div>
+									<div id="reduce-gain" class="rslider-slider"></div>
+								</div>
+								<div class="rslider">
+									<div class="rslider-tip">Smoothing bands:</div>
+									<div id="smoothing-bands" class="rslider-slider"></div>
+								</div>
+						        <!-- roundSlider Javascript -->
+						        <script type="text/javascript" src="/components/roundslider/dist/roundslider.min.js"></script>
 							</div>
-					        <!-- roundSlider Javascript -->
-					        <script type="text/javascript" src="/components/roundslider/dist/roundslider.min.js"></script>
+						</div>
+						<div class="col-xs-12" style="margin-top: 20px;">
+							<div class="step2-tip col-xs-6">
+								<div id="year-desc"></div>
+								<div id="profile-desc"></div>
+							</div>
+							<div class="player col-xs-6">
+								<div class="player-btn">
+									<input type="button" value="Clean it!" id="go" class="btn btn-send">
+								</div>
+								<div class="bbplayer">
+									<span class="bb-play"></span>
+									<span class="bb-trackTitle"></span>
+									<audio id="player"></audio>
+								</div>
+								<div class="player-tip">Press play to hear a sample</div>
+								<!-- bbplayer Javascript -->
+								<script src="/components/bbplayer/js/bbplayer.js"></script>
+							</div>
 						</div>
 					</div>
-					<div class="col-xs-12" style="margin-top: 20px;">
-						<div class="step2-tip col-xs-6">
-							<div id="year-desc"></div>
-							<div id="profile-desc"></div>
-						</div>
-						<div class="player col-xs-6">
-							<div class="player-btn">
-								<button id="go" class="btn btn-send">Clean it!</button>
-							</div>
-							<div class="bbplayer">
-								<span class="bb-play"></span>
-								<span class="bb-trackTitle"></span>
-								<audio id="player"></audio>
-							</div>
-							<div class="player-tip">Press play to hear a sample</div>
-							<!-- bbplayer Javascript -->
-							<script src="/components/bbplayer/js/bbplayer.js"></script>
-						</div>
-					</div>
+					<div id="section-error-2" class="section-error"></div>
 				</div>
-				<div id="section-error-2" class="section-error"></div>
-			</div>
-			<div id="step3" class="hdn" class="step-container">
-				<i class="fa fa-spinner fa-spin fa-4x"></i><br>
-				We're working on it... This process may take a few seconds
-				<div id="section-error-3" class="section-error"></div>
-			</div>
-			<div id="step4" class="hdn" class="step-container">
-				<p>Click download and save the file into your computer. Enjoy!</p>
-				<a id="download" type="submit" class="btn btn-download"><i class="fa fa-download"></i>&nbsp;Download</a>
-				<p id="step4-tip"><a id="again">Clean another sample</a></p>
-			</div>
+				<div id="step3" class="hdn" class="step-container">
+					<i class="fa fa-spinner fa-spin fa-4x"></i><br>
+					We're working on it... This process may take a few seconds
+					<div id="section-error-3" class="section-error"></div>
+				</div>
+				<div id="step4" class="hdn" class="step-container">
+					<p>Click download and save the file into your computer. Enjoy!</p>
+					<a id="download" type="submit" class="btn btn-download"><i class="fa fa-download"></i>&nbsp;Download</a>
+					<p id="step4-tip"><a id="again">Clean another sample</a></p>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>

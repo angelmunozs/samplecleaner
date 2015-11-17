@@ -1,6 +1,8 @@
-var file = ''
+//	File data
+var file, name, size, type = ''
+//	Name of clean song
 var clean = ''
-var allowedExts = ['wav', 'mp3']
+var allowedTypes = ['audio/x-wav', 'audio/wav', 'audio/vnd.wav', 'audio/mpeg']
 
 //	Validate an e-mail
 var validateEmail = function (email) {
@@ -10,8 +12,6 @@ var validateEmail = function (email) {
 $(document).ready(function() {
 	//	Get main nav height
 	var navHeight = parseInt($('#nav').css('height'));
-	//	Element to drop files in
-	var drop = $('#step1')
 	//	Set checkbox unchecked
 	$('#advanced-settings').attr('checked', false)
 	//	Positions of page sections
@@ -78,275 +78,60 @@ $(document).ready(function() {
 			})
 		})
 	})
-	//	Validate sections
-	var validateSection = function (n, params) {
-		switch(n) {
-			case 1 :
-				var song = params[0]
-				var parts = params[1]
-				return song && song.length && allowedExts.indexOf(parts[parts.length - 1].toLowerCase()) != -1
-			case 2 :
-				var noiseYear = params[0]
-				var noiseProfile = params[1]
-				var reduceGain = params[2]
-				var smoothingBands = params[3]
+	//	File selected with input
+	$(':file').change(function () {
+		file = this.files[0]
+		var fileReader = new FileReader()
 
-				var validateNoiseYear = /[4-9]{1,1}[0]{1,1}/.test(noiseYear) // 40, 50, 60, 70, 80 or 90
-				var validateNoiseProfile = /[1-9]{1,2}/.test(noiseProfile) // 1-19
-				var validateReduceGain = Number(reduceGain) >= 10 && Number(reduceGain) <= 40 // 10-40
-				var validateSmoothingBands = /[0-5]{1,1}/.test(smoothingBands) // 0-5
+		fileReader.onload = (function(file) {
+			name = file.name
+			size = file.size
+			type = file.type
+			section(1)		
+		})(file)
 
-				return validateNoiseYear && validateNoiseProfile && validateReduceGain && validateSmoothingBands
-			default :
-				return
-		}
-	}
-	//	Section behavior
-	var section = function (n) {
-		switch(n) {
-			case 1 :
-				song = $('#dirty').val()
-				var parts = song.split('.')
-				//	Jump to next section
-				if(validateSection(1, [song, parts])) {
-					//	Assign value to file
-					file = song
-					//	Call to next step
-					section(2)
-				}
-				else {
-					if(song.length) {
-						$('#section-error-1').html(parts[parts.length - 1] + ' is not a supported audio file')
-					}
-				}
-				break
-			case 2 :
-				//	Update active step title
-				$('.step-header').removeClass('active')
-				$('#step2-header').addClass('active')
-				//	Change section
-				$('#step1').hide()
-				$('#step2').show()
-				//	File name
-				$('#file-name').html(file)
-				//	Populate select box
-				var options = ''
-				$.get('/api/noise/profiles')
-				.done(function (data) {
-					//	Get info from API
-					var years = Object.keys(data.data)
-					//	Default year selected
-					var defaultValue = 70
-					//	DOM elements
-					var noiseYear = $("#noise-year")
-					var noiseProfile = $("#noise-profile")
-					var reduceGain = $('#reduce-gain')
-					var smoothingBands = $('#smoothing-bands')
-					//	Noise year
-					noiseYear.roundSlider({
-						min: Number(years[0]),
-						max: Number(years[years.length - 1]),
-						step: 10,
-						value: defaultValue,
-						sliderType: "min-range",
-						handleShape: "round",
-						handleSize: 16,
-						radius: 55,
-						width: 16,
-						editableTooltip: false
-					})
-					//	Noise profile
-					noiseProfile.roundSlider({
-						min: 1,
-						max: data.data[defaultValue].length,
-						step: 1,
-						value: 1,
-						sliderType: "min-range",
-						handleShape: "round",
-						handleSize: 16,
-						radius: 55,
-						width: 16,
-						editableTooltip: false
-					})
-					//	Retrieve data from sliders
-					var year = $('input[name=noise-year]').val()
-					var profile = $('input[name=noise-profile]').val()
-					//	Player variables
-					var audio_location = '/api/noise/wav/' + year + '/' + profile
-					var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
-					//	Reduce gain (advanced)
-					reduceGain.roundSlider({
-						min: 10,
-						max: 40,
-						step: 1,
-						value: 20,
-						sliderType: "min-range",
-						handleShape: "round",
-						handleSize: 10,
-						width: 8,
-						radius: 38,
-						disabled: true,
-						editableTooltip: false
-					})
-					//	Smoothing bands (advanced)
-					smoothingBands.roundSlider({
-						min: 0,
-						max: 5,
-						step: 1,
-						value: 2,
-						sliderType: "min-range",
-						handleShape: "round",
-						handleSize: 10,
-						width: 8,
-						radius: 38,
-						disabled: true,
-						editableTooltip: false
-					})
-					//	Audio player
-					$('#player').html(player_html)
-					//	APIs to get info
-					$.get('/api/info/year/' + year)
-					.done(function (info) {
-						$('#year-desc').html(info.data)
-					})
-					$.get('/api/info/profile/' + year + '/' + profile)
-					.done(function (info) {
-						$('#profile-desc').html(info.data)
-					})
-					//	Change functionality
-					noiseYear.change(function () {
-						var year = $('input[name=noise-year]').val()
-						var profile = $('input[name=noise-profile]').val()
-						var audio_location = '/api/noise/wav/' + year + '/' + profile
-						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
-						//	Update year info
-						$.get('/api/info/year/' + year)
-						.done(function (info) {
-							$('#year-desc').html(info.data)
-						})
-						//	Update profile info
-						$.get('/api/info/profile/' + year + '/' + profile)
-						.done(function (info) {
-							$('#profile-desc').html(info.data)
-						})
-						//	Audio player
-						$('#player').html(player_html)
-						//	Update roundslider for profiles
-						noiseProfile.roundSlider({
-							min: 1,
-							max: data.data[year].length,
-							step: 1,
-							value: 1,
-							sliderType: "min-range",
-							handleShape: "round",
-							handleSize: 16,
-							radius: 55,
-							width: 16,
-							editableTooltip: false
-						})
-					})
-					//	Change functionality
-					noiseProfile.change(function () {
-						var year = $('input[name=noise-year]').val()
-						var profile = $('input[name=noise-profile]').val()
-						var audio_location = '/api/noise/wav/' + year + '/' + profile
-						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
-						//	Update profile info
-						$.get('/api/info/profile/' + year + '/' + profile)
-						.done(function (info) {
-							$('#profile-desc').html(info.data)
-						})
-						//	Audio player
-						$('#player').html(player_html)
-					})
-					//	Enable/disable advanced settings
-					$('#advanced-settings').change(function () {
-						if($(this).is(":checked")) {
-							//	Color of the title
-							$('.rslider-tip-advanced').css('color', '#555')
-							//	Enable sliders
-							reduceGain.roundSlider('enable')
-							smoothingBands.roundSlider('enable')
-						}
-						else {
-							//	Color of the title
-							$('.rslider-tip-advanced').css('color', '#aaa')
-							//	Reset values
-							//	TODO
-							//	Disable sliders
-							reduceGain.roundSlider('disable')
-							smoothingBands.roundSlider('disable')
-						}
-					})
-					$('#go').click(function () {
-						var noiseYear = $('input[name=noise-year]').val()
-						var noiseProfile = $('input[name=noise-profile]').val()
-						var reduceGain = $('input[name=reduce-gain]').val()
-						var smoothingBands = $('input[name=smoothing-bands]').val()
-						//	Jump to next section
-						if(validateSection(2, [noiseYear, noiseProfile, reduceGain, smoothingBands])) {
-							//	Call to next step
-							section(3)
-						}
-						else {
-							alert('Wrong fields')
-						}
-					})
-				})
-				break
-			case 3 :
-				//	Update active step title
-				$('.step-header').removeClass('active')
-				$('#step3-header').addClass('active')
-				//	Change section
-				$('#step2').hide()
-				$('#step3').show()
-				//	Wait for the server to return the file
-				$.ajax({
-					type : 'POST',
-					url : '/api/clean',
-					enctype: 'multipart/form-data',
-					data : {
-						file : file
-					},
-					success : function (data) {
-						if(data.error) {
-							$('#section-error-3').html(data.error)
-						}
-						else {
-							clean = data.data
-							//	Call to next step
-							section(4)
-						}
-					},
-					error : function (error) {
-						console.log(error)
-						$('#section-error-3').html('There was an error while processing your request. Please, try again later.')
-					}
-				})
-				break
-			case 4 :
-				//	Update form action
-				$('#download').attr('href', '/api/song/' + clean)
-				$('#download').attr('download', file + ' (clean)')
-				//	Update active step title
-				$('.step-header').removeClass('active')
-				$('#step4-header').addClass('active')
-				//	Change section
-				$('#step3').hide()
-				$('#step4').show()
-				break
-			default :
-				return
-		}
-	}
-	//	Step 1
-	$('#dirty').on('change', function () {
-		section(1)
+		fileReader.readAsDataURL(file)
 	})
+	//	File dragging
+	$.event.props.push('dataTransfer')
+	$('#step1').on({
+		dragenter: function(event) {
+			event.stopPropagation()
+			event.preventDefault()
+			$('#step1').css('background-color', '#e9e9e9')
+		},
+		dragleave: function(event) {
+			event.stopPropagation()
+			event.preventDefault()
+			$('#step1').css('background-color', '#fff')
+		},
+		drop: function(event) {
+			event.stopPropagation()
+			event.preventDefault()
+			console.log('Dropped!')
+			$('#step1').css('background-color', '#fff')
+
+			file = event.dataTransfer.files[0]
+			var fileReader = new FileReader()
+
+			fileReader.onload = (function(file) {
+				name = file.name
+				size = file.size
+				type = file.type
+				section(1)		
+			})(file)
+
+			fileReader.readAsDataURL(file)
+		}
+	})	
 	$('#again').click(function () {
 		//	Reset input type 'file'
-		$('#dirty').replaceWith($('#dirty').val('').clone(true));
+		$('#file').replaceWith($('#file').val('').clone(true))
+		var fileReader = new FileReader()
+		//	Reset values
+		name = ''
+		size = 0
+		type = ''
 		//	Update active step title
 		$('.step-header').removeClass('active')
 		$('#step1-header').addClass('active')
@@ -445,51 +230,266 @@ $(document).ready(function() {
 			$('#list-button').removeAttr('disabled')
 		}
 	})
-	//	File dragging
-	if(window.FileReader) {
-		addEventHandler(window, 'load', function() {
-			
-			function cancel(e) {
-				if (e.preventDefault) {
-					e.preventDefault()
+	//	Validate sections
+	var validateSection = function (n, params) {
+		switch(n) {
+			case 1 :
+				var song = params[0]
+				var size = params[1]
+				var type = params[2]
+				return song && size != 0 && allowedTypes.indexOf(type.toLowerCase()) != -1
+			case 2 :
+				var noiseYear = params[0]
+				var noiseProfile = params[1]
+				var reduceGain = params[2]
+				var smoothingBands = params[3]
+
+				var validateNoiseYear = /[4-9]{1,1}[0]{1,1}/.test(noiseYear) // 40, 50, 60, 70, 80 or 90
+				var validateNoiseProfile = /[1-9]{1,2}/.test(noiseProfile) // 1-19
+				var validateReduceGain = Number(reduceGain) >= 10 && Number(reduceGain) <= 40 // 10-40
+				var validateSmoothingBands = /[0-5]{1,1}/.test(smoothingBands) // 0-5
+
+				return validateNoiseYear && validateNoiseProfile && validateReduceGain && validateSmoothingBands
+			default :
+				return
+		}
+	}
+	//	Section behavior
+	var section = function (n) {
+		switch(n) {
+			case 1 :
+				//	Jump to next section
+				if(validateSection(1, [name, size, type])) {
+					//	Call to next step
+					section(2)
 				}
-				return false
-			}
-
-			// Tells the browser that we *can* drop on this target
-			addEventHandler(drop, 'dragover', cancel)
-			addEventHandler(drop, 'dragenter', cancel)
-		})
+				else {
+					if(name.length) {
+						$('#section-error-1').html(type + ' is not a supported audio file')
+					}
+				}
+				break
+			case 2 :
+				//	Update active step title
+				$('.step-header').removeClass('active')
+				$('#step2-header').addClass('active')
+				//	Change section
+				$('#step1').hide()
+				$('#step2').show()
+				//	File name
+				$('#file-name').html(name)
+				//	Populate select box
+				var options = ''
+				$.get('/api/noise/profiles')
+				.done(function (data) {
+					//	Get info from API
+					var years = Object.keys(data.data)
+					//	Default year selected
+					var defaultValue = 70
+					//	DOM elements
+					var noiseYear = $("#noise-year")
+					var noiseProfile = $("#noise-profile")
+					var reduceGain = $('#reduce-gain')
+					var smoothingBands = $('#smoothing-bands')
+					//	Noise year
+					noiseYear.roundSlider({
+						min: Number(years[0]),
+						max: Number(years[years.length - 1]),
+						step: 10,
+						value: defaultValue,
+						sliderType: "min-range",
+						handleShape: "square",
+						handleSize: '16,8',
+						radius: 55,
+						width: 10,
+						editableTooltip: false
+					})
+					//	Noise profile
+					noiseProfile.roundSlider({
+						min: 1,
+						max: data.data[defaultValue].length,
+						step: 1,
+						value: 1,
+						sliderType: "min-range",
+						handleShape: "square",
+						handleSize: '16,8',
+						radius: 55,
+						width: 10,
+						editableTooltip: false
+					})
+					//	Retrieve data from sliders
+					var year = $('input[name=noise-year]').val()
+					var profile = $('input[name=noise-profile]').val()
+					//	Player variables
+					var audio_location = '/api/noise/wav/' + year + '/' + profile
+					var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
+					//	Reduce gain (advanced)
+					reduceGain.roundSlider({
+						min: 10,
+						max: 40,
+						step: 1,
+						value: 20,
+						sliderType: "min-range",
+						handleShape: "square",
+						handleSize: '12,6',
+						width: 6,
+						radius: 38,
+						disabled: true,
+						editableTooltip: false
+					})
+					//	Smoothing bands (advanced)
+					smoothingBands.roundSlider({
+						min: 0,
+						max: 5,
+						step: 1,
+						value: 2,
+						sliderType: "min-range",
+						handleShape: "square",
+						handleSize: '12,6',
+						width: 6,
+						radius: 38,
+						disabled: true,
+						editableTooltip: false
+					})
+					//	Audio player
+					$('#player').html(player_html)
+					//	APIs to get info
+					$.get('/api/info/year/' + year)
+					.done(function (info) {
+						$('#year-desc').html(info.data)
+					})
+					$.get('/api/info/profile/' + year + '/' + profile)
+					.done(function (info) {
+						$('#profile-desc').html(info.data)
+					})
+					//	Change functionality
+					noiseYear.change(function () {
+						var year = $('input[name=noise-year]').val()
+						var profile = 1 //	always reset profile slider when year changes
+						var audio_location = '/api/noise/wav/' + year + '/' + profile
+						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
+						//	Audio player
+						$('#player').html(player_html)
+						//	Set profile value to 1
+						noiseProfile.roundSlider({
+							min: 1,
+							max: data.data[year].length,
+							step: 1,
+							value: profile,
+							sliderType: "min-range",
+							handleShape: "square",
+							handleSize: '16,8',
+							radius: 55,
+							width: 10,
+							editableTooltip: false
+						})
+						//	Update year info
+						$.get('/api/info/year/' + year)
+						.done(function (info) {
+							$('#year-desc').html(info.data)
+						})
+						//	Update profile info
+						$.get('/api/info/profile/' + year + '/' + profile)
+						.done(function (info) {
+							$('#profile-desc').html(info.data)
+						})
+					})
+					//	Change functionality
+					noiseProfile.change(function () {
+						var year = $('input[name=noise-year]').val()
+						var profile = $('input[name=noise-profile]').val()
+						var audio_location = '/api/noise/wav/' + year + '/' + profile
+						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
+						//	Audio player
+						$('#player').html(player_html)
+						//	Update profile info
+						$.get('/api/info/profile/' + year + '/' + profile)
+						.done(function (info) {
+							$('#profile-desc').html(info.data)
+						})
+					})
+					//	Enable/disable advanced settings
+					$('#advanced-settings').change(function () {
+						if($(this).is(":checked")) {
+							//	Color of the title
+							$('.rslider-tip-advanced').css('color', '#555')
+							//	Enable sliders
+							reduceGain.roundSlider('enable')
+							smoothingBands.roundSlider('enable')
+						}
+						else {
+							//	Color of the title
+							$('.rslider-tip-advanced').css('color', '#aaa')
+							//	Reset values
+							//	TODO
+							//	Disable sliders
+							reduceGain.roundSlider('disable')
+							smoothingBands.roundSlider('disable')
+						}
+					})
+					$('#go').click(function () {
+						var noiseYear = $('input[name=noise-year]').val()
+						var noiseProfile = $('input[name=noise-profile]').val()
+						var reduceGain = $('input[name=reduce-gain]').val()
+						var smoothingBands = $('input[name=smoothing-bands]').val()
+						//	Jump to next section
+						if(validateSection(2, [noiseYear, noiseProfile, reduceGain, smoothingBands])) {
+							//	Call to next step
+							section(3)
+						}
+						else {
+							alert('Wrong fields')
+						}
+					})
+				})
+				break
+			case 3 :
+				//	Update active step title
+				$('.step-header').removeClass('active')
+				$('#step3-header').addClass('active')
+				//	Change section
+				$('#step2').hide()
+				$('#step3').show()
+				//	Form data class
+				var formData = new FormData()
+				formData.append('file', file)
+				//	Wait for the server to return the file
+				$.ajax({
+					url : '/api/clean',
+					type : 'POST',
+					success : function (data) {
+						if(data.error) {
+							$('#section-error-3').html(data.error)
+						}
+						else {
+							clean = data.data
+							//	Call to next step
+							section(4)
+						}
+					},
+					error : function (error) {
+						console.log(error)
+						$('#section-error-3').html('There was an error while processing your request. Please, try again later.')
+					},
+					data : formData,
+					cache : false,
+					contentType : false,
+					processData : false
+				})
+				break
+			case 4 :
+				//	Update form action
+				$('#download').attr('href', '/api/song/' + clean)
+				$('#download').attr('download', name)
+				//	Update active step title
+				$('.step-header').removeClass('active')
+				$('#step4-header').addClass('active')
+				//	Change section
+				$('#step3').hide()
+				$('#step4').show()
+				break
+			default :
+				return
+		}
 	}
-	function addEventHandler(object, event, handler) {
-		if(object.addEventListener) {
-			// W3C method
-			object.addEventListener(event, handler, false)
-		}
-		else if(object.attachEvent) {
-			// IE method
-			object.attachEvent('on' + event, handler)
-		}
-		else {
-			// Old school method
-			object['on' + event] = handler
-		}
-	}
-	addEventHandler(drop, 'drop', function (e) {
-		e = e || window.event // Get window.event if e argument missing (in IE)
-		if (e.preventDefault) {
-			e.preventDefault()
-		}
-
-		var dt = e.dataTransfer
-		var files = dt.files
-
-		for (var i = 0; i < files.length; i++) {
-			var file = files[i]
-			var reader = new FileReader()
-			$('#dirty').val(file)
-			reader.readAsDataURL(file)
-		}
-		return false
-	})
 })

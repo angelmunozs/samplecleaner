@@ -1,4 +1,5 @@
 //	Requirements
+var formidable 	= require('formidable')
 var async 		= require('async')
 var path 		= require('path')
 var fs 			= require('fs.extra')
@@ -8,49 +9,63 @@ var _ 			= require('underscore')
 //	Uploaded file name: A numeric id, starting from 1
 module.exports.upload = function(req, res, next) {
 
-	var dirtyFilesLocation = path.join(__dirname, '../files/songs/dirty')
+	var form = new formidable.IncomingForm()
 
-	if(!req.body.file) {
-		req.error = Errores.NO_FILE_UPLOADED
-		return next()
-	}
+	form.parse(req, function (err, data, files) {
 
-	var file = req.body.file || null
+		//	console.log('err: %s', err)
+		//	console.log('data: %s', JSON.stringify(data))
+		//	console.log('files: %s', JSON.stringify(files))
 
-	var newFileName
-	var newFileDestination
-	var extension = '.' + file.split('.').pop()
+		var dirtyFilesLocation = path.join(__dirname, '../files/songs/dirty')
 
-	async.series([
-		//	Find id of the last uploaded file
-		function findLastId(cb) {
-			var files = fs.readdirSync(dirtyFilesLocation)
-			//	Take only the numbers, not the extensions
-			for(var i in files) {
-				files[i] = Number(files[i].split('.')[0])
-			}
-			//	Order the numbers correctly, not alphabetically
-			function sortNumber(a, b) {
-				return a - b
-			}
-			files.sort(sortNumber)
-			//	Take the last one
-			var lastId = files.length ? Number(files[files.length - 1]) : 0
-			newFileName = lastId + 1
-			cb()
-		},
-		//	Upload file
-		function uploadFile(cb) {
-			newFileDestination = path.join(dirtyFilesLocation, newFileName + extension)
-			fs.writeFile(newFileDestination, file, cb)
-		}
-	], function (error) {
-		if (error) {
-			req.error = error
+		if(_.isEmpty(files)) {
+			req.error = Errores.NO_FILE_UPLOADED
 			return next()
 		}
-		req.file = newFileDestination
-		return next()
+
+		var file = files.file
+
+		var newFileName
+		var newFileDestination
+		var extension = '.' + file.name.split('.').pop()
+
+		async.series([
+			//	Find id of the last uploaded file
+			function findLastId(cb) {
+				var files = fs.readdirSync(dirtyFilesLocation)
+				//	Take only the numbers, not the extensions
+				for(var i in files) {
+					files[i] = Number(files[i].split('.')[0])
+				}
+				//	Order the numbers correctly, not alphabetically
+				function sortNumber(a, b) {
+					return a - b
+				}
+				files.sort(sortNumber)
+				//	Take the last one
+				var lastId = files.length ? Number(files[files.length - 1]) : 0
+				newFileName = lastId + 1
+				cb()
+			},
+			//	Upload file
+			function uploadFile(cb) {
+				fs.readFile(file.path, function (error, data) {
+					if(error) {
+						cb(error)
+					}
+					newFileDestination = path.join(dirtyFilesLocation, newFileName + extension)
+					fs.writeFile(newFileDestination, data, cb)
+				})
+			}
+		], function (error) {
+			if (error) {
+				req.error = error
+				return next()
+			}
+			req.file = newFileDestination
+			return next()
+		})
 	})
 }
 

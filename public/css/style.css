@@ -163,6 +163,9 @@ b.step-number {
 #step1, #step3 {
 	padding-top: 70px;
 }
+#step1 {
+	height: 294px;
+}
 #step1 .file-upload input {
 	position: absolute;
 	top: 0;
@@ -238,8 +241,17 @@ b.step-number {
 	margin-left: 30px;
 	text-align: left;
 }
-.rs-range-color {
-	background-color: #ff3337;
+.rs-range-color  {
+    background-color: #ff3337;
+}
+.rs-path-color  {
+    background-color: #dedede;
+}
+.rs-handle  {
+    background-color: #000000;
+}
+.rs-border  {
+    border: 2px solid white;
 }
 .advanced .rs-range-color  {
 	background-color: #7F1610;
