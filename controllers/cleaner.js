@@ -4,6 +4,7 @@ var async 		= require('async')
 var path 		= require('path')
 var fs 			= require('fs.extra')
 var _ 			= require('underscore')
+var validate 	= require('../tools/validate')
 
 //	Upload file to server
 //	Uploaded file name: A numeric id, starting from 1
@@ -13,10 +14,6 @@ module.exports.upload = function(req, res, next) {
 
 	form.parse(req, function (err, data, files) {
 
-		//	console.log('err: %s', err)
-		//	console.log('data: %s', JSON.stringify(data))
-		//	console.log('files: %s', JSON.stringify(files))
-
 		var dirtyFilesLocation = path.join(__dirname, '../files/songs/dirty')
 
 		if(_.isEmpty(files)) {
@@ -24,11 +21,18 @@ module.exports.upload = function(req, res, next) {
 			return next()
 		}
 
-		var file = files.file
+		var file 		= files.file
+		var type 		= file.type
+		var size 		= file.size
+		var name 		= file.name
+		var extension 	= '.' + name.split('.').pop()
 
-		var newFileName
-		var newFileDestination
-		var extension = '.' + file.name.split('.').pop()
+		var newFileName, newFileDestination
+
+		if(!validate.audio(type, extension)) {
+			req.error = Errores.WRONG_FILE_TYPE
+			return next()
+		}
 
 		async.series([
 			//	Find id of the last uploaded file
@@ -63,7 +67,13 @@ module.exports.upload = function(req, res, next) {
 				req.error = error
 				return next()
 			}
-			req.file = newFileDestination
+			req.file = {
+				url 		: newFileDestination,
+				name 		: name,
+				extension 	: extension,
+				type 		: type,
+				size 		: size
+			}
 			return next()
 		})
 	})
@@ -71,34 +81,34 @@ module.exports.upload = function(req, res, next) {
 
 //	Convert to WAV
 module.exports.convert = function(req, res, next) {
+	
 	if(!req.file) {
 		return next()
 	}
 
-	//	TODO
-	setTimeout(function(){ return next() }, 2000);
+	//	TODO: 	Convert to WAV, if not a WAV file
+	//			(Python script)
 }
 
 //	Clean a sample
 module.exports.clean = function(req, res, next) {
+
 	if(!req.file) {
 		return next()
 	}
 
-	//	TODO
+	//	TODO: 	Clean the file
+	//			(Python script)
 
 	var cleanFilesLocation = path.join(__dirname, '../files/songs/clean')
-	var dirtyFile = req.file
-	var parts = dirtyFile.split(path.sep)
-	var rawFileName = parts[parts.length - 1]
-	var newFileDestination = path.join(cleanFilesLocation, rawFileName)
+	var newFileDestination = path.join(cleanFilesLocation, req.file.name)
 
-	fs.copy(dirtyFile, newFileDestination, {}, function (error) {
+	fs.copy(req.file.url, newFileDestination, {}, function (error) {
 		if (error) {
 			req.error = error
 			return next()
 		}
-		req.data = rawFileName
+		req.data = req.file.name
 		return next()
 	})
 }
