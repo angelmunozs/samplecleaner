@@ -9,7 +9,7 @@ module.exports = {
 	NO_PARAMS : 					{ code : 106, message : 'Empty parameters' },
 	NO_FILE_FOUND : 				{ code : 107, message : 'File not found' },
 	NO_FILE_UPLOADED : 				{ code : 108, message : 'No file selected' },
-	NO_FILE_UPLOADED : 				{ code : 109, message : 'Wrong file type' },
+	WRONG_FILE_TYPE : 				{ code : 109, message : 'Wrong file type' },
 	//	Error en la petición
 	PUNTO_ACCESO_DESCONOCIDO : 		{ code : 200, message : 'Unknown access point' },
 	SINTAXIS_INCORRECTA : 			{ code : 201, message : 'Wrong syntax' },

@@ -12,9 +12,18 @@ module.exports.upload = function(req, res, next) {
 
 	var form = new formidable.IncomingForm()
 
-	form.parse(req, function (err, data, files) {
+	form.parse(req, function (error, data, files) {
+
+		if(error) {
+			req.error = error
+			return next()
+		}
 
 		var dirtyFilesLocation = path.join(__dirname, '../files/songs/dirty')
+
+		// console.log('error: %s', error)
+		// console.log('data: %s', JSON.stringify(data))
+		// console.log('files: %s', JSON.stringify(files))
 
 		if(_.isEmpty(files)) {
 			req.error = Errores.NO_FILE_UPLOADED
@@ -69,7 +78,7 @@ module.exports.upload = function(req, res, next) {
 			}
 			req.file = {
 				url 		: newFileDestination,
-				name 		: name,
+				name 		: newFileName,
 				extension 	: extension,
 				type 		: type,
 				size 		: size
@@ -81,24 +90,31 @@ module.exports.upload = function(req, res, next) {
 
 //	Convert to WAV
 module.exports.convert = function(req, res, next) {
-	
-	if(!req.file) {
+
+	if(!req.file || _.isEmpty(req.file)) {
 		return next()
 	}
 
 	//	TODO: 	Convert to WAV, if not a WAV file
 	//			(Python script)
+
+	return next()
 }
 
 //	Clean a sample
 module.exports.clean = function(req, res, next) {
 
-	if(!req.file) {
+	if(!req.file || _.isEmpty(req.file)) {
 		return next()
 	}
 
 	//	TODO: 	Clean the file
 	//			(Python script)
+
+	//	Convert to string, for path.join to work fine
+	if(typeof req.file.name != 'string') {
+		req.file.name = req.file.name.toString()
+	}
 
 	var cleanFilesLocation = path.join(__dirname, '../files/songs/clean')
 	var newFileDestination = path.join(cleanFilesLocation, req.file.name)
