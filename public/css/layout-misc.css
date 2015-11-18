@@ -1,0 +1,49 @@
+body {
+	font-size: 17px;
+	font-family: 'Marvel', sans-serif;
+	font-weight: 400;
+}
+a {
+	text-decoration: none;
+	color: #FF3337;
+}
+a:hover, a:focus {
+	color: #bc2629;
+	text-decoration: none;
+}
+/* All sections */
+.section {
+	z-index: 1;
+	width: 100%;
+	padding: 30px 15px 50px 15px;
+}
+.row {
+	width: 1170px;
+	margin: 0px auto;
+}
+.section:nth-child(3) {
+	background: #eee;
+}
+h2 {
+	margin-top: 0px;
+	color: #ff3337;
+}
+.hdn {
+	display: none;
+}
+/*	Quit mailing list 	*/
+.center-page {
+	text-align: center;
+	background: #fff;
+	position: absolute;
+	color: #222;
+	top: 50%;
+	left: 50%;
+	padding: 15px;
+	-ms-transform: translateX(-50%) translateY(-50%);
+	-webkit-transform: translate(-50%,-50%);
+	transform: translate(-50%,-50%);
+}
+.bottom-link {
+	margin-top: 15px;
+}

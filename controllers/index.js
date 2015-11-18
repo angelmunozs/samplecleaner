@@ -24,9 +24,13 @@ global.config = config
 global.locals = locals
 
 //	Global functions
-module.exports.render = function(page, layout) {
+module.exports.render = function(page, data, layout) {
 	return function (req, res) {
-		res.render(page, {req: req}, layout ? layout : false);
+		//	Default layout
+		data = data ? data : {}
+		data.layout = data.layout ? data.layout : 'layout-main'
+		//	Render page
+		res.render(page, data, layout ? layout : false);
 	}
 }
 

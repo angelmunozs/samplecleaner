@@ -1,11 +1,10 @@
 //	Requirements
 var controllers = require('../controllers')
 var api 		= require('../api')
-var render 		= require('../render')
 
 module.exports = function(app) {
-	//	Autenticación
+	//	Autentication
 	app.get('/', controllers.render('index'))
-	//	TODO:
-	//	app.get('/list/quit')
+	//	Quit mailing list:
+	app.get('/list/quit/:email/:token', api.auth.require.not_logged, controllers.mailingList.quit_token, controllers.render('misc/quit-list', { layout : 'layout-misc' }))
 }
