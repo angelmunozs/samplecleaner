@@ -1,6 +1,7 @@
 module.exports = {
 	//	Server
 	PORT				: 3000,
+	DOMAIN 				: 'http://localhost:3000',
 	//	Site
 	DEFAULT_LANG 		: 'es',
 	//	DB

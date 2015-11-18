@@ -118,11 +118,11 @@ module.exports.quit_token = function(req, res, next) {
 		return next()
 	}
 
-	var email = req.params.email || null
 	var token = req.params.token || null
+	var email = req.params.email || null
 
 	if(!validate.email(email)) {
-		req.error = res.locals.error = Errores.EMAIL_INCORRECTO
+		req.error = Errores.EMAIL_INCORRECTO
 		return next()
 	}
 

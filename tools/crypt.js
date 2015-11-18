@@ -5,10 +5,10 @@ var crypt = {
 	backend: function(data) {
 	    var shasum = crypto.createHash('sha512')
 	    shasum.update(data)
-	    return shasum.digest('hex').substr(0, 20)
+	    return shasum.digest('hex').substr(0, 30)
 	},
 	frontend: function(email, password) {
-		return CryptoJS.SHA512(email + password).toString(CryptoJS.enc.Hex).substr(0, 20)
+		return CryptoJS.SHA512(email + password).toString(CryptoJS.enc.Hex).substr(0, 30)
 	}
 }
 
