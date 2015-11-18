@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.10.1deb1
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Nov 13, 2015 at 12:28 PM
--- Server version: 5.5.38
--- PHP Version: 5.3.10-1ubuntu3.13
+-- Servidor: localhost
+-- Tiempo de generación: 18-11-2015 a las 09:00:01
+-- Versión del servidor: 5.5.46-0ubuntu0.14.04.2
+-- Versión de PHP: 5.5.9-1ubuntu4.14
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -17,13 +17,15 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `samplecleaner`
+-- Base de datos: `samplecleaner`
 --
+CREATE DATABASE IF NOT EXISTS `samplecleaner` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `samplecleaner`;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `contact`
+-- Estructura de tabla para la tabla `contact`
 --
 
 DROP TABLE IF EXISTS `contact`;
@@ -38,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `groups`
+-- Estructura de tabla para la tabla `groups`
 --
 
 DROP TABLE IF EXISTS `groups`;
@@ -50,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `groups`
+-- Volcado de datos para la tabla `groups`
 --
 
 INSERT INTO `groups` (`idGroup`, `group`, `createdAt`) VALUES
@@ -60,7 +62,7 @@ INSERT INTO `groups` (`idGroup`, `group`, `createdAt`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `info_profiles`
+-- Estructura de tabla para la tabla `info_profiles`
 --
 
 DROP TABLE IF EXISTS `info_profiles`;
@@ -73,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `info_profiles` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=49 ;
 
 --
--- Dumping data for table `info_profiles`
+-- Volcado de datos para la tabla `info_profiles`
 --
 
 INSERT INTO `info_profiles` (`idInfo`, `year`, `profile`, `info`) VALUES
@@ -129,7 +131,7 @@ INSERT INTO `info_profiles` (`idInfo`, `year`, `profile`, `info`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `info_years`
+-- Estructura de tabla para la tabla `info_years`
 --
 
 DROP TABLE IF EXISTS `info_years`;
@@ -141,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `info_years` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
--- Dumping data for table `info_years`
+-- Volcado de datos para la tabla `info_years`
 --
 
 INSERT INTO `info_years` (`idInfo`, `year`, `info`) VALUES
@@ -155,7 +157,25 @@ INSERT INTO `info_years` (`idInfo`, `year`, `info`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mailing_list`
+-- Estructura de tabla para la tabla `log_uploads`
+--
+
+DROP TABLE IF EXISTS `log_uploads`;
+CREATE TABLE IF NOT EXISTS `log_uploads` (
+  `idLog` int(11) NOT NULL AUTO_INCREMENT,
+  `idUser` int(11) DEFAULT NULL,
+  `ip` text,
+  `date` datetime DEFAULT NULL,
+  `name` text,
+  `size` text,
+  `type` text,
+  PRIMARY KEY (`idLog`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `mailing_list`
 --
 
 DROP TABLE IF EXISTS `mailing_list`;
@@ -166,12 +186,12 @@ CREATE TABLE IF NOT EXISTS `mailing_list` (
   `token` text,
   `disabled` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idList`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Estructura de tabla para la tabla `users`
 --
 
 DROP TABLE IF EXISTS `users`;
@@ -193,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_groups`
+-- Estructura de tabla para la tabla `user_groups`
 --
 
 DROP TABLE IF EXISTS `user_groups`;
