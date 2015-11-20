@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 18-11-2015 a las 09:00:01
+-- Tiempo de generación: 20-11-2015 a las 11:22:15
 -- Versión del servidor: 5.5.46-0ubuntu0.14.04.2
 -- Versión de PHP: 5.5.9-1ubuntu4.14
 
@@ -72,61 +72,43 @@ CREATE TABLE IF NOT EXISTS `info_profiles` (
   `profile` text,
   `info` text,
   PRIMARY KEY (`idInfo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=49 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
 
 --
 -- Volcado de datos para la tabla `info_profiles`
 --
 
 INSERT INTO `info_profiles` (`idInfo`, `year`, `profile`, `info`) VALUES
-(1, '40', '1', 'Profile 1'),
-(2, '40', '2', 'Profile 2'),
-(3, '40', '3', 'Profile 3'),
-(4, '40', '4', 'Profile 4'),
-(5, '40', '5', 'Profile 5'),
-(6, '40', '6', 'Profile 6'),
-(7, '40', '7', 'Profile 7'),
-(8, '40', '8', 'Profile 8'),
-(9, '50', '1', 'Profile 1'),
-(10, '50', '2', 'Profile 2'),
-(11, '50', '3', 'Profile 3'),
-(12, '50', '4', 'Profile 4'),
-(13, '50', '5', 'Profile 5'),
-(14, '50', '6', 'Profile 6'),
-(15, '50', '7', 'Profile 7'),
-(16, '50', '8', 'Profile 8'),
-(17, '60', '1', 'Profile 1'),
-(18, '60', '2', 'Profile 2'),
-(19, '60', '3', 'Profile 3'),
-(20, '60', '4', 'Profile 4'),
-(21, '60', '5', 'Profile 5'),
-(22, '60', '6', 'Profile 6'),
-(23, '60', '7', 'Profile 7'),
-(24, '60', '8', 'Profile 8'),
-(25, '70', '1', 'Profile 1'),
-(26, '70', '2', 'Profile 2'),
-(27, '70', '3', 'Profile 3'),
-(28, '70', '4', 'Profile 4'),
-(29, '70', '5', 'Profile 5'),
-(30, '70', '6', 'Profile 6'),
-(31, '70', '7', 'Profile 7'),
-(32, '70', '8', 'Profile 8'),
-(33, '80', '1', 'Profile 1'),
-(34, '80', '2', 'Profile 2'),
-(35, '80', '3', 'Profile 3'),
-(36, '80', '4', 'Profile 4'),
-(37, '80', '5', 'Profile 5'),
-(38, '80', '6', 'Profile 6'),
-(39, '80', '7', 'Profile 7'),
-(40, '80', '8', 'Profile 8'),
-(41, '90', '1', 'Profile 1'),
-(42, '90', '2', 'Profile 2'),
-(43, '90', '3', 'Profile 3'),
-(44, '90', '4', 'Profile 4'),
-(45, '90', '5', 'Profile 5'),
-(46, '90', '6', 'Profile 6'),
-(47, '90', '7', 'Profile 7'),
-(48, '90', '8', 'Profile 8');
+(1, '40', '1', 'Click + Dust + Hiss + Friction (GENERIC)'),
+(2, '40', '2', 'Click + Dust + Hiss + Friction + ELECTRIC NOISE'),
+(3, '40', '3', 'Click + Dust + Hiss + Friction + EXTRA FRICTION'),
+(4, '40', '4', 'Click + Dust + Hiss + Friction + EXTRA CLICK'),
+(5, '40', '5', 'Click + Dust + Hiss + Friction + EXTRA DUST'),
+(6, '50', '1', 'Click + Dust + Hiss + Friction (GENERIC)'),
+(7, '50', '2', 'Click + Dust + Hiss + Friction + ELECTRIC NOISE'),
+(8, '50', '3', 'Click + Dust + Hiss + Friction + EXTRA FRICTION'),
+(9, '50', '4', 'Click + Dust + Hiss + Friction + EXTRA CLICK'),
+(10, '50', '5', 'Click + Dust + Hiss + Friction + EXTRA DUST'),
+(11, '60', '1', 'Click + Dust + Hiss + Friction (GENERIC)'),
+(12, '60', '2', 'Click + Dust + Hiss + Friction + ELECTRIC NOISE'),
+(13, '60', '3', 'Click + Dust + Hiss + Friction + EXTRA FRICTION'),
+(14, '60', '4', 'Click + Dust + Hiss + Friction + EXTRA CLICK'),
+(15, '60', '5', 'Click + Dust + Hiss + Friction + EXTRA DUST'),
+(16, '70', '1', 'Click + Dust + Hiss + Friction (GENERIC)'),
+(17, '70', '2', 'Click + Dust + Hiss + Friction + ELECTRIC NOISE'),
+(18, '70', '3', 'Click + Dust + Hiss + Friction + EXTRA FRICTION'),
+(19, '70', '4', 'Click + Dust + Hiss + Friction + EXTRA CLICK'),
+(20, '70', '5', 'Click + Dust + Hiss + Friction + EXTRA DUST'),
+(21, '80', '1', 'Click + Dust + Hiss + Friction (GENERIC)'),
+(22, '80', '2', 'Click + Dust + Hiss + Friction + ELECTRIC NOISE'),
+(23, '80', '3', 'Click + Dust + Hiss + Friction + EXTRA FRICTION'),
+(24, '80', '4', 'Click + Dust + Hiss + Friction + EXTRA CLICK'),
+(25, '80', '5', 'Click + Dust + Hiss + Friction + EXTRA DUST'),
+(26, '90', '1', 'Click + Dust + Hiss + Friction (GENERIC)'),
+(27, '90', '2', 'Click + Dust + Hiss + Friction + ELECTRIC NOISE'),
+(28, '90', '3', 'Click + Dust + Hiss + Friction + EXTRA FRICTION'),
+(29, '90', '4', 'Click + Dust + Hiss + Friction + EXTRA CLICK'),
+(30, '90', '5', 'Click + Dust + Hiss + Friction + EXTRA DUST');
 
 -- --------------------------------------------------------
 
@@ -170,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `log_uploads` (
   `size` text,
   `type` text,
   PRIMARY KEY (`idLog`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -186,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `mailing_list` (
   `token` text,
   `disabled` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idList`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
