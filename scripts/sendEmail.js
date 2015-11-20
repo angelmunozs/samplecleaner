@@ -66,7 +66,7 @@ var sendEmails = function (users, cb) {
 		//	Specify the receiver
 		mailOptions.to = user.email
 		//	Generate token link
-		mailOptions.html = util.format(mailOptions.html, text, config.DOMAIN + '/api/list/quit/' + user.email + '/' + user.token)
+		mailOptions.html = util.format(mailOptions.html, text, config.DOMAIN + '/list/quit/' + user.email + '/' + user.token)
 		//	Send the e-mail
 		transporter.sendMail(mailOptions, function (error, info) {
 			if(error) {
