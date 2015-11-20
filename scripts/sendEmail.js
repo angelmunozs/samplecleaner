@@ -2,6 +2,8 @@ var nodemailer 	= require('nodemailer')
 var Sequelize 	= require('sequelize')
 var async 		= require('async')
 var util 		= require('util')
+var path 		= require('path')
+var fs 			= require('fs')
 var config 		= require('../config')
 
 //	=============================================================================================================================
@@ -9,27 +11,13 @@ var config 		= require('../config')
 //	=============================================================================================================================
 
 //	Sender
-var from 	= 	'Sample Cleaner'
+var from 	= 'Sample Cleaner'
 //	Subject
-var subject = 	'Welcome to Sample Cleaner!'
+var subject = 'Welcome to Sample Cleaner!'
 //	Message
-var text 	= 	'We are proud to announce that Sample Cleaner will start working in early 2016.'
+var text 	= 'We are proud to announce that Sample Cleaner will start working in early 2016.'
 //	HTML-formatted message
-var html 	= 	'<img id="logo" src="http://i.imgur.com/eWEE4zI.png" style="max-height: 33px;" alt="Sample Cleaner">' +
-				'<hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ddd; margin-top: 16px; margin-bottom: 16px; padding: 0px;">' +
-				'<div style="font-family: Arial; font-size: 15px; color: #333">' +
-					'<p>' +
-						text +
-					'</p>' +
-				'</div>' +
-				'<hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ddd; margin-top: 16px; margin-bottom: 16px; padding: 0px;">' +
-				'<div style="font-family:Arial; font-size: 15px;">' +
-					'<p>' +
-						'<a href="' + config.DOMAIN + '/list/quit/%s/%s" style="font-size: 13px; color: #777; font-style: italic; text-decoration: none">' +
-							'Quit mailing list' +
-						'</a>' +
-					'</p>' +
-				'</div>'
+var html 	= fs.readFileSync(path.join(__dirname, '../email/template.html'), 'utf8')
 
 //	=============================================================================================================================
 //	End parameters
@@ -78,7 +66,7 @@ var sendEmails = function (users, cb) {
 		//	Specify the receiver
 		mailOptions.to = user.email
 		//	Generate token link
-		mailOptions.html = util.format(mailOptions.html, user.email, user.token)
+		mailOptions.html = util.format(mailOptions.html, text, config.DOMAIN + '/api/list/quit/' + user.email + '/' + user.token)
 		//	Send the e-mail
 		transporter.sendMail(mailOptions, function (error, info) {
 			if(error) {
