@@ -299,7 +299,7 @@ $(document).ready(function() {
 					//	Get info from API
 					var years = Object.keys(data.data)
 					//	Default year selected
-					var defaultValue = 70
+					var defaultValue = 90
 					//	DOM elements
 					var noiseYear = $("#noise-year")
 					var noiseProfile = $("#noise-profile")
