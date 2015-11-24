@@ -332,8 +332,8 @@ $(document).ready(function() {
 						editableTooltip: false
 					})
 					//	Retrieve data from sliders
-					var year = $('input[name=noise-year]').val()
-					var profile = $('input[name=noise-profile]').val()
+					var year = noiseYear.roundSlider('getValue')
+					var profile = noiseProfile.roundSlider('getValue')
 					//	Player variables
 					var audio_location = '/api/noise/wav/' + year + '/' + profile
 					var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
@@ -365,7 +365,8 @@ $(document).ready(function() {
 						disabled: true,
 						editableTooltip: false
 					})
-					//	Audio player
+					//	Audio player					
+					$('#player').attr('src', audio_location)
 					$('#player').html(player_html)
 					//	APIs to get info
 					$.get('/api/info/year/' + year)
@@ -378,11 +379,12 @@ $(document).ready(function() {
 					})
 					//	Change functionality
 					noiseYear.change(function () {
-						var year = $('input[name=noise-year]').val()
+						var year = noiseYear.roundSlider('getValue')
 						var profile = 1 //	always reset profile slider when year changes
 						var audio_location = '/api/noise/wav/' + year + '/' + profile
 						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
-						//	Audio player
+						//	Audio player						
+						$('#player').attr('src', audio_location)
 						$('#player').html(player_html)
 						//	Set profile value to 1
 						noiseProfile.roundSlider({
@@ -410,11 +412,12 @@ $(document).ready(function() {
 					})
 					//	Change functionality
 					noiseProfile.change(function () {
-						var year = $('input[name=noise-year]').val()
-						var profile = $('input[name=noise-profile]').val()
+						var year = noiseYear.roundSlider('getValue')
+						var profile = noiseProfile.roundSlider('getValue')
 						var audio_location = '/api/noise/wav/' + year + '/' + profile
 						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
-						//	Audio player
+						//	Audio player						
+						$('#player').attr('src', audio_location)
 						$('#player').html(player_html)
 						//	Update profile info
 						$.get('/api/info/profile/' + year + '/' + profile)
@@ -435,17 +438,18 @@ $(document).ready(function() {
 							//	Color of the title
 							$('.rslider-tip-advanced').css('color', '#aaa')
 							//	Reset values
-							//	TODO
+							reduceGain.roundSlider('setValue', 20)
+							smoothingBands.roundSlider('setValue', 2)
 							//	Disable sliders
 							reduceGain.roundSlider('disable')
 							smoothingBands.roundSlider('disable')
 						}
 					})
 					$('#go').click(function () {
-						var noiseYear = $('input[name=noise-year]').val()
-						var noiseProfile = $('input[name=noise-profile]').val()
-						var reduceGain = $('input[name=reduce-gain]').val()
-						var smoothingBands = $('input[name=smoothing-bands]').val()
+						var noiseYear = noiseYear.roundSlider('getValue')
+						var noiseProfile = noiseProfile.roundSlider('getValue')
+						var reduceGain = reduceGain.roundSlider('getValue')
+						var smoothingBands = smoothingBands.roundSlider('getValue')
 						//	Jump to next section
 						if(validateSection(2, [noiseYear, noiseProfile, reduceGain, smoothingBands])) {
 							//	Call to next step
