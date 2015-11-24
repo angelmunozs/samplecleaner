@@ -3,6 +3,8 @@ var file, name, size, type = ''
 //	Name of clean song
 var clean = ''
 var allowedTypes = ['audio/x-wav', 'audio/wav', 'audio/vnd.wav', 'audio/mpeg']
+//	Timed events
+var hideErrorMsg, hideStatusIcon
 
 //	Validate an e-mail
 var validateEmail = function (email) {
@@ -145,6 +147,9 @@ $(document).ready(function() {
 		//	First, disable button
 		$('#contact-button').attr('disabled', 'disabled')
 		$('#contact-button').html('<i class="fa fa-spinner fa-spin"></i>')
+		//	Then, clear timeout
+		clearTimeout(hideErrorMsg)
+
 		var contact = {
 			email : $('#contact-email').val(),
 			message : $('#contact-message').val().replace(/\n/gi, '<br>')
@@ -156,43 +161,49 @@ $(document).ready(function() {
 			})
 			.done(function (data) {
 				if(data.error) {
-					$('#error-msg').css('color', '#ff0000');
-					$('#error-msg').html(data.error);
+					$('#error-msg').css('color', '#ff0000')
+					$('#error-msg').html(data.error)
 					//	Re-enable button
 					$('#contact-button').removeAttr('disabled')
 					$('#contact-button').html('Send')
 				}
 				else {				
-					$('#error-msg').css('color', '#58FA58');
-					$('#error-msg').html('Succesfully sent. We will answer you as soon as possible.');
+					$('#error-msg').css('color', '#58FA58')
+					$('#error-msg').html('Succesfully sent. We will answer you as soon as possible.')
 					//	Reset values to avoid multiple equal emails
-					$('#contact-email').val('');
-					$('#contact-message').val('');
+					$('#contact-email').val('')
+					$('#contact-message').val('')
 					//	Re-enable button
 					$('#contact-button').removeAttr('disabled')
 					$('#contact-button').html('Send')
 				}
 			})
 			.fail(function () {
-				$('#error-msg').css('color', '#ff0000');
-				$('#error-msg').html('Something went wrong. please, try again later.');
+				$('#error-msg').css('color', '#ff0000')
+				$('#error-msg').html('Something went wrong. please, try again later.')
 				//	Re-enable button
 				$('#contact-button').removeAttr('disabled')
 				$('#contact-button').html('Send')
 			})
 		}
 		else {
-			$('#error-msg').css('color', '#ff0000');
-			$('#error-msg').html('Please, provide a valid e-mail address and write a message.');
+			$('#error-msg').css('color', '#ff0000')
+			$('#error-msg').html('Please, provide a valid e-mail address and write a message.')
 			//	Re-enable button
 			$('#contact-button').removeAttr('disabled')
 			$('#contact-button').html('Send')
 		}
+		hideErrorMsg = setTimeout(function () {
+			$('#error-msg').html('')
+		}, 10000)
 	})
 	//	'Join mailing list' button from section 'Footer'
 	$('#list-button').on('click', function () {
 		//	First, disable button
 		$('#list-button').attr('disabled', 'disabled')
+		//	Then, clear timeout
+		$('#status-icon').show()
+		clearTimeout(hideStatusIcon)
 
 		var email = $('#list-email').val()
 
@@ -229,6 +240,9 @@ $(document).ready(function() {
 			//	Re-enable button
 			$('#list-button').removeAttr('disabled')
 		}
+		hideStatusIcon = setTimeout(function () {
+			$('#status-icon').fadeOut('slow')
+		}, 2000)
 	})
 	//	Validate sections
 	var validateSection = function (n, params) {
