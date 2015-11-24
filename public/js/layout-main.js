@@ -367,7 +367,7 @@ $(document).ready(function() {
 					})
 					//	Audio player					
 					$('#player').attr('src', audio_location)
-					$('#player').html(player_html)
+					//	$('#player').html(player_html)
 					//	APIs to get info
 					$.get('/api/info/year/' + year)
 					.done(function (info) {
@@ -385,7 +385,7 @@ $(document).ready(function() {
 						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
 						//	Audio player						
 						$('#player').attr('src', audio_location)
-						$('#player').html(player_html)
+						//	$('#player').html(player_html)
 						//	Set profile value to 1
 						noiseProfile.roundSlider({
 							min: 1,
@@ -418,7 +418,7 @@ $(document).ready(function() {
 						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
 						//	Audio player						
 						$('#player').attr('src', audio_location)
-						$('#player').html(player_html)
+						//	$('#player').html(player_html)
 						//	Update profile info
 						$.get('/api/info/profile/' + year + '/' + profile)
 						.done(function (info) {
