@@ -9,9 +9,12 @@ Web
 ----get('/api/list/quit/:token') para accionarla desde el propio email
 ----Instalación de la shell de Python
 ----Script para envío masivo de e-mail
+-	Local storage de las preferencias de la última sesión
 -	Script de Python que convierta a WAV el audio subido
 -	Script de Python que procese el audio en WAV y lo devuelva también en WAV
 -	Borrar canción limpia una vez descargada
+-	Política de privacidad y de cookies
+-	Mensaje de las cookies
 
 Python
 
