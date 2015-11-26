@@ -180,12 +180,12 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `idUser` int(11) NOT NULL AUTO_INCREMENT,
   `email` text COMMENT 'User e-mail',
+  `name` text COMMENT 'First name',
   `password` text COMMENT 'Encrypted password',
   `firstLogin` text COMMENT 'Date of first login',
   `lastLogin` text COMMENT 'Date of last login',
   `firstIP` text COMMENT 'First IP address',
   `lastIP` text COMMENT 'Last IP address',
-  `timesLoggedIn` int(11) DEFAULT '0' COMMENT 'Times logged in',
   `createdAt` datetime DEFAULT NULL COMMENT 'Date of creation',
   `updatedAt` datetime DEFAULT NULL COMMENT 'Date of update',
   `disabled` int(11) NOT NULL DEFAULT '0' COMMENT 'Disabled = 1, Enabled = 0',
