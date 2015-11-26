@@ -446,6 +446,12 @@ $(document).ready(function() {
 						}
 					})
 					$('#go').click(function () {
+						//	DOM elements
+						var noiseYear = $("#noise-year")
+						var noiseProfile = $("#noise-profile")
+						var reduceGain = $('#reduce-gain')
+						var smoothingBands = $('#smoothing-bands')
+						
 						var noiseYear = noiseYear.roundSlider('getValue')
 						var noiseProfile = noiseProfile.roundSlider('getValue')
 						var reduceGain = reduceGain.roundSlider('getValue')
