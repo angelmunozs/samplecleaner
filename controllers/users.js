@@ -17,7 +17,7 @@ module.exports.create = function(req, res, next) {
 	var user = {
 		email : req.body.email || null,
 		password : req.body.password || null,
-		nombre : req.body.nombre || null
+		name : req.body.name || null
 	}
 
 	if(utils.emptyFields(user)) {
@@ -30,7 +30,9 @@ module.exports.create = function(req, res, next) {
 		return next()
 	}
 
-	if(user.password.length != 20) {
+	user.hash = crypt.backend(user.email + user.password);
+
+	if(user.hash.length != 30) {
 		req.error = Errores.PASSWORD_FORMATO_INCORRECTO
 		return next()
 	}
@@ -49,16 +51,16 @@ module.exports.create = function(req, res, next) {
 		},
 		//	Crea el user
 		function createUser(cb) {
-			user.hash = crypt.backend(user.email + user.password);
-			Query("INSERT INTO users (email, password, nombre, createdAt, disabled) VALUES (?, ?, ?, ?)", [user.email, user.hash, user.nombre, date.toMysql(new Date()), 1])
-			.then(function() {
+			Query("INSERT INTO users (email, password, name, createdAt, disabled) VALUES (?, ?, ?, ?, ?)", [user.email, user.hash, user.name, date.toMysql(new Date()), 0])
+			.then(function(rows) {
+				user.idUser = rows[0].insertId
 				cb()
 			})
 			.catch(cb)
 		},
 		//	Asigna el grupo de usuario básico
 		function assignGroup(cb) {
-			Query("SELECT idGroup FROM groups WHERE group LIKE ?", ['basic'])
+			Query("SELECT idGroup FROM groups WHERE `group` LIKE ?", ['basic'])
 			.then(function (rows) {
 				Query("INSERT INTO user_groups (idUser, idGroup, createdAt) VALUES (?, ?, ?)", [user.idUser, rows[0][0].idGroup, date.toMysql(new Date())])
 				cb()

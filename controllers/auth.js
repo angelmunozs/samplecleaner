@@ -8,6 +8,7 @@ var passport = require('passport')
 //  Log in
 module.exports.login = function(req, res, next) {
 
+    console.log('Logging in')
     passport.authenticate('local', function(error_passport, user, info) {
 
         if (error_passport) {
@@ -20,7 +21,6 @@ module.exports.login = function(req, res, next) {
             req.error = Errores.ACCESO_DENEGADO
             return next()
         }
-        //  console.log(user)
         //  Realiza login
         req.login(user, function(error_login) {
             if (error_login) {
@@ -59,15 +59,14 @@ module.exports.login = function(req, res, next) {
                         cb()
                     }
                 }
-                //  When completed
-                ], function(error_updates) {
+            //  When completed
+            ], function(error_updates) {
                 if(error_updates) {
                     req.error = error_updates
                 }
                 return next()
             })
         })
-
     })(req, res, next)
 }
 
@@ -110,19 +109,18 @@ module.exports.serializeUser = function(user, done) {
 }
 //  Deserialize user
 module.exports.deserializeUser = function(id, done) {
-    Query("SELECT idUser AS id, email, nombre AS name FROM users WHERE idUser = ?", [id])
+    Query("SELECT idUser AS id, email, name AS name FROM users WHERE idUser = ?", [id])
     .then(function(users) {
 
         var user = users[0][0] || null
 
         if (user) {
             //  Get groups
-            Query('SELECT g.nombre FROM grupos g INNER JOIN users_grupos u ON u.idGrupo = g.idGrupo WHERE u.idUser = ?', [user.id])
+            Query('SELECT g.group FROM `groups` g INNER JOIN user_groups u ON u.idGroup = g.idGroup WHERE u.idUser = ?', [user.id])
             .then(function(groups) {
-
                 user.groups = []
                 for(var i in groups[0]){
-                    user.groups.push(groups[0][i].nombre)
+                    user.groups.push(groups[0][i].group)
                 }
                 done(null, user)
             })
