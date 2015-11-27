@@ -24,7 +24,7 @@ module.exports = function(app) {
 	//	Get wav file for preview of noise samples
 	app.get('/api/noise/:extension/:year/:profile', controllers.noise.audio, api.common.file)
 	//	Clean a song
-	app.post('/api/clean', controllers.cleaner.upload, controllers.cleaner.convert, controllers.cleaner.clean, api.common.data)
+	app.post('/api/clean', controllers.cleaner.upload, controllers.cleaner.clean, api.common.data)
 	//	Download a song
 	app.get('/api/song/:id', controllers.cleaner.download, api.common.file)
 }

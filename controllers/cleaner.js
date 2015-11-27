@@ -1,4 +1,5 @@
 //	Requirements
+var PythonShell = require('python-shell')
 var formidable 	= require('formidable')
 var async 		= require('async')
 var path 		= require('path')
@@ -6,6 +7,9 @@ var fs 			= require('fs.extra')
 var _ 			= require('underscore')
 var validate 	= require('../tools/validate')
 var date 		= require('../tools/dates')
+
+//	Default path for Python scripts
+PythonShell.defaultOptions = { scriptPath: path.join(__dirname, '../scripts/python') }
 
 //	Upload file to server
 //	Uploaded file name: A numeric id, starting from 1
@@ -85,19 +89,6 @@ module.exports.upload = function(req, res, next) {
 	})
 }
 
-//	Convert to WAV
-module.exports.convert = function(req, res, next) {
-
-	if(!req.file || _.isEmpty(req.file)) {
-		return next()
-	}
-
-	//	TODO: 	Convert to WAV, if not a WAV file
-	//			(Python script)
-
-	return next()
-}
-
 //	Clean a sample
 module.exports.clean = function(req, res, next) {
 
@@ -105,25 +96,21 @@ module.exports.clean = function(req, res, next) {
 		return next()
 	}
 
-	//	TODO: 	Clean the file
-	//			(Python script)
-
-	//	Convert to string, for path.join to work fine
-	if(typeof req.file.id != 'string') {
-		req.file.id = req.file.id.toString()
-	}
-
-	var cleanFilesLocation = path.join(__dirname, '../files/songs/clean')
-	var newFileDestination = path.join(cleanFilesLocation, req.file.id + req.file.extension)
-
-	fs.copy(req.file.url, newFileDestination, {}, function (error) {
-		if (error) {
+	//	Python shell init
+	var pyshell = new PythonShell('clean.py', {
+		args : [req.file.url]
+	})
+	.on('message', function (message) {
+		console.log(message)
+	})
+	.end(function (error) {
+		if(error) {
+			console.log(error)
 			req.error = error
-			return next()
 		}
 		req.data = {
 			id 			: req.file.id,
-			url 		: req.file.url,
+			url 		: req.file.url.replace('dirty', 'clean'),
 			name 		: req.file.name,
 			extension 	: req.file.extension,
 			type 		: req.file.type,
