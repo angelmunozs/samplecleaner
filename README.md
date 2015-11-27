@@ -9,15 +9,21 @@ Developed with nodejs.
 
 2. Install nodejs modules:
 
-```npm install```
+```bash
+npm install
+```
 
 3. Install frontend components:
 
-```bower install```
+```bash
+bower install
+```
 
 4. Start project
 
-```npm start```
+```bash
+npm start
+```
 
 ## Python dependencies
 
@@ -25,20 +31,28 @@ Developed with nodejs.
 
 scipy
 
-```sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose```
+```bash
+sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
+```
 
 ffmpeg
 
-```sudo apt-add-repository ppa:mc3man/trusty-media
+```bash
+sudo apt-add-repository ppa:mc3man/trusty-media
 sudo apt-get update
-sudo apt-get install ffmpeg```
+sudo apt-get install ffmpeg
+```
 
 ### Modules:
 
 python-magic
 
-```pip install python-magic```
+```bash
+pip install python-magic
+```
 
 pydub
 
-```pip install pydub```
+```bash
+pip install pydub
+```
