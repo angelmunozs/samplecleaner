@@ -8,7 +8,6 @@ var passport = require('passport')
 //  Log in
 module.exports.login = function(req, res, next) {
 
-    console.log('Logging in')
     passport.authenticate('local', function(error_passport, user, info) {
 
         if (error_passport) {
@@ -39,13 +38,13 @@ module.exports.login = function(req, res, next) {
                     .catch(cb)
                 },
                 //  Update last times logged in
-                function timesLoggedIn (cb) {
-                    Query('UPDATE users SET timesLoggedIn = timesLoggedIn + 1 WHERE idUser = ?', [user.idUser])
-                    .then(function() {
-                        cb()
-                    })
-                    .catch(cb)
-                },
+                // function timesLoggedIn (cb) {
+                //     Query('UPDATE users SET timesLoggedIn = timesLoggedIn + 1 WHERE idUser = ?', [user.idUser])
+                //     .then(function() {
+                //         cb()
+                //     })
+                //     .catch(cb)
+                // },
                 //  Update first login and first IP, if first time logged in
                 function primerLogin (cb) {
                     if(!user.firstIP && !user.firstLogin) {
