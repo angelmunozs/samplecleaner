@@ -89,7 +89,7 @@ $(document).ready(function() {
 			name = file.name
 			size = file.size
 			type = file.type
-			section(1)		
+			section1()		
 		})(file)
 
 		fileReader.readAsDataURL(file)
@@ -120,28 +120,12 @@ $(document).ready(function() {
 				name = file.name
 				size = file.size
 				type = file.type
-				section(1)		
+				section1()	
 			})(file)
 
 			fileReader.readAsDataURL(file)
 		}
 	})	
-	$('#again').click(function () {
-		//	Reset input type 'file'
-		$('#file').replaceWith($('#file').val('').clone(true))
-		var fileReader = new FileReader()
-		//	Reset values
-		name = ''
-		size = 0
-		type = ''
-		//	Update active step title
-		$('.step-header').removeClass('active')
-		$('#step1-header').addClass('active')
-		//	Change section
-		$('#step4').hide()
-		$('#step1').show()
-		section(1)
-	})
 	//	'Send' button from section 'Contact'
 	$('#contact-button').on('click', function () {
 		//	First, disable button
@@ -244,276 +228,302 @@ $(document).ready(function() {
 			$('#status-icon').fadeOut('slow')
 		}, 2000)
 	})
-	//	Validate sections
-	var validateSection = function (n, params) {
-		switch(n) {
-			case 1 :
-				var song = params[0]
-				var size = params[1]
-				var type = params[2]
-				return song && size != 0 && allowedTypes.indexOf(type.toLowerCase()) != -1
-			case 2 :
-				var noiseYear = params[0]
-				var noiseProfile = params[1]
-				var reduceGain = params[2]
-				var smoothingBands = params[3]
+	$('#again').click(function () {
+		//	Reset input type 'file'
+		$('#file').replaceWith($('#file').val('').clone(true))
+		//	Reset values
+		file = ''
+		name = ''
+		size = ''
+		type = ''
+		$('#file-name').html(name)
+		//	Reset roundSliders
+		$("#noise-year").roundSlider('setValue', 90)
+		$("#noise-profile").roundSlider('setValue', 1)
+		$('#reduce-gain').roundSlider('setValue', 20)
+		$('#smoothing-bands').roundSlider('setValue', 2)
+		//	Disable roundSliders
+		$("#noise-year").roundSlider('disable')
+		$("#noise-profile").roundSlider('disable')
+		$('#reduce-gain').roundSlider('disable')
+		$('#smoothing-bands').roundSlider('disable')
+		//	Disable 'Clean it!' button
+		$('#go').attr('disabled', 'disabled')
+		//	Reset audio player
+		$('#player').html('')
+		$('#player').removeAttr('src')
+		//	Reset sliders info
+		$('#year-desc').html('')
+		$('#profile-desc').html('')
+		//	Uncheck advanced settings
+		$("#advanced-settings").attr("checked", false);
+		//	Update active step title
+		$('.step-header').removeClass('active')
+		$('#step1-header').addClass('active')
+		//	Change section
+		$('#step4').hide()
+		$('#step1').show()
+		section1()
+	})
+	//	Section 1 behavior
+	var section1 = function () {
+		//	Jump to next section
+		if(name && size != 0 && allowedTypes.indexOf(type.toLowerCase()) != -1) {
+			//	Call to next step
+			section2()
+		}
+		else {
+			if(name.length > 1) {
+				$('#section-error-1').html(type + ' is not a supported audio file')
+			}
+		}
+		return
+	}
+	//	Section 2 behavior
+	var section2 = function () {
+		//	Update active step title
+		$('.step-header').removeClass('active')
+		$('#step2-header').addClass('active')
+		//	Change section
+		$('#step1').hide()
+		$('#step2').show()
+		//	File name
+		$('#file-name').html(name)
+		//	Populate select box
+		var options = ''
+		$.get('/api/noise/profiles')
+		.done(function (data) {
+			//	Get info from API
+			var years = Object.keys(data.data)
+			//	Default year selected
+			var defaultValue = 90
+			//	DOM elements
+			var noiseYear = $("#noise-year")
+			var noiseProfile = $("#noise-profile")
+			var reduceGain = $('#reduce-gain')
+			var smoothingBands = $('#smoothing-bands')
+			//	Noise year
+			noiseYear.roundSlider({
+				min: Number(years[0]),
+				max: Number(years[years.length - 1]),
+				step: 10,
+				value: defaultValue,
+				sliderType: "min-range",
+				handleShape: "square",
+				handleSize: '16,8',
+				radius: 55,
+				width: 10,
+				editableTooltip: false
+			})
+			//	Noise profile
+			noiseProfile.roundSlider({
+				min: 1,
+				max: data.data[defaultValue].length,
+				step: 1,
+				value: 1,
+				sliderType: "min-range",
+				handleShape: "square",
+				handleSize: '16,8',
+				radius: 55,
+				width: 10,
+				editableTooltip: false
+			})
+			//	Re-enable roundSliders
+			noiseYear.roundSlider('enable')
+			noiseProfile.roundSlider('enable')
+			//	Re-enable button
+			$('#go').removeAttr('disabled')
+			//	Retrieve data from sliders
+			var year = noiseYear.roundSlider('getValue')
+			var profile = noiseProfile.roundSlider('getValue')
+			//	Player variables
+			var audio_location = '/api/noise/wav/' + year + '/' + profile
+			var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
+			//	Reduce gain (advanced)
+			reduceGain.roundSlider({
+				min: 10,
+				max: 40,
+				step: 1,
+				value: 20,
+				sliderType: "min-range",
+				handleShape: "square",
+				handleSize: '12,6',
+				width: 6,
+				radius: 38,
+				disabled: true,
+				editableTooltip: false
+			})
+			//	Smoothing bands (advanced)
+			smoothingBands.roundSlider({
+				min: 0,
+				max: 5,
+				step: 1,
+				value: 2,
+				sliderType: "min-range",
+				handleShape: "square",
+				handleSize: '12,6',
+				width: 6,
+				radius: 38,
+				disabled: true,
+				editableTooltip: false
+			})
+			//	Audio player					
+			$('#player').attr('src', audio_location)
+			//	$('#player').html(player_html)
+			//	APIs to get info
+			$.get('/api/info/year/' + year)
+			.done(function (info) {
+				$('#year-desc').html(info.data)
+			})
+			$.get('/api/info/profile/' + year + '/' + profile)
+			.done(function (info) {
+				$('#profile-desc').html(info.data)
+			})
+			//	Change functionality
+			noiseYear.change(function () {
+				var year = noiseYear.roundSlider('getValue')
+				var profile = 1 //	Always reset profile slider when year changes
+				var audio_location = '/api/noise/wav/' + year + '/' + profile
+				var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
+				//	Audio player						
+				$('#player').attr('src', audio_location)
+				//	$('#player').html(player_html)
+				//	Set profile value to 1
+				noiseProfile.roundSlider({
+					min: 1,
+					max: data.data[year].length,
+					step: 1,
+					value: profile,
+					sliderType: "min-range",
+					handleShape: "square",
+					handleSize: '16,8',
+					radius: 55,
+					width: 10,
+					editableTooltip: false
+				})
+				//	Update year info
+				$.get('/api/info/year/' + year)
+				.done(function (info) {
+					$('#year-desc').html(info.data)
+				})
+				//	Update profile info
+				$.get('/api/info/profile/' + year + '/' + profile)
+				.done(function (info) {
+					$('#profile-desc').html(info.data)
+				})
+			})
+			//	Change functionality
+			noiseProfile.change(function () {
+				var year = noiseYear.roundSlider('getValue')
+				var profile = noiseProfile.roundSlider('getValue')
+				var audio_location = '/api/noise/wav/' + year + '/' + profile
+				var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
+				//	Audio player						
+				$('#player').attr('src', audio_location)
+				//	$('#player').html(player_html)
+				//	Update profile info
+				$.get('/api/info/profile/' + year + '/' + profile)
+				.done(function (info) {
+					$('#profile-desc').html(info.data)
+				})
+			})
+			//	Enable/disable advanced settings
+			$('#advanced-settings').change(function () {
+				if($(this).is(":checked")) {
+					//	Color of the title
+					$('.rslider-tip-advanced').css('color', '#555')
+					//	Enable sliders
+					reduceGain.roundSlider('enable')
+					smoothingBands.roundSlider('enable')
+				}
+				else {
+					//	Color of the title
+					$('.rslider-tip-advanced').css('color', '#aaa')
+					//	Reset values
+					reduceGain.roundSlider('setValue', 20)
+					smoothingBands.roundSlider('setValue', 2)
+					//	Disable sliders
+					reduceGain.roundSlider('disable')
+					smoothingBands.roundSlider('disable')
+				}
+			})
+			$('#go').click(function () {
+				//	DOM elements
+				var noiseYear = $("#noise-year")
+				var noiseProfile = $("#noise-profile")
+				var reduceGain = $('#reduce-gain')
+				var smoothingBands = $('#smoothing-bands')
+				
+				//	Get values from roundSlider
+				var noiseYear = noiseYear.roundSlider('getValue')
+				var noiseProfile = noiseProfile.roundSlider('getValue')
+				var reduceGain = reduceGain.roundSlider('getValue')
+				var smoothingBands = smoothingBands.roundSlider('getValue')
 
+				//	Some validation
 				var validateNoiseYear = /[4-9]{1,1}[0]{1,1}/.test(noiseYear) // 40, 50, 60, 70, 80 or 90
 				var validateNoiseProfile = /[1-9]{1,2}/.test(noiseProfile) // 1-19
 				var validateReduceGain = Number(reduceGain) >= 10 && Number(reduceGain) <= 40 // 10-40
 				var validateSmoothingBands = /[0-5]{1,1}/.test(smoothingBands) // 0-5
 
-				return validateNoiseYear && validateNoiseProfile && validateReduceGain && validateSmoothingBands
-			default :
-				return
-		}
-	}
-	//	Section behavior
-	var section = function (n) {
-		switch(n) {
-			case 1 :
 				//	Jump to next section
-				if(validateSection(1, [name, size, type])) {
+				if(validateNoiseYear && validateNoiseProfile && validateReduceGain && validateSmoothingBands) {
 					//	Call to next step
-					section(2)
+					section3()
 				}
 				else {
-					if(name.length) {
-						$('#section-error-1').html(type + ' is not a supported audio file')
-					}
+					alert('Wrong fields')
 				}
-				break
-			case 2 :
-				//	Update active step title
-				$('.step-header').removeClass('active')
-				$('#step2-header').addClass('active')
-				//	Change section
-				$('#step1').hide()
-				$('#step2').show()
-				//	File name
-				$('#file-name').html(name)
-				//	Populate select box
-				var options = ''
-				$.get('/api/noise/profiles')
-				.done(function (data) {
-					//	Get info from API
-					var years = Object.keys(data.data)
-					//	Default year selected
-					var defaultValue = 90
-					//	DOM elements
-					var noiseYear = $("#noise-year")
-					var noiseProfile = $("#noise-profile")
-					var reduceGain = $('#reduce-gain')
-					var smoothingBands = $('#smoothing-bands')
-					//	Noise year
-					noiseYear.roundSlider({
-						min: Number(years[0]),
-						max: Number(years[years.length - 1]),
-						step: 10,
-						value: defaultValue,
-						sliderType: "min-range",
-						handleShape: "square",
-						handleSize: '16,8',
-						radius: 55,
-						width: 10,
-						editableTooltip: false
-					})
-					//	Noise profile
-					noiseProfile.roundSlider({
-						min: 1,
-						max: data.data[defaultValue].length,
-						step: 1,
-						value: 1,
-						sliderType: "min-range",
-						handleShape: "square",
-						handleSize: '16,8',
-						radius: 55,
-						width: 10,
-						editableTooltip: false
-					})
-					//	Retrieve data from sliders
-					var year = noiseYear.roundSlider('getValue')
-					var profile = noiseProfile.roundSlider('getValue')
-					//	Player variables
-					var audio_location = '/api/noise/wav/' + year + '/' + profile
-					var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
-					//	Reduce gain (advanced)
-					reduceGain.roundSlider({
-						min: 10,
-						max: 40,
-						step: 1,
-						value: 20,
-						sliderType: "min-range",
-						handleShape: "square",
-						handleSize: '12,6',
-						width: 6,
-						radius: 38,
-						disabled: true,
-						editableTooltip: false
-					})
-					//	Smoothing bands (advanced)
-					smoothingBands.roundSlider({
-						min: 0,
-						max: 5,
-						step: 1,
-						value: 2,
-						sliderType: "min-range",
-						handleShape: "square",
-						handleSize: '12,6',
-						width: 6,
-						radius: 38,
-						disabled: true,
-						editableTooltip: false
-					})
-					//	Audio player					
-					$('#player').attr('src', audio_location)
-					//	$('#player').html(player_html)
-					//	APIs to get info
-					$.get('/api/info/year/' + year)
-					.done(function (info) {
-						$('#year-desc').html(info.data)
-					})
-					$.get('/api/info/profile/' + year + '/' + profile)
-					.done(function (info) {
-						$('#profile-desc').html(info.data)
-					})
-					//	Change functionality
-					noiseYear.change(function () {
-						var year = noiseYear.roundSlider('getValue')
-						var profile = 1 //	always reset profile slider when year changes
-						var audio_location = '/api/noise/wav/' + year + '/' + profile
-						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
-						//	Audio player						
-						$('#player').attr('src', audio_location)
-						//	$('#player').html(player_html)
-						//	Set profile value to 1
-						noiseProfile.roundSlider({
-							min: 1,
-							max: data.data[year].length,
-							step: 1,
-							value: profile,
-							sliderType: "min-range",
-							handleShape: "square",
-							handleSize: '16,8',
-							radius: 55,
-							width: 10,
-							editableTooltip: false
-						})
-						//	Update year info
-						$.get('/api/info/year/' + year)
-						.done(function (info) {
-							$('#year-desc').html(info.data)
-						})
-						//	Update profile info
-						$.get('/api/info/profile/' + year + '/' + profile)
-						.done(function (info) {
-							$('#profile-desc').html(info.data)
-						})
-					})
-					//	Change functionality
-					noiseProfile.change(function () {
-						var year = noiseYear.roundSlider('getValue')
-						var profile = noiseProfile.roundSlider('getValue')
-						var audio_location = '/api/noise/wav/' + year + '/' + profile
-						var player_html = 	'<source src="' + audio_location + '" type="audio/wav">Your browser does not support the audio element.'
-						//	Audio player						
-						$('#player').attr('src', audio_location)
-						//	$('#player').html(player_html)
-						//	Update profile info
-						$.get('/api/info/profile/' + year + '/' + profile)
-						.done(function (info) {
-							$('#profile-desc').html(info.data)
-						})
-					})
-					//	Enable/disable advanced settings
-					$('#advanced-settings').change(function () {
-						if($(this).is(":checked")) {
-							//	Color of the title
-							$('.rslider-tip-advanced').css('color', '#555')
-							//	Enable sliders
-							reduceGain.roundSlider('enable')
-							smoothingBands.roundSlider('enable')
-						}
-						else {
-							//	Color of the title
-							$('.rslider-tip-advanced').css('color', '#aaa')
-							//	Reset values
-							reduceGain.roundSlider('setValue', 20)
-							smoothingBands.roundSlider('setValue', 2)
-							//	Disable sliders
-							reduceGain.roundSlider('disable')
-							smoothingBands.roundSlider('disable')
-						}
-					})
-					$('#go').click(function () {
-						//	DOM elements
-						var noiseYear = $("#noise-year")
-						var noiseProfile = $("#noise-profile")
-						var reduceGain = $('#reduce-gain')
-						var smoothingBands = $('#smoothing-bands')
-						
-						var noiseYear = noiseYear.roundSlider('getValue')
-						var noiseProfile = noiseProfile.roundSlider('getValue')
-						var reduceGain = reduceGain.roundSlider('getValue')
-						var smoothingBands = smoothingBands.roundSlider('getValue')
-						//	Jump to next section
-						if(validateSection(2, [noiseYear, noiseProfile, reduceGain, smoothingBands])) {
-							//	Call to next step
-							section(3)
-						}
-						else {
-							alert('Wrong fields')
-						}
-					})
-				})
-				break
-			case 3 :
-				//	Update active step title
-				$('.step-header').removeClass('active')
-				$('#step3-header').addClass('active')
-				//	Change section
-				$('#step2').hide()
-				$('#step3').show()
-				//	Form data class
-				var formData = new FormData()
-				formData.append('file', file)
-				//	Wait for the server to return the file
-				$.ajax({
-					url : '/api/clean',
-					type : 'POST',
-					success : function (data) {
-						if(data.error) {
-							$('#section-error-3').html(data.error)
-						}
-						else {
-							clean = data.data
-							//	Call to next step
-							section(4)
-						}
-					},
-					error : function (error) {
-						console.log(error)
-						$('#section-error-3').html('There was an error while processing your request. Please, try again later.')
-					},
-					data : formData,
-					cache : false,
-					contentType : false,
-					processData : false
-				})
-				break
-			case 4 :
-				//	Update form action
-				$('#download').attr('href', '/api/song/' + clean.id)
-				$('#download').attr('download', clean.name)
-				//	Update active step title
-				$('.step-header').removeClass('active')
-				$('#step4-header').addClass('active')
-				//	Change section
-				$('#step3').hide()
-				$('#step4').show()
-				break
-			default :
-				return
-		}
+			})
+		})
+		return
+	}
+	//	Section 3 behavior
+	var section3 = function () {
+		//	Update active step title
+		$('.step-header').removeClass('active')
+		$('#step3-header').addClass('active')
+		//	Change section
+		$('#step2').hide()
+		$('#step3').show()
+		//	Form data class
+		var formData = new FormData()
+		formData.append('file', file)
+		//	Wait for the server to return the file
+		$.ajax({
+			url : '/api/clean',
+			type : 'POST',
+			success : function (data) {
+				if(data.error) {
+					$('#section-error-3').html(data.error)
+				}
+				else {
+					clean = data.data
+					//	Call to next step
+					section4()
+				}
+			},
+			error : function (error) {
+				console.log(error)
+				$('#section-error-3').html('There was an error while processing your request. Please, try again later.')
+			},
+			data : formData,
+			cache : false,
+			contentType : false,
+			processData : false
+		})
+		return
+	}
+	//	Section 4 behavior
+	var section4 = function () {
+		//	Update form action
+		$('#download').attr('href', '/api/song/' + clean.id)
+		$('#download').attr('download', clean.name)
+		//	Update active step title
+		$('.step-header').removeClass('active')
+		$('#step4-header').addClass('active')
+		//	Change section
+		$('#step3').hide()
+		$('#step4').show()
 	}
 })

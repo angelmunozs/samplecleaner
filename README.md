@@ -29,13 +29,7 @@ npm start
 
 ###	Extensions
 
-scipy
-
-```bash
-sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
-```
-
-ffmpeg
+-	ffmpeg
 
 ```bash
 sudo apt-add-repository ppa:mc3man/trusty-media
@@ -45,13 +39,19 @@ sudo apt-get install ffmpeg
 
 ### Modules:
 
-python-magic
+-	scipy
+
+```bash
+sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
+```
+
+-	python-magic
 
 ```bash
 pip install python-magic
 ```
 
-pydub
+-	pydub
 
 ```bash
 pip install pydub
