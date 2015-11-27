@@ -57,7 +57,7 @@ $(document).ready(function() {
 		return changeSection(navHeight)
 	})
 	//	Menu links
-	$('.menu-link').click(function (e) {
+	$('.menu-link').off('click').click(function (e) {
 		//	Prevent default behavior
 		e.preventDefault()
 		//	Deactivate scrolling
@@ -228,7 +228,7 @@ $(document).ready(function() {
 			$('#status-icon').fadeOut('slow')
 		}, 2000)
 	})
-	$('#again').click(function () {
+	$('#again').off('click').click(function () {
 		//	Reset input type 'file'
 		$('#file').replaceWith($('#file').val('').clone(true))
 		//	Reset values
@@ -447,7 +447,7 @@ $(document).ready(function() {
 					smoothingBands.roundSlider('disable')
 				}
 			})
-			$('#go').click(function () {
+			$('#go').off('click').click(function () {
 				//	DOM elements
 				var noiseYear = $("#noise-year")
 				var noiseProfile = $("#noise-profile")
