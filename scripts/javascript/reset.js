@@ -3,12 +3,12 @@ var path 	= require('path')
 var util 	= require('util')
 var shell 	= require('shellscript').globalize()
 var async 	= require('async')
-var config 	= require('../config')
+var config 	= require('../../config')
 
 /*	Delete dirty files 	*/
 var deleteDirtyFiles = function (cb) {
 
-	var dirty_location = path.join(__dirname, '../files/songs/dirty')
+	var dirty_location = path.join(__dirname, '../../files/songs/dirty')
 	var dirty_files = fs.readdirSync(dirty_location)
 
 	//	Log actions
@@ -30,7 +30,7 @@ var deleteDirtyFiles = function (cb) {
 
 /*	Delete clean files 	*/
 var deleteCleanFiles = function (cb) {
-	var clean_location = path.join(__dirname, '../files/songs/clean')
+	var clean_location = path.join(__dirname, '../../files/songs/clean')
 	var clean_files = fs.readdirSync(clean_location)
 
 	//	Log actions
@@ -57,7 +57,7 @@ var resetDB = function (cb) {
 	console.log('Resetting DB')
 
 	//	Reset database, as a shell script
-	var script = util.format("mysql -u %s -p%s samplecleaner < %s", config.DB_USER, config.DB_PASS, path.join(__dirname, '../base.sql'))
+	var script = util.format("mysql -u %s -p%s samplecleaner < %s", config.DB_USER, config.DB_PASS, path.join(__dirname, '../../base.sql'))
 	var result = shell(script)
 
 	if(result.stderr) {

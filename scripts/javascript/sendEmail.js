@@ -4,7 +4,7 @@ var async 		= require('async')
 var util 		= require('util')
 var path 		= require('path')
 var fs 			= require('fs')
-var config 		= require('../config')
+var config 		= require('../../config')
 
 //	=============================================================================================================================
 //	Parameters
@@ -17,7 +17,7 @@ var subject = 'Welcome to Sample Cleaner!'
 //	Message
 var text 	= 'We are proud to announce that Sample Cleaner will start working in early 2016.'
 //	HTML-formatted message
-var html 	= fs.readFileSync(path.join(__dirname, '../email/template.html'), 'utf8')
+var html 	= fs.readFileSync(path.join(__dirname, '../../email/template.html'), 'utf8')
 
 //	=============================================================================================================================
 //	End parameters
