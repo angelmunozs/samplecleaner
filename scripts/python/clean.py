@@ -5,12 +5,11 @@
 #   Version 1.0: Noise reduced, and time-smoothing and frequency smoothing applied.
 #
 #	args:
-#		sys.argv[1]: 	File ID
-#		sys.argv[2]: 	Dirty file path
-#		sys.argv[3]: 	Noise year
-#		sys.argv[4]: 	Noise profile
-#		sys.argv[5]: 	Reduce gain
-#		sys.argv[6]: 	Smoothing bands
+#		sys.argv[1]: 	Dirty file path
+#		sys.argv[2]: 	Noise year
+#		sys.argv[3]: 	Noise profile
+#		sys.argv[4]: 	Reduce gain
+#		sys.argv[5]: 	Smoothing bands
 #
 #
 #	=====================================================================
@@ -30,16 +29,15 @@ mime = magic.Magic(mime = True)
 #	=====================================================================
 
 #	If not enough args, return
-if len(sys.argv) < 7 :
+if len(sys.argv) < 6 :
 	sys.exit('Missing arguments')
 
 #	Args
-file_id 				= sys.argv[1]
-input_original_file 	= sys.argv[2]
-noise_year 				= sys.argv[3]
-noise_profile 			= sys.argv[4]
-reduce_gain 			= sys.argv[5]
-smoothing_bands 		= sys.argv[6]
+input_original_file 	= sys.argv[1]
+noise_year 				= sys.argv[2]
+noise_profile 			= sys.argv[3]
+reduce_gain 			= sys.argv[4]
+smoothing_bands 		= sys.argv[5]
 
 #	Debugging logs
 # for i in sys.argv:
@@ -92,11 +90,15 @@ Fs, Song = wav.read(input_converted_file, False)
 with open(noise_path, "rb") as csvFile :
 	NoisePowers = csv.reader(noise_path)
 
+#   Matrix dimensions
+
+
 #	TODO: Cleaning
+NewSong = Song
 
 #	Write clean song
 print('Saving clean file as: %s' % output_original_file)
-wav.write(output_original_file, Fs, Song)
+wav.write(output_original_file, Fs, NewSong)
 #	Reconvert to original format
 if not input_original_extension in wav_extensions :
 	print('Re-converting WAV to original format %s: %s' % (input_original_format, output_converted_file))

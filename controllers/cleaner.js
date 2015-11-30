@@ -149,7 +149,6 @@ module.exports.clean = function(req, res, next) {
 			//	Python shell init
 			var pyshell = new PythonShell('clean.py', {
 				args : [
-					req.file.id, 	/* File ID */
 					req.file.url, 	/* Dirty file path */
 					noiseYear, 		/* Noise year */
 					noiseProfile, 	/* Noise profile */
