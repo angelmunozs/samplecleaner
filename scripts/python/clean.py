@@ -1,45 +1,103 @@
+#   Noise reduction using spectral noise gating.
+#   Reads a CSV file containing results of noise analysis, and proceeds
+#   to reduce the noise of a song.
+#   
+#   Version 1.0: Noise reduced, and time-smoothing and frequency smoothing applied.
+#
+#	args:
+#		sys.argv[1]: 	File ID
+#		sys.argv[2]: 	Dirty file path
+#		sys.argv[3]: 	Noise year
+#		sys.argv[4]: 	Noise profile
+#		sys.argv[5]: 	Reduce gain
+#		sys.argv[6]: 	Smoothing bands
+#
+#
+#	=====================================================================
+#	Requirements
+#	=====================================================================
+
 import sys
-from os import path
-#	Library for converting files to WAV
+import os.path as path
+import csv
 from pydub import AudioSegment
-#	Library for MIME types
+import scipy.io.wavfile as wav
 import magic
 mime = magic.Magic(mime = True)
-#	Library for signal processing
-from scipy import io
 
+#	=====================================================================
+#	Some validation
+#	=====================================================================
 
 #	If not enough args, return
-if len(sys.argv) < 2 :
-	sys.exit('Missing argument: path to an existing file')
+if len(sys.argv) < 7 :
+	sys.exit('Missing arguments')
 
-input_file = sys.argv[1]
+#	Args
+file_id 				= sys.argv[1]
+input_original_file 	= sys.argv[2]
+noise_year 				= sys.argv[3]
+noise_profile 			= sys.argv[4]
+reduce_gain 			= sys.argv[5]
+smoothing_bands 		= sys.argv[6]
+
+#	Debugging logs
+# for i in sys.argv:
+# 	print i
 
 #	If the file doesn't exist
-if not path.isfile(input_file) :
+if not path.isfile(input_original_file) :
 	sys.exit('File doesn\'t exist')
 
-#	Check for the extension
-input_name, input_extension = path.splitext(input_file)
-input_mime = mime.from_file(input_file)
+#	=====================================================================
+#	Conversion to WAV
+#	=====================================================================
 
-#	Output parameters
-output_format = 'wav'
-output_name = path.basename(input_name)
-output_path = path.dirname(input_file)
-output_file = path.join(output_path, output_name + '.' + output_format)
+#	Input (generally non-WAV)
+input_original_name, input_original_extension = path.splitext(input_original_file)
+input_original_mime = mime.from_file(input_original_file)
+input_original_format = input_original_extension.replace('.', '', 1)
+
+#	Converted input (WAV)
+input_converted_format = 'wav'
+input_converted_name = path.basename(input_original_name)
+input_converted_file = input_original_file.replace(input_original_extension, '.wav')
+
+#	Original output (WAV)
+output_original_file = input_converted_file.replace('dirty', 'clean', 1)
+
+#	Converted output
+output_converted_file = output_original_file.replace('.wav', input_original_extension, 1)
+output_converted_format = input_original_format
+
+#	Noise info
+noise_path = path.abspath(path.join('files/noise/profiles', noise_year, noise_profile + '.csv'))
 
 #	WAV MIME types
-wav_types = ['audio/x-wav', 'audio/wav', 'audio/vnd.wav']
 wav_extensions = ['.wav']
 
 #	If the type is already a WAV
-if (input_mime in wav_types) and (input_extension in wav_extensions) :
+if not input_original_extension in wav_extensions :
 	#	Logging
-	print('Processing file: %s' % output_file)
-else :
-	#	Logging
-	print('Converting file: %s' % input_file)
-	AudioSegment.from_file(input_file, input_extension.replace('.', '', 1)).export(output_file, format = output_format)
-	#	Logging
-	print('Processing file: %s' % output_file)
+	print('Converting %s file to WAV: %s' % (input_original_format, input_original_file))
+	AudioSegment.from_file(input_original_file, input_original_format).export(input_converted_file, format = input_converted_format)
+
+#	=====================================================================
+#	Noise reduction
+#	=====================================================================
+
+#	Read uploaded song
+Fs, Song = wav.read(input_converted_file, False)
+#	Read noise statistics
+with open(noise_path, "rb") as csvFile :
+	NoisePowers = csv.reader(noise_path)
+
+#	TODO: Cleaning
+
+#	Write clean song
+print('Saving clean file as: %s' % output_original_file)
+wav.write(output_original_file, Fs, Song)
+#	Reconvert to original format
+if not input_original_extension in wav_extensions :
+	print('Re-converting WAV to original format %s: %s' % (input_original_format, output_converted_file))
+	AudioSegment.from_file(output_original_file, input_converted_format).export(output_converted_file, format = output_converted_format)

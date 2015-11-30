@@ -26,23 +26,43 @@ module.exports.upload = function(req, res, next) {
 
 		var dirtyFilesLocation = path.join(__dirname, '../files/songs/dirty')
 
-		// console.log('error: %s', error)
-		// console.log('data: %s', JSON.stringify(data))
-		// console.log('files: %s', JSON.stringify(files))
+		//	console.log('error: %s', error)
+		//	console.log('data: %s', JSON.stringify(data))
+		//	console.log('files: %s', JSON.stringify(files))
 
 		if(_.isEmpty(files)) {
 			req.error = Errores.NO_FILE_UPLOADED
 			return next()
 		}
 
-		var file 		= files.file
-		var type 		= file.type
-		var size 		= file.size
-		var name 		= file.name
-		var extension 	= '.' + name.split('.').pop()
-		var idUser 		= req.user ? req.user.idUser : null
+		if(!data.noiseYear || !data.noiseProfile || !data.reduceGain || !data.smoothingBands) {
+			req.error = Errores.NO_PARAMS
+			return next()
+		}
+
+		var file 			= files.file
+		var type 			= file.type
+		var size 			= file.size
+		var name 			= file.name
+		var extension 		= '.' + name.split('.').pop()
+		var idUser 			= req.user ? req.user.idUser : null
+		var noiseYear 		= data.noiseYear || null
+		var noiseProfile 	= data.noiseProfile || null
+		var reduceGain 		= data.reduceGain || null
+		var smoothingBands 	= data.smoothingBands || null
+
+		if(!/[4-9]{1,1}[0]{1,1}/.test(noiseYear) || !/[1-9]{1,2}/.test(noiseProfile) || !(reduceGain >= 10 && reduceGain <= 40) || !/[0-5]{1,1}/.test(smoothingBands)) {
+			req.error = Errores.CAMPOS_INCORRECTOS
+			return next()
+		}
 
 		var newFileDestination, insertId
+		var params = {
+			noiseYear: noiseYear,
+			noiseProfile: noiseProfile,
+			reduceGain: reduceGain,
+			smoothingBands: smoothingBands
+		}
 
 		if(!validate.audio(type, extension)) {
 			req.error = Errores.WRONG_FILE_TYPE
@@ -52,8 +72,8 @@ module.exports.upload = function(req, res, next) {
 		async.series([
 			//	Update entry in DB
 			function logUpload(cb) {
-				var sql = 'INSERT INTO log_uploads (idUser, ip, date, name, size, type) VALUES (?, ?, ?, ?, ?, ?)'
-				Query(sql, [idUser, req.ip, date.toMysql(new Date()), name, size, type])
+				var sql = 'INSERT INTO log_uploads (idUser, ip, date, error, name, size, type, params) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+				Query(sql, [idUser, req.ip, date.toMysql(new Date()), null, name, size, type, JSON.stringify(params)])
 				.then(function (rows) {
 					insertId = rows[0].insertId
 					cb()
@@ -76,6 +96,10 @@ module.exports.upload = function(req, res, next) {
 				req.error = error
 				return next()
 			}
+			req.noiseYear 		= noiseYear
+			req.noiseProfile 	= noiseProfile
+			req.reduceGain 		= reduceGain
+			req.smoothingBands 	= smoothingBands
 			req.file = {
 				id 			: insertId,
 				url 		: newFileDestination,
@@ -96,28 +120,71 @@ module.exports.clean = function(req, res, next) {
 		return next()
 	}
 
-	//	Python shell init
-	var pyshell = new PythonShell('clean.py', {
-		args : [req.file.url]
-	})
-	.on('message', function (message) {
-		console.log(message)
-	})
-	.end(function (error) {
-		if(error) {
-			console.log(error)
-			req.error = error
+	if(!req.noiseYear || !req.noiseYear.length || !req.noiseProfile || !req.noiseProfile.length || !req.reduceGain || !req.reduceGain.length || !req.smoothingBands || !req.smoothingBands.length) {
+		req.error = Errores.CAMPOS_VACIOS
+		return next()
+	}
+
+	var noiseYear = req.noiseYear || null
+	var noiseProfile = req.noiseProfile || null
+	var reduceGain = req.reduceGain || null
+	var smoothingBands = req.smoothingBands || null
+
+	req.data = {
+		id 			: req.file.id,
+		url 		: req.file.url,
+		name 		: req.file.name,
+		extension 	: req.file.extension,
+		type 		: req.file.type,
+		size 		: req.file.size
+	}
+
+	var messages = []
+	var startTime, endTime
+
+	async.waterfall([
+		function cleanSong(cb) {
+			//	Time measure
+			startTime = new Date().getTime()
+			//	Python shell init
+			var pyshell = new PythonShell('clean.py', {
+				args : [
+					req.file.id, 	/* File ID */
+					req.file.url, 	/* Dirty file path */
+					noiseYear, 		/* Noise year */
+					noiseProfile, 	/* Noise profile */
+					reduceGain, 	/* Reduce gain */
+					smoothingBands 	/* Smoothing bands */
+					]
+			})
+			.on('message', function (message) {
+				messages.push(message)
+			})
+			.end(function (error) {
+				console.log(error)
+				req.data.url = req.data.url.replace('dirty', 'clean')
+				cb(null, error)
+			})
+		},
+		function logError(error, cb) {
+			//	Time measure
+			endTime = new Date().getTime()
+			var time = endTime - startTime
+
+			var sql = 'UPDATE log_uploads SET error = ?, messages = ?, time = ? WHERE idLog = ?'
+			Query(sql, [JSON.stringify(error), messages.join('\n'), time, req.file.id])
+			.then(function () {
+				cb(error)
+			})
+			.catch(cb)
 		}
-		req.data = {
-			id 			: req.file.id,
-			url 		: req.file.url.replace('dirty', 'clean'),
-			name 		: req.file.name,
-			extension 	: req.file.extension,
-			type 		: req.file.type,
-			size 		: req.file.size
+	], function (error) {
+		if(error) {
+			req.error = error
 		}
 		return next()
 	})
+
 }
 
 //	Download the clean song
