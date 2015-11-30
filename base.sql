@@ -145,12 +145,16 @@ INSERT INTO `info_years` (`idInfo`, `year`, `info`) VALUES
 DROP TABLE IF EXISTS `log_uploads`;
 CREATE TABLE IF NOT EXISTS `log_uploads` (
   `idLog` int(11) NOT NULL AUTO_INCREMENT,
-  `idUser` int(11) DEFAULT NULL,
-  `ip` text,
-  `date` datetime DEFAULT NULL,
-  `name` text,
-  `size` text,
-  `type` text,
+  `idUser` int(11) DEFAULT NULL COMMENT 'User id',
+  `ip` text COMMENT 'User IP address',
+  `date` datetime DEFAULT NULL COMMENT 'Date',
+  `time` int(11) DEFAULT '0' COMMENT 'Python script: Time (milliseconds)',
+  `error` text COMMENT 'Python script: Errors',
+  `messages` text COMMENT 'Python script: Messages',
+  `name` text COMMENT 'File name',
+  `size` text COMMENT 'File size',
+  `type` text COMMENT 'File MIME type',
+  `params` text COMMENT 'Parameters for the cleaning process',
   PRIMARY KEY (`idLog`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
