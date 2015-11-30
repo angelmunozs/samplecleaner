@@ -228,7 +228,7 @@ $(document).ready(function() {
 			$('#status-icon').fadeOut('slow')
 		}, 2000)
 	})
-	$('#again').off('click').click(function () {
+	$('.step-tip a').off('click').click(function () {
 		//	Reset input type 'file'
 		$('#file').replaceWith($('#file').val('').clone(true))
 		//	Reset values
@@ -261,7 +261,7 @@ $(document).ready(function() {
 		$('.step-header').removeClass('active')
 		$('#step1-header').addClass('active')
 		//	Change section
-		$('#step4').hide()
+		$('.step-container').hide()
 		$('#step1').show()
 		section1()
 	})
@@ -285,7 +285,7 @@ $(document).ready(function() {
 		$('.step-header').removeClass('active')
 		$('#step2-header').addClass('active')
 		//	Change section
-		$('#step1').hide()
+		$('.step-container').hide()
 		$('#step2').show()
 		//	File name
 		$('#file-name').html(name)
@@ -484,11 +484,27 @@ $(document).ready(function() {
 		$('.step-header').removeClass('active')
 		$('#step3-header').addClass('active')
 		//	Change section
-		$('#step2').hide()
+		$('.step-container').hide()
 		$('#step3').show()
+		//	Reset html
+		$('#section-3-msg').html('We\'re working on it... This process may take a few seconds')
+		$('#step3-icon').removeClass('fa-times')
+		$('#step3-icon').addClass('fa-spinner')
+		$('#step3-icon').addClass('fa-spin')
+		$('#step3-tip').hide()
+		$('#section-error-3').html('')
 		//	Form data class
 		var formData = new FormData()
 		formData.append('file', file)
+		//	DOM elements
+		var noiseYear = $("#noise-year")
+		var noiseProfile = $("#noise-profile")
+		var reduceGain = $('#reduce-gain')
+		var smoothingBands = $('#smoothing-bands')
+		formData.append('noiseYear', noiseYear.roundSlider('getValue'))
+		formData.append('noiseProfile', noiseProfile.roundSlider('getValue'))
+		formData.append('reduceGain', reduceGain.roundSlider('getValue'))
+		formData.append('smoothingBands', smoothingBands.roundSlider('getValue'))
 		//	Wait for the server to return the file
 		$.ajax({
 			url : '/api/clean',
@@ -496,9 +512,18 @@ $(document).ready(function() {
 			success : function (data) {
 				if(data.error) {
 					$('#section-error-3').html(data.error)
+					$('#step3-tip').show()
+					$('#section-3-msg').html('There was an error while processing your request')
+					$('#step3-icon').removeClass('fa-spinner')
+					$('#step3-icon').removeClass('fa-spin')
+					$('#step3-icon').addClass('fa-times')
 				}
 				else {
 					clean = data.data
+					$('#section-3-msg').html('We\'re working on it... This process may take a few seconds')
+					$('#step3-icon').removeClass('fa-times')
+					$('#step3-icon').addClass('fa-spinner')
+					$('#step3-icon').addClass('fa-spin')
 					//	Call to next step
 					section4()
 				}
@@ -523,7 +548,7 @@ $(document).ready(function() {
 		$('.step-header').removeClass('active')
 		$('#step4-header').addClass('active')
 		//	Change section
-		$('#step3').hide()
+		$('.step-container').hide()
 		$('#step4').show()
 	}
 })

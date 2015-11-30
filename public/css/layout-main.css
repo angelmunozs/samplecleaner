@@ -314,12 +314,12 @@ audio {
 #step4 {
 	margin-top: 80px;
 }
-#step4-tip, #step4-tip a {
+.step-tip, .step-tip a {
 	margin-top: 8px;
 	font-size: 14px;
 	color: #222;
 }
-#step4-tip a:hover, #step4-tip a:focus {
+.step-tip a:hover, .step-tip a:focus {
 	cursor: pointer;
 	color: #111;
 	text-decoration: underline;
