@@ -93,7 +93,7 @@ if not input_original_extension in wav_extensions :
 #	=====================================================================
 
 #	Read uploaded song
-Fs, Song = wav.read(input_converted_file, False)
+Fs, Song = wav.read(input_converted_file)
 #	Song = song.astype(float)
 #	Song = Song / np.amax(math.fabs(np.amax(Song)), math.fabs(np.amin(Song)))
 
@@ -118,8 +118,8 @@ Window = np.hanning(W)
 #	Initialize
 iterations = math.ceil(songlength / MSS)
 NewSong = np.zeros((songlength + W, songchannels))
-Gains = np.ones((songchannels, 2, FFTsize))
-Transforms = np.zeros((songchannels, 2, FFTsize), dtype = complex)
+Gains = np.ones((songchannels, iterations, FFTsize))
+Transforms = np.zeros((songchannels, iterations, FFTsize), dtype = complex)
 
 #	Print status
 print('\tStep 1: Taking statistics from %d samples...' % songlength)
@@ -129,7 +129,7 @@ j = 0
 while j < songchannels :
 
 	#	Print channel and initialize progress
-	print('\t\tChannel no. %d' % j)
+	print('\t\tChannel no. %d' % j + 1)
 	total = math.floor(songlength / MSS)
 	count = 0
 	progress = 0
@@ -197,7 +197,7 @@ j = 0
 while j < songchannels :
 
 	#	Print channel and initialize progress
-	print('\t\tChannel no. %d' % j)
+	print('\t\tChannel no. %d' % j + 1)
 	total = math.floor(songlength / MSS)
 	count = 0
 	progress = 0
