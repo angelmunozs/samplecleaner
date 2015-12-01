@@ -72,8 +72,8 @@ module.exports.upload = function(req, res, next) {
 		async.series([
 			//	Update entry in DB
 			function logUpload(cb) {
-				var sql = 'INSERT INTO log_uploads (idUser, ip, date, error, name, size, type, params) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-				Query(sql, [idUser, req.ip, date.toMysql(new Date()), null, name, size, type, JSON.stringify(params)])
+				var sql = 'INSERT INTO log_uploads (idUser, ip, date, error, messages, name, size, type, params) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+				Query(sql, [idUser, req.ip, date.toMysql(new Date()), null, null, name, size, type, JSON.stringify(params)])
 				.then(function (rows) {
 					insertId = rows[0].insertId
 					cb()
@@ -160,7 +160,6 @@ module.exports.clean = function(req, res, next) {
 				messages.push(message)
 			})
 			.end(function (error) {
-				console.log(error)
 				req.data.url = req.data.url.replace('dirty', 'clean')
 				cb(null, error)
 			})
