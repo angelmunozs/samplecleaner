@@ -2,7 +2,8 @@
 %   Reads a CSV file containing results of noise analysis, and proceeds
 %   to reduce the noise of a song.
 %   
-%   V1: Noise reduced, and time-smoothing and frequency smoothing applied.
+%   V1: Noise reduced, but time-smoothing and frequency smoothing not yet
+%       implemented.
 %
 %   Parameters:
 %       songpath (String):              Path for input dirty songs
@@ -15,9 +16,11 @@
 %       W (Integer):                    Window size, in samples
 %       MSS (Integer):                  Number of non-overlapped samples
 %                                       per window
-%       SmoothingBands (Integer):       Number of smoothing bands
 %       FFTsize (Integer):              Size of FFT
 %       ReduceLevel (Integer):          Gain to reduce noise, in dB (+)
+%       FreqSmoothingBands (Integer):   Number of freq. smoothing bands
+%       TimeSmoothingPerc (Integer):    Percentage allowed for two freqs.
+%                                       to differ from consecutive windows
 %
 %   ======================================================================
 
@@ -25,12 +28,12 @@
 tic;
 
 %   Reset workspace
-close all; clear variables;
+close all; clear variables; clc;
 
 %   ======================================================================
 
 %   Independent parameters
-Version = '2';
+Version = '1';
 songpath = '..\\Canciones sucias\\';
 noisepath = 'profiles\\';
 outputpath = '..\\Canciones limpias\\';
@@ -40,13 +43,15 @@ noisename = '70s3';
 noiseextension = '.csv';
 
 ReduceLevel = 20;
-SmoothingBands = 3;
+FreqSmoothingBands = 3;
+TimeSmoothingPerc = 40;
 
 %   ======================================================================
 
 %   Read files (orignial audio, and noise)
 [Song, Fs] = audioread(strcat(songpath, songname, songextension));
 NoisePowers = csvread(strcat(noisepath, noisename, noiseextension));
+NoisePowers = NoisePowers / 40;
 
 %   Matrix dimensions
 s = size(Song);
@@ -69,13 +74,11 @@ Window = hann(W);
 %   ======================================================================
 
 %   Initialize
-iterations = ceil(songlength / MSS);
 NewSong = zeros(songlength + W, songchannels);
-Gains = ones(songchannels, iterations, FFTsize);
-Transforms = zeros(songchannels, iterations, FFTsize);
+BufferedSample = zeros(W, songchannels);
 
 %   Print status
-fprintf('Step 1: Taking statistics from %d samples...\n', songlength);
+fprintf('Processing %d samples\n', songlength);
 
 %   Process song
 for j = 1 : songchannels
@@ -83,15 +86,15 @@ for j = 1 : songchannels
     fprintf('\n\tChannel no. %d\n', j);
     total = floor(songlength / MSS);
     count = 0;
-    progress = 0;
+    progress = round(100 * count / total);
     
     for i = 1 : MSS : songlength
         
         %   Print proggress
         count = count + 1;
-        newprogress = floor((100 * count / total) / 10) * 10;
+        newprogress = round(100 * count / total);
         if(progress ~= newprogress)
-            fprintf('\t\tProgress: %d%%\n', newprogress);
+            fprintf('\t\tProgreso: %d%%\n', newprogress);
         end
         progress = newprogress;
         
@@ -100,103 +103,59 @@ for j = 1 : songchannels
         
         %   Sample
         SongSample = Song(i : songend, j);
+        position = 0;
         
         %   If we reached the end
         if (length(SongSample) < W)
+            position = 1;
             %   Fill with zeros until size equals W
             Zeros = zeros(W, 1);
             Zeros(1 : length(SongSample), 1) = SongSample;
             SongSample = Zeros;
+        elseif (i == 1)
+            position = -1;
         end
         
         %   Windowed sample
         WindowedSample = SongSample .* Window;
         
         %   Compute FFT
-        SampleTransform = fft(WindowedSample, FFTsize);
-        %   Save into Transforms
-        Transforms(j, count, :) = SampleTransform;
-        %   Calculate power
-        Power = abs(SampleTransform) .^ 2;
+        SongTransform = fft(WindowedSample, FFTsize);
+        Power = abs(SongTransform) .^ 2;
         
-        %   Calculate the gains to apply later
-        for k = 1 : FFTsize
+        %   Calculate the power
+        for k = 1 : length(Power)
             if Power(k) <= NoisePowers(k, j)
                 times = times + 1;
-                Gains(j, count, k) = 1 / ReduceLevelUN;
+                SongTransform(k) = SongTransform(k) / ReduceLevelUN;
             end
         end
-    end
-end
-
-%   Print status
-fprintf('\nStep 2: Applying time smoothing to gains...\n');
-fprintf('\tDoing %d operations\n\n', FFTsize * songchannels);
-
-%   Time smoothing
-for l = 1 : songchannels
-    for m = 1 : FFTsize
-        GainsToSmooth = Gains(l, :, m);
-        GainsToSmooth = reshape(GainsToSmooth, [], iterations)';
-        SmoothedGains = smooth(GainsToSmooth, SmoothingBands);
-        Gains(l, :, m) = SmoothedGains;
-    end
-end
-
-%   Print status
-fprintf('\nStep 3: Applying frequency smoothing to gains...\n');
-fprintf('\tDoing %d operations\n\n', iterations * songchannels);
-
-%   Frequency smoothing
-for l = 1 : songchannels
-    for n = 1 : iterations
-        GainsToSmooth = Gains(l, n, :);
-        GainsToSmooth = reshape(GainsToSmooth, [], FFTsize)';
-        SmoothedGains = smooth(GainsToSmooth, SmoothingBands);
-        Gains(l, n, :) = SmoothedGains;
-    end
-end
-
-%   Print status
-fprintf('Step 4: Applying noise gate to %d samples...\n', songlength);
-
-%   Process song
-for j = 1 : songchannels
-    
-    fprintf('\n\tChannel no. %d\n', j);
-    total = floor(songlength / MSS);
-    count = 0;
-    progress = 0;
-    
-    for i = 1 : MSS : songlength
-        
-        %   Print proggress
-        count = count + 1;
-        newprogress = floor((100 * count / total) / 10) * 10;
-        if(progress ~= newprogress)
-            fprintf('\t\tProgress: %d%%\n', newprogress);
-        end
-        progress = newprogress;
-
-        %   Take stored values in arrays Transforms and Gains
-        SampleTransform = Transforms(j, count, :);
-        SampleTransform = reshape(SampleTransform, [], FFTsize)';
-        TransformGains = Gains(j, count, :);
-        TransformGains = reshape(TransformGains, [], FFTsize)';
-        
-        %   Apply gains to each band
-        ProcessedTransform = SampleTransform .* TransformGains;
         
         %   Inverse FFT
-        ProcessedSample = ifft(ProcessedTransform, FFTsize);
+        ProcessedSample = ifft(SongTransform, FFTsize);
         ProcessedSample = ProcessedSample(1 : W);
         
+        %   Save buffered sample
+        BufferedSample = ProcessedSample;
+        
         %   Overlapp/add method for piecing together the processed windows
-        NewSong(i : i + W/2 - 1, j) = ...
-            NewSong(i : i + W/2 - 1, j) + ...
-            ProcessedSample(1 : 1 + W/2 - 1, 1);
-        NewSong(i + W/2 : i + W - 1, j) = ...
-            ProcessedSample(1 + W/2 : 1 + W - 1, 1);
+        switch position
+            case -1
+                NewSong(i + W/2 : i + W - 1, j) = zeros(W/2, 1);
+                NewSong(i + W : i + 3/2 * W - 1, j) = ...
+                    ProcessedSample(1 + W/2 : 1 + W - 1, 1);
+            case 1
+                NewSong(i + W/2 : i + W - 1, j) = ...
+                    NewSong(i + W/2 : i + W - 1, j) + ...
+                    ProcessedSample(1 : 1 + W/2 - 1, 1);
+                NewSong(i + W : i + 3/2 * W - 1, j) = zeros(W/2, 1);
+            otherwise
+                NewSong(i + W/2 : i + W - 1, j) = ...
+                    NewSong(i + W/2 : i + W - 1, j) + ...
+                    ProcessedSample(1 : 1 + W/2 - 1, 1);
+                NewSong(i + W : i + 3/2 * W - 1, j) = ...
+                    ProcessedSample(1 + W/2 : 1 + W - 1, 1);
+        end
     end
 end
 
