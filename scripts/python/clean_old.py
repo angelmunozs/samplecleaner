@@ -43,8 +43,7 @@ reduce_gain 			= sys.argv[4]
 smoothing_bands 		= sys.argv[5]
 
 #	Debugging logs
-# for i in sys.argv:
-# 	print i
+print('Args: %s' % ', '.join(sys.argv))
 
 #	If the file doesn't exist
 if not path.isfile(input_original_file) :
@@ -112,7 +111,8 @@ FFTsize = len(NoisePowers)
 #	Parameters depending on the previous ones
 W = FFTsize
 MSS = W / 2
-ReduceLevelUN = 1 / (10 ^ int(reduce_gain) / 10)
+ReduceLevelUN = 1.0
+ReduceLevelUN = 1 / (10 ** (float(reduce_gain) / 10))
 times = 0
 
 #	Window
@@ -121,8 +121,6 @@ Window = np.hanning(W)
 #	Initialize
 iterations = math.ceil(songlength / MSS)
 NewSong = np.zeros((songlength + W, songchannels))
-Gains = np.ones((songchannels, iterations, FFTsize))
-Transforms = np.zeros((songchannels, iterations, FFTsize), dtype = complex)
 
 #	Print status
 print('Step 1: Taking statistics from %d samples...' % songlength)
@@ -158,65 +156,19 @@ while j < songchannels :
 		
 		#	Compute FFT
 		SampleTransform = fftpack.fft(WindowedSample)
-		#	Save into Transforms
-		Transforms[j][count][:] = SampleTransform
 		#	Calculate power
 		Power = abs(SampleTransform) ** 2
 
-		#	Calculate the gains to apply later
+		#	Apply gains to values under threshold
 		k = 0
 		while k < FFTsize :
 			if Power[k] <= NoisePowers[k, j] :
-				Gains[j][count][k] = ReduceLevelUN
+				SampleTransform[k] = SampleTransform[k] / ReduceLevelUN
 
 			k = k + 1
-
-		#	Print proggress
-		count = count + 1
-		# newprogress = math.floor((100 * count / total) / 10) * 10
-		# if not (progress == newprogress) :
-		# 	print('\t\tProgress: %d%%' % newprogress)
 		
-		# progress = newprogress
-
-		i = i + MSS
-	j = j + 1
-
-#	Print status
-print('Step 2: Applying time smoothing to gains...')
-print('\tDoing %d operations' % (FFTsize * songchannels))
-#	TODO: Time smoothing
-
-#	Print status
-print('\tep 3: Applying frequency smoothing to gains...')
-print('\tDoing %d operations' % iterations * songchannels)
-#	TODO: Frequency smoothing
-
-#	Print status
-print('Step 4: Applying noise gate to %d samples...' % songlength);
-
-#	Process song
-j = 0
-while j < songchannels :
-
-	#	Print channel and initialize progress
-	print('\tChannel no. %d' % (j + 1))
-	# total = math.floor(songlength / MSS)
-	# progress = 0
-	count = 0
-
-	i = 0
-	while i < songlength - MSS :
-		
-		#	Take stored values in arrays Transforms and Gains
-		SampleTransform = Transforms[j][count]
-		TransformGains = Gains[j][count]
-
-		#	Apply gains to each band
-		ProcessedTransform = SampleTransform * TransformGains
-
 		#	Inverse FFT
-		ProcessedSample = np.real(fftpack.ifft(ProcessedTransform))
+		ProcessedSample = np.real(fftpack.ifft(SampleTransform))
 
 		#	Overlapp/add method for piecing together the processed windows
 		NewSong[i : i + W/2 - 1, j] = NewSong[i : i + W/2 - 1, j] + ProcessedSample[1 : 1 + W/2 - 1]
