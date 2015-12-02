@@ -94,11 +94,14 @@ if not input_original_extension in wav_extensions :
 
 #	Read uploaded song
 Fs, Song = wav.read(input_converted_file)
-#	Song = song.astype(float)
-#	Song = Song / np.amax(math.fabs(np.amax(Song)), math.fabs(np.amin(Song)))
+Song = Song.astype(float)
+song_norm_factor = np.amax((math.fabs(np.amax(Song)), math.fabs(np.amin(Song))))
+Song = Song / song_norm_factor
 
 #	Read noise statistics
 NoisePowers = np.genfromtxt(noise_path, delimiter = ',')
+noise_norm_factor = np.amax(NoisePowers)
+NoisePowers = (0.2 / noise_norm_factor) * NoisePowers
 
 #   Matrix dimensions
 songchannels = Song.ndim
@@ -122,31 +125,23 @@ Gains = np.ones((songchannels, iterations, FFTsize))
 Transforms = np.zeros((songchannels, iterations, FFTsize), dtype = complex)
 
 #	Print status
-print('\tStep 1: Taking statistics from %d samples...' % songlength)
+print('Step 1: Taking statistics from %d samples...' % songlength)
 
 #	Analyze song
 j = 0
 while j < songchannels :
 
 	#	Print channel and initialize progress
-	print('\t\tChannel no. %d' % j + 1)
+	print('\tChannel no. %d' % (j + 1))
 	total = math.floor(songlength / MSS)
 	count = 0
 	progress = 0
 	
 	i = 0
-	while i < songlength :
-
-		#	Print proggress
-		count = count + 1
-		newprogress = math.floor((100 * count / total) / 10) * 10
-		if not (progress == newprogress) :
-			print('\t\t\tProgress: %d%%' % newprogress)
-		
-		progress = newprogress
+	while i < songlength - MSS :
 		
 		#	Calculate end of song and noise
-		songend = np.amin((i + W, songlength))
+		songend = np.amin((i + W, songlength - 1))
 		
 		#	Sample
 		SongSample = Song[i : songend, j]
@@ -164,7 +159,7 @@ while j < songchannels :
 		#	Compute FFT
 		SampleTransform = fftpack.fft(WindowedSample)
 		#	Save into Transforms
-		Transforms[j][count] = SampleTransform
+		Transforms[j][count][:] = SampleTransform
 		#	Calculate power
 		Power = abs(SampleTransform) ** 2
 
@@ -176,42 +171,43 @@ while j < songchannels :
 				Gains[j][count][k] = ReduceLevelUN
 
 			k = k + 1
+
+		#	Print proggress
+		count = count + 1
+		newprogress = math.floor((100 * count / total) / 10) * 10
+		if not (progress == newprogress) :
+			print('\t\tProgress: %d%%' % newprogress)
+		
+		progress = newprogress
+
 		i = i + MSS
 	j = j + 1
 
 #	Print status
-print('\tStep 2: Applying time smoothing to gains...')
-print('\t\tDoing %d operations' % (FFTsize * songchannels))
+print('Step 2: Applying time smoothing to gains...')
+print('\tDoing %d operations' % (FFTsize * songchannels))
 #	TODO: Time smoothing
 
 #	Print status
-print('\tStep 3: Applying frequency smoothing to gains...')
-print('\t\tDoing %d operations' % iterations * songchannels)
+print('\tep 3: Applying frequency smoothing to gains...')
+print('\tDoing %d operations' % iterations * songchannels)
 #	TODO: Frequency smoothing
 
 #	Print status
-print('\tStep 4: Applying noise gate to %d samples...' % songlength);
+print('Step 4: Applying noise gate to %d samples...' % songlength);
 
 #	Process song
 j = 0
 while j < songchannels :
 
 	#	Print channel and initialize progress
-	print('\t\tChannel no. %d' % j + 1)
+	print('\tChannel no. %d' % (j + 1))
 	total = math.floor(songlength / MSS)
 	count = 0
 	progress = 0
 
 	i = 0
-	while i < songlength :
-
-		#	Print proggress
-		count = count + 1
-		newprogress = math.floor((100 * count / total) / 10) * 10
-		if not (progress == newprogress) :
-			print('\t\t\tProgress: %d%%' % newprogress)
-		
-		progress = newprogress
+	while i < songlength - MSS :
 		
 		#	Take stored values in arrays Transforms and Gains
 		SampleTransform = Transforms[j][count]
@@ -224,12 +220,22 @@ while j < songchannels :
 		ProcessedSample = np.real(fftpack.ifft(ProcessedTransform))
 
 		#	Overlapp/add method for piecing together the processed windows
-		NewSong[i : i + W/2 - 1, j] = NewSong[i : i + W/2 - 1, j] + ProcessedSample[1 : 1 + W/2 - 1, 1]
-		NewSong[i + W/2 : i + W - 1, j] = ProcessedSample[1 + W/2 : 1 + W - 1, 1]
+		NewSong[i : i + W/2 - 1, j] = NewSong[i : i + W/2 - 1, j] + ProcessedSample[1 : 1 + W/2 - 1]
+		NewSong[i + W/2 : i + W - 1, j] = ProcessedSample[1 + W/2 : 1 + W - 1]
+
+		#	Print proggress
+		count = count + 1
+		newprogress = math.floor((100 * count / total) / 10) * 10
+		if not (progress == newprogress) :
+			print('\t\tProgress: %d%%' % newprogress)
+		
+		progress = newprogress
 
 		i = i + MSS
 	j = j + 1
 
+#	De-normalize song
+NewSong = NewSong * song_norm_factor
 #	Write clean song
 wav.write(output_original_file, Fs, NewSong)
 print('Noise reduction and file writing took %.4f seconds' % (time.time() - start_time))

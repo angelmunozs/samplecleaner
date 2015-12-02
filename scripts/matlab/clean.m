@@ -31,12 +31,12 @@ close all; clear variables;
 
 %   Independent parameters
 Version = '2';
-songpath = '..\\Canciones sucias\\';
-noisepath = 'profiles\\';
-outputpath = '..\\Canciones limpias\\';
+songpath = '/home/angel/samplecleaner/test/dirty/';
+noisepath = '/home/angel/samplecleaner/files/noise/profiles/70/';
+outputpath = '/home/angel/samplecleaner/test/clean/';
 songname = 'Raphael - Yo soy aquel';
 songextension = '.wav';
-noisename = '70s3';
+noisename = '1';
 noiseextension = '.csv';
 
 ReduceLevel = 20;
