@@ -48,7 +48,7 @@ print('Args: %s' % ', '.join(sys.argv))
 
 #	If the file doesn't exist
 if not os.path.isfile(input_original_file) :
-	sys.exit('File doesn\'t exist')
+	sys.exit('File \'%s\' doesn\'t exist' % input_original_file)
 
 #	=====================================================================
 #	Conversion to WAV
@@ -72,7 +72,6 @@ output_converted_file = output_original_file.replace('.wav', input_original_exte
 output_converted_format = input_original_format
 
 #	Noise info
-#	noise_path = os.path.abspath(os.path.join(os.getcwd(), '../../', 'files/noise/profiles', noise_year, noise_profile + '.csv'))
 noise_path = os.path.abspath(os.path.join('files/noise/profiles', noise_year, noise_profile + '.csv'))
 
 #	WAV MIME types
@@ -101,7 +100,7 @@ Song = Song / song_norm_factor
 
 #	Read noise statistics
 NoisePowers = np.genfromtxt(noise_path, delimiter = ',')
-NoisePowers = 0.16 * NoisePowers
+NoisePowers = NoisePowers
 
 #   Matrix dimensions
 songchannels = Song.ndim
@@ -135,7 +134,7 @@ for j in range(0, songchannels) :
 	# progress = 0
 	count = 0
 	
-	for i in range(0, songlength, MSS) :
+	for i in range(0, songlength - MSS, MSS) :
 		
 		#	Calculate end of song and noise
 		songend = np.amin((i + W, songlength - 1))
@@ -184,9 +183,11 @@ print('Noise reduction and file writing took %.4f seconds' % (time.time() - star
 #	Time measure
 start_time = time.time()
 
-#	Reconvert to original format
+#	Reconvert to original format or mp3
 if not input_original_extension in wav_extensions :
 	AudioSegment.from_file(output_original_file, input_converted_format).export(output_converted_file, format = output_converted_format)
 	print('Conversion to %s took %.4f seconds' % (input_original_format, time.time() - start_time))
-	#	Time measure
-	start_time = time.time()
+else :
+	sys.exit()
+	AudioSegment.from_file(output_original_file, input_converted_format).export(output_converted_file, format = 'mp3')
+	print('Conversion to %s took %.4f seconds' % ('mp3', time.time() - start_time))

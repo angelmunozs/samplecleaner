@@ -1,35 +1,25 @@
-function [ Output ] = smooth( Input, npoints )
-%	Applies time smoothing to an Input audio file.
+function [ Output ] = smooth_V1_CenterValues( Input, sm_bands )
+%   Applies time smoothing to an Input audio file.
 %   Parameters:
 %       Input:      Unsmoothed signal
-%       npoints:    number of neighboring data points on either side of
+%       sm_bands:    number of neighboring data points on either side of
 %                   each sample
 %       Output:     Smoothed signal
 
-    %   span
-    span = 2 * npoints + 1;
-
-    %   Only 1-dimensional signals
-    s = size(Input);
-    if(s(1) ~= 1 && s(2) ~= 1)
-        Output = false;
-        return
-    end
-
-    %   Initialize
+    l = length(Input);
+    span = 2 * sm_bands + 1;
     Output = Input;
     
-    %   Do this for every value in [npoints, end - npoints]
-    for i = 1:length(Input)
-        if(i > npoints && i < length(Input) - npoints + 1)
+    %   Do this for every value in [sm_bands, end - sm_bands]
+    for i = 1 : l
+        if(i > sm_bands && i < l - sm_bands + 1)
             %   y(i) = 1/span * [y(i - N) + ... + y(i) + ... + y(i + N)]
             factor = 0;
-            for j = -npoints : npoints
-                factor = factor + Output(i + j);
+            for j = -sm_bands : sm_bands
+                factor = factor + Input(i + j);
             end
             Output(i) = 1/span * factor;
         end
     end
 
 end
-
