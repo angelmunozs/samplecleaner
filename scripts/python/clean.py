@@ -10,7 +10,6 @@
 #		sys.argv[3]: 	Noise profile
 #		sys.argv[4]: 	Reduce gain
 #		sys.argv[5]: 	Smoothing bands
-#
 
 #	=====================================================================
 #	Requirements
@@ -19,13 +18,15 @@
 import sys
 import time
 import math
-import magic
-import os
 import numpy as np
-import scipy.fftpack as fftpack
-import scipy.io.wavfile as wav
+from os import path
+from magic import Magic
+from scipy.fftpack import fft
+from scipy.fftpack import ifft
+from scipy.io.wavfile import write
+from scipy.io.wavfile import read
 from pydub import AudioSegment
-mime = magic.Magic(mime = True)
+mime = Magic(mime = True)
 
 #	=====================================================================
 #	Some validation
@@ -47,7 +48,7 @@ smoothing_bands 		= int(sys.argv[5])
 print('Args: %s' % ', '.join(sys.argv))
 
 #	If the file doesn't exist
-if not os.path.isfile(input_original_file) :
+if not path.isfile(input_original_file) :
 	sys.exit('File \'%s\' doesn\'t exist' % input_original_file)
 
 #	=====================================================================
@@ -74,13 +75,13 @@ def smooth(Input, sm_bands) :
 #	=====================================================================
 
 #	Input (generally non-WAV)
-input_original_name, input_original_extension = os.path.splitext(input_original_file)
+input_original_name, input_original_extension = path.splitext(input_original_file)
 input_original_mime = mime.from_file(input_original_file)
 input_original_format = input_original_extension.replace('.', '', 1)
 
 #	Converted input (WAV)
 input_converted_format = 'wav'
-input_converted_name = os.path.basename(input_original_name)
+input_converted_name = path.basename(input_original_name)
 input_converted_file = input_original_file.replace(input_original_extension, '.wav')
 
 #	Original output (WAV)
@@ -91,9 +92,9 @@ output_converted_file = output_original_file.replace('.wav', input_original_exte
 output_converted_format = input_original_format
 
 #	Noise info
-noise_path = os.path.abspath(os.path.join('files/noise/profiles', noise_year, noise_profile + '.csv'))
+noise_path = path.abspath(path.join('files/noise/profiles', noise_year, noise_profile + '.csv'))
 
-#	WAV MIME types
+#	WAV extensions
 wav_extensions = ['.wav']
 
 #	Time measure
@@ -112,19 +113,18 @@ if not input_original_extension in wav_extensions :
 #	=====================================================================
 
 #	Read uploaded song
-Fs, Song = wav.read(input_converted_file)
+Fs, Song = read(input_converted_file)
 Song = Song.astype(float)
-song_norm_factor = np.amax((math.fabs(np.amax(Song)), math.fabs(np.amin(Song))))
+song_norm_factor = np.max(np.abs(Song))
 Song = Song / song_norm_factor
 
 #	Read noise statistics
 NoisePowers = np.genfromtxt(noise_path, delimiter = ',')
-NoisePowers = NoisePowers
+NoisePowers = NoisePowers * 0.49 #	70% of the song gain (it's a power, so 0.7**2 = 0.49)
 
 #   Matrix dimensions
 songchannels = Song.ndim
 songlength = len(Song)
-noisechannels = NoisePowers.ndim
 FFTsize = len(NoisePowers)
 
 #	Parameters depending on the previous ones
@@ -174,15 +174,17 @@ for j in range(0, songchannels) :
 		WindowedSample = SongSample * Window
 
 		#	Compute FFT
-		SampleTransform = fftpack.fft(WindowedSample)
+		SampleTransform = fft(WindowedSample)
 		#	Save into Transforms
 		Transforms[j][count] = SampleTransform
 		#	Calculate power
 		Power = abs(SampleTransform) ** 2
+		#	Normalize power, because the noise power is also normalized
+		Power = Power / np.max(Power)
 
 		#	Apply gains to values under threshold
 		for k in range(0, len(Power)) :
-			if Power[k] <= NoisePowers[k, j] :
+			if Power[k] <= NoisePowers[k] :
 				Gains[j][count][k] = ReduceLevelUN
 		
 		#	Print proggress
@@ -233,7 +235,7 @@ for j in range(0, songchannels) :
 		ProcessedTransform = SampleTransform * TransformGains
 
 		#	Inverse FFT
-		ProcessedSample = np.real(fftpack.ifft(ProcessedTransform))
+		ProcessedSample = np.real(ifft(ProcessedTransform))
 
 		#	Overlapp/add method for piecing together the processed windows
 		NewSong[i : i + W/2 - 1, j] = NewSong[i : i + W/2 - 1, j] + ProcessedSample[0 : W/2 - 1]
@@ -248,16 +250,17 @@ for j in range(0, songchannels) :
 		# progress = newprogress
 
 #	Write clean song
-wav.write(output_original_file, Fs, NewSong)
+ScaledSong = np.int16(NewSong * 32767)
+write(output_original_file, Fs, ScaledSong)
 print('File writing took %.4f seconds' % (time.time() - start_time))
 #	Time measure
 start_time = time.time()
+sys.exit()
 
 #	Reconvert to original format or mp3
 if not input_original_extension in wav_extensions :
 	AudioSegment.from_file(output_original_file, input_converted_format).export(output_converted_file, format = output_converted_format)
 	print('Conversion to %s took %.4f seconds' % (input_original_format, time.time() - start_time))
 else :
-	sys.exit()
 	AudioSegment.from_file(output_original_file, input_converted_format).export(output_converted_file, format = 'mp3')
 	print('Conversion to %s took %.4f seconds' % ('mp3', time.time() - start_time))
