@@ -56,18 +56,20 @@ if not path.isfile(input_original_file) :
 #	=====================================================================
 
 #	Smoothing
-def smooth(Input, sm_bands) :
+def smooth(Input, npoints) :
 	l = len(Input)
-	span = sm_bands * 2 + 1
+	span = npoints * 2 + 1
 	Output = np.zeros(l)
 	#	Apply smoothing
 	for i in range(0, l) :
-		if i > sm_bands - 1 and i < l - sm_bands :
+		if i > npoints - 1 and i < l - npoints :
 			#	y(i) = 1/span * [y(i - N) + ... + y(i) + ... + y(i + N)]
 			factor = 0
-			for j in range(-sm_bands, sm_bands + 1) :
+			for j in range(-npoints, npoints + 1) :
 				factor = factor + Input[i + j]
 			Output[i] = factor / span
+		else :
+			Output[i] = Input[i]
 	return Output
 
 #	=====================================================================
@@ -208,7 +210,11 @@ start_time = time.time()
 
 #	Print status
 print('Step 3: Applying frequency smoothing to gains...')
-#	TODO
+
+# for i in range(0, songchannels) :
+# 	for j in range(0, iterations) :
+# 		Gains[i][j] = smooth(Gains[i][j], smoothing_bands)
+
 print('Frequency smoothing took %.4f seconds' % (time.time() - start_time))
 #	Time measure
 start_time = time.time()
