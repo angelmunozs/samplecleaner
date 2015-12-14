@@ -487,7 +487,7 @@ $(document).ready(function() {
 		$('.step-container').hide()
 		$('#step3').show()
 		//	Reset html
-		$('#section-3-msg').html('We\'re working on it... This process may take a few seconds')
+		$('#section-3-msg').html('We\'re working on it... This process may take about 1-2 minutes')
 		$('#step3-icon').removeClass('fa-times')
 		$('#step3-icon').addClass('fa-spinner')
 		$('#step3-icon').addClass('fa-spin')
@@ -520,7 +520,7 @@ $(document).ready(function() {
 				}
 				else {
 					clean = data.data
-					$('#section-3-msg').html('We\'re working on it... This process may take a few seconds')
+					$('#section-3-msg').html('We\'re working on it... This process may take about 1-2 minutes')
 					$('#step3-icon').removeClass('fa-times')
 					$('#step3-icon').addClass('fa-spinner')
 					$('#step3-icon').addClass('fa-spin')
