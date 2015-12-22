@@ -146,13 +146,13 @@ Gains = np.ones((songchannels, iterations, FFTsize))
 Transforms = np.zeros((songchannels, iterations, FFTsize), dtype = complex)
 
 #	Print status
-print('Step 1: Taking statistics from %d samples...' % songlength)
+#	print('Step 1: Taking statistics from %d samples...' % songlength)
 
 #	Analyze song
 for j in range(0, songchannels) :
 
 	#	Print channel and initialize progress
-	print('\tChannel no. %d' % (j + 1))
+	#	print('\tChannel no. %d' % (j + 1))
 	# total = math.floor(songlength / MSS)
 	# progress = 0
 	count = 0
@@ -202,14 +202,14 @@ print('Noise reduction took %.4f seconds' % (time.time() - start_time))
 start_time = time.time()
 
 #	Print status
-print('Step 2: Applying time smoothing to gains...')
+#	print('Step 2: Applying time smoothing to gains...')
 #	TODO
 print('Frequency smoothing took %.4f seconds' % (time.time() - start_time))
 #	Time measure
 start_time = time.time()
 
 #	Print status
-print('Step 3: Applying frequency smoothing to gains...')
+#	print('Step 3: Applying frequency smoothing to gains...')
 
 # for i in range(0, songchannels) :
 # 	for j in range(0, iterations) :
@@ -220,13 +220,13 @@ print('Frequency smoothing took %.4f seconds' % (time.time() - start_time))
 start_time = time.time()
 
 #	Print status
-print('Step 4: Applying noise gate to %d samples...' % songlength);
+#	print('Step 4: Applying noise gate to %d samples...' % songlength);
 
 #	Process song
 for j in range(0, songchannels) :
 
 	#	Print channel and initialize progress
-	print('\tChannel no. %d' % (j + 1))
+	#	print('\tChannel no. %d' % (j + 1))
 	# total = math.floor(songlength / MSS)
 	# progress = 0
 	count = 0
