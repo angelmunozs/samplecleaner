@@ -84,7 +84,7 @@ input_original_format = input_original_extension.replace('.', '', 1)
 #	Converted input (WAV)
 input_converted_format = 'wav'
 input_converted_name = path.basename(input_original_name)
-input_converted_file = input_original_file.replace(input_original_extension, '.wav')
+input_converted_file = input_original_file.replace(input_original_extension, '.wav', 1)
 
 #	Original output (WAV)
 output_original_file = input_converted_file.replace('dirty', 'clean', 1)
@@ -104,7 +104,7 @@ start_time = time.time()
 
 #	If the input file is not yet a WAV
 if not input_original_extension in wav_extensions :
-	#	CONvert to WAV
+	#	Convert to WAV
 	AudioSegment.from_file(input_original_file, input_original_format).export(input_converted_file, format = input_converted_format)
 	print('Conversion to WAV took %.4f seconds' % (time.time() - start_time))
 	#	Time measure
@@ -206,7 +206,7 @@ start_time = time.time()
 #	Print status
 #	print('Step 2: Applying time smoothing to gains...')
 #	TODO
-print('Frequency smoothing took %.4f seconds' % (time.time() - start_time))
+print('Time smoothing took %.4f seconds' % (time.time() - start_time))
 #	Time measure
 start_time = time.time()
 
@@ -263,12 +263,11 @@ write(output_original_file, Fs, ScaledSong)
 print('File writing took %.4f seconds' % (time.time() - start_time))
 #	Time measure
 start_time = time.time()
-sys.exit()
 
 #	Reconvert to original format or mp3
 if not input_original_extension in wav_extensions :
 	AudioSegment.from_file(output_original_file, input_converted_format).export(output_converted_file, format = output_converted_format)
 	print('Conversion to %s took %.4f seconds' % (input_original_format, time.time() - start_time))
-else :
-	AudioSegment.from_file(output_original_file, input_converted_format).export(output_converted_file, format = 'mp3')
-	print('Conversion to %s took %.4f seconds' % ('mp3', time.time() - start_time))
+
+print('Saved as %s' % (output_converted_file))
+sys.exit()
