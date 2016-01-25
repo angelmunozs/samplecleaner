@@ -160,7 +160,11 @@ module.exports.clean = function(req, res, next) {
 				messages.push(message)
 			})
 			.end(function (error) {
-				req.data.url = req.data.url.replace('dirty', 'clean')
+				messages = messages.join('\n')
+				//	Depends on the message shown by the Pyhton console!!
+				req.data.url = messages.split('Saved as ')[1]
+				//	Update file name
+				req.data.name = req.data.name.split('.')[0] + '.' + path.extname(req.data.url)
 				cb(null, error)
 			})
 		},
@@ -170,7 +174,7 @@ module.exports.clean = function(req, res, next) {
 			var time = endTime - startTime
 
 			var sql = 'UPDATE log_uploads SET error = ?, messages = ?, time = ? WHERE idLog = ?'
-			Query(sql, [JSON.stringify(error), messages.join('\n'), time, req.file.id])
+			Query(sql, [JSON.stringify(error), messages, time, req.file.id])
 			.then(function () {
 				cb(error)
 			})
@@ -206,8 +210,7 @@ module.exports.download = function(req, res, next) {
 				}
 				file = {
 					id 		: id,
-					url 	: path.join(__dirname, '../files/songs/clean', id + '.' + rows[0][0].name.split('.')[1]) /* Change when WAV conversion works */,
-					name 	: rows[0][0].name,
+					url 	: rows[0][0].messages.split('Saved as ')[1], 	/*	Depends on the message shown by the Pyhton console!! 	*/
 					ip 		: rows[0][0].ip
 				}
 				if(file.ip != req.ip) {
