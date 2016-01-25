@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `log_uploads` (
   `time` int(11) DEFAULT '0' COMMENT 'Python script: Time (milliseconds)',
   `error` text COMMENT 'Python script: Errors',
   `messages` text COMMENT 'Python script: Messages',
-  `name` text COMMENT 'File name',
+  `name` text COMMENT 'Uploaded file name',
   `size` text COMMENT 'File size',
   `type` text COMMENT 'File MIME type',
   `params` text COMMENT 'Parameters for the cleaning process',
