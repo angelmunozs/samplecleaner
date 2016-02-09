@@ -181,10 +181,6 @@ for j in range(0, songchannels) :
 		Transforms[j][count] = SampleTransform
 		#	Calculate power
 		Power = abs(SampleTransform) ** 2
-		#	Normalize power, because the noise power is also normalized
-		norm_factor = np.max(Power)
-		if not norm_factor == 0 :
-			Power = Power / norm_factor
 
 		#	Apply gains to values under threshold
 		for k in range(0, len(Power)) :
