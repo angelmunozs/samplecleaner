@@ -107,6 +107,9 @@ a:hover, a:focus {
 .section:nth-child(3) {
 	background: #eee;
 }
+.section:nth-child(5) {
+	background: #eee;
+}
 h2 {
 	margin-top: 0px;
 	color: #ff3337;
@@ -386,6 +389,20 @@ audio {
 }
 .error-msg {
 	font-size: 19px;
+}
+/* Section 4: FAQ */
+h4.question {
+	margin-top: 15px;
+	margin-bottom: 5px;
+}
+.answer {
+	margin-left: 15px;
+	color: #777;
+	font-size: 16px;
+}
+.fa-question-circle {
+	margin-right: 4px;
+	color: #999;
 }
 /* Footer */
 footer {
