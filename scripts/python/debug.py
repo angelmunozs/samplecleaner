@@ -51,7 +51,9 @@ W = FFTsize
 MSS = W / 2
 
 #	Window
-Window = np.hanning(W)
+#	Window = np.hanning(W)
+#	MATLAB-generated window
+Window = np.genfromtxt(path.abspath('files/windows/hann' + str(W) + '.csv'), delimiter = ',')
 
 #	Initialize
 NewSong = np.zeros((songlength + W, songchannels))
@@ -104,7 +106,7 @@ write(output_original_file, Fs, ScaledSong)
 print('Done (took %.4f seconds)' % (time.time() - start_time))
 
 #	Write output text files for debugging
-np.savetxt('/home/angel/samplecleaner/test/clean/SampleBeforeIfft.csv', SampleBeforeIfft, delimiter = ',')
-np.savetxt('/home/angel/samplecleaner/test/clean/SampleAfterIfft.csv', SampleAfterIfft, delimiter = ',')
-np.savetxt('/home/angel/samplecleaner/test/clean/SampleTransform.csv', SampleTransform, delimiter = ',')
-np.savetxt('/home/angel/samplecleaner/test/clean/hann2048.csv', Window, delimiter = ',')
+#	np.savetxt('/home/angel/samplecleaner/test/clean/SampleBeforeIfft.csv', SampleBeforeIfft, delimiter = ',')
+#	np.savetxt('/home/angel/samplecleaner/test/clean/SampleAfterIfft.csv', SampleAfterIfft, delimiter = ',')
+#	np.savetxt('/home/angel/samplecleaner/test/clean/SampleTransform.csv', SampleTransform, delimiter = ',')
+#	np.savetxt('/home/angel/samplecleaner/test/clean/hann2048.csv', Window, delimiter = ',')

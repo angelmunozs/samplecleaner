@@ -137,7 +137,9 @@ ReduceLevelUN = 1 / (10 ** (float(reduce_gain) / 10))
 times = 0
 
 #	Window
-Window = np.hanning(W)
+#	Window = np.hanning(W)
+#	MATLAB-generated window
+Window = np.genfromtxt(path.abspath('files/windows/hann' + str(W) + '.csv'), delimiter = ',')
 
 #	Initialize
 iterations = int(math.ceil(songlength / MSS))
@@ -242,7 +244,7 @@ for j in range(0, songchannels) :
 		ProcessedSample = np.real(ifft(ProcessedTransform))
 
 		#	Overlapp/add method for piecing together the processed windows
-		NewSong[i : i + W/2 - 1, j] = NewSong[i : i + W/2 - 1, j] + ProcessedSample[0 : W/2 - 1]
+		NewSong[i : i + W/2, j] = NewSong[i : i + W/2, j] + ProcessedSample[0 : W/2]
 		NewSong[i + W/2 : i + W - 1, j] = ProcessedSample[W/2 : W - 1]
 
 		#	Print proggress
