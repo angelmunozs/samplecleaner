@@ -6,9 +6,10 @@
 
 		<h4>Sample Cleaner uses a technique called <a href="https://en.wikipedia.org/wiki/Noise_gate" target="_blank">spectral noise gating</a>.</h4>
 
-		<p>The audio signal you upload to the server (1) is windowed and each window is processed individually (2). For each windowed sample, we take the FFT of size 2048, so 1025 frequency bands are analyzed, and then the mean power of each band is calculated (3). Every frequency band is compared to the same frequency band of the noise you selected (which has been previously analyzed, and its statistics are stored in the server). The next step is spectral noise gating.</p>
+		<p>The audio signal you upload to the server is windowed and each window is processed individually. For each windowed sample, we take the FFT of size 2048, and then the mean power of each band is calculated. Every frequency band is compared to the same frequency band of the noise you selected (whose statistics are stored in the server), and the noise gate is applied.</p>
 
-		<p>Frequency smoothing and time smoothing are then applied, and the windowed signal is reconstructed by taking the inverse FFT. When all the windowed samples have been processed, the audio signal is pieced together using overlap/add method of 50% the window size (4).</p>
+		<p>When all the windowed samples have been processed and taken their inverse FFT, the audio signal is pieced together using overlap/add method of 50% the window size. Sample Cleaner uses a <a href="https://en.wikipedia.org/wiki/Hann_function" target="_blank">Hann window</a> of size 2048, the same as the FFT size.</p>
+
 	</div>
 
 	<div class="row">

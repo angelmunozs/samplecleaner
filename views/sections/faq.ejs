@@ -1,0 +1,37 @@
+<div id="section-faq" class="section col-xs-12">
+	<div class="row">
+		<h2>
+			FAQ
+		</h2>
+
+		<h4 class="question">
+			Do you delete data that has been uploaded to your server?
+		</h4>
+
+		<p class="answer">Yes, we do. Any audio file you upload to <script type="text/javascript">document.write(window.location.hostname)</script> is deleted after a period of 24 hours, as well as the clean version of your song.</p>
+
+		<h4 class="question">
+			What programming language do you use?
+		</h4>
+
+		<p class="answer">Our web server is developed with <a href="https://nodejs.org/" target="_blank">nodejs</a>, and we use Python's <a href="http://www.scipy.org/" target="_blank">Scipy</a> for audio signal processing.</p>
+
+		<h4 class="question">
+			Why do you use a FFT size of 2048?
+		</h4>
+
+		<p class="answer">
+			Because for that size, 1025 positive frequency bands are analyzed, a number that we consider accurate enough for noise reduction. A higher FFT size will unnecesarily increase computational cost and execution time, and a lower one, won't be enough for the analysis.
+		</p>
+
+		<!-- <h4 class="question">
+			Are the techinques used by Sample Cleaner academically grounded?
+		</h4>
+
+		<p class="answer">
+			Yes, it is. Sample Cleaner was developed by a Telecom Engineering student at Universidad Politécnica de Madrid.
+		</p> -->
+
+	</div>
+
+</div>
