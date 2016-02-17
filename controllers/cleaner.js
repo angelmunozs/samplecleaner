@@ -223,7 +223,7 @@ module.exports.download = function(req, res, next) {
 		function findFile(cb) {
 			fs.readFile(file.url, function (error, data) {
 				if(error) {
-					return cb(error)
+					return cb(Errores.NO_FILE_FOUND)
 				}
 				if(!data || !data.length) {
 					return cb(Errores.NO_FILE_FOUND)
