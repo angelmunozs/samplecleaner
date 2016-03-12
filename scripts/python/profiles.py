@@ -42,6 +42,7 @@ FFTsizePower = 11
 FFTsize = 2 ** FFTsizePower
 W = FFTsize
 MSS = W / 2
+print 'FFT size: ', FFTsize
 
 #	Window
 Window = np.hanning(W)
@@ -65,9 +66,9 @@ for l in range(0, len(folders)) :
 
 		#	Initialize
 		iterations = int(math.ceil(noiselength / MSS))
-		Powers = np.zeros((iterations, noisechannels, FFTsize))
-		NoisePowers = np.zeros((FFTsize, noisechannels))
-		MaxPowers = np.zeros(FFTsize)
+		AbsValues = np.zeros((iterations, noisechannels, FFTsize))
+		NoiseAbsValues = np.zeros((FFTsize, noisechannels))
+		MaxAbsValues = np.zeros(FFTsize)
 
 		print('File %d/%d: %s' % (m + 1 + l * len(files), len(folders) * len(files), path.join(audio_path, folders[l], files[m])))
 
@@ -98,9 +99,9 @@ for l in range(0, len(folders)) :
 				#	Compute FFT
 				NoiseTransform = fft(WindowedSample)
 				#	Calculate power
-				Power = abs(NoiseTransform) ** 2
+				AbsValue = abs(NoiseTransform)
 				#	Save
-				Powers[count][j] = Power
+				AbsValues[count][j] = AbsValue
 				
 				#	Print proggress
 				count = count + 1
@@ -111,17 +112,16 @@ for l in range(0, len(folders)) :
 			#	For each window analyzed
 			for i in range(0, FFTsize) :
 
-				NoisePowers[i][k] = Powers[1][k][i]
+				NoiseAbsValues[i][k] = AbsValues[1][k][i]
 
 				#	Calculate the maximum of the powers of noise in that band
 				for j in range(0, iterations) :
 
-					if Powers[j][k][i] > NoisePowers[i][k] :
-						NoisePowers[i][k] = Powers[j][k][i]
+					if AbsValues[j][k][i] > NoiseAbsValues[i][k] :
+						NoiseAbsValues[i][k] = AbsValues[j][k][i]
 
 				#	Maximum of both channels
-				MaxPowers[i] = np.amax(NoisePowers[i])
+				MaxAbsValues[i] = np.amax(NoiseAbsValues[i])
 
-		MaxPowers = MaxPowers / np.max(MaxPowers)
 		profile_name = path.join(output_path, folders[l], files[m].replace('wav', 'csv', 1))
-		np.savetxt(profile_name, MaxPowers, delimiter = ',')
+		np.savetxt(profile_name, MaxAbsValues, delimiter = ',')

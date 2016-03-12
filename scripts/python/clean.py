@@ -121,13 +121,13 @@ song_norm_factor = np.max(np.abs(Song))
 Song = Song / song_norm_factor
 
 #	Read noise statistics
-NoisePowers = np.genfromtxt(noise_path, delimiter = ',')
-NoisePowers = NoisePowers * 0.49 #	70% of the song gain (it's a power, so 0.7**2 = 0.49)
+NoiseAbsValues = np.genfromtxt(noise_path, delimiter = ',')
+NoiseAbsValues = NoiseAbsValues * 0.1 #	10% of the song gain
 
 #   Matrix dimensions
 songchannels = Song.ndim
 songlength = len(Song)
-FFTsize = len(NoisePowers)
+FFTsize = len(NoiseAbsValues)
 
 #	Parameters depending on the previous ones
 W = FFTsize
@@ -137,9 +137,7 @@ ReduceLevelUN = 1 / (10 ** (float(reduce_gain) / 10))
 times = 0
 
 #	Window
-#	Window = np.hanning(W)
-#	MATLAB-generated window
-Window = np.genfromtxt(path.abspath('files/windows/hann' + str(W) + '.csv'), delimiter = ',')
+Window = np.hanning(W)
 
 #	Initialize
 iterations = int(math.ceil(songlength / MSS))
@@ -182,11 +180,11 @@ for j in range(0, songchannels) :
 		#	Save into Transforms
 		Transforms[j][count] = SampleTransform
 		#	Calculate power
-		Power = abs(SampleTransform) ** 2
+		AbsValue = abs(SampleTransform)
 
 		#	Apply gains to values under threshold
-		for k in range(0, len(Power)) :
-			if Power[k] <= NoisePowers[k] :
+		for k in range(0, len(AbsValue)) :
+			if AbsValue[k] <= NoiseAbsValues[k] :
 				Gains[j][count][k] = ReduceLevelUN
 		
 		#	Print proggress
