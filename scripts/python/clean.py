@@ -100,6 +100,7 @@ noise_path = path.abspath(path.join('files/noise/profiles', noise_year, noise_pr
 wav_extensions = ['.wav']
 
 #	Time measure
+start_time_abs = time.time()
 start_time = time.time()
 
 #	If the input file is not yet a WAV
@@ -122,7 +123,6 @@ Song = Song / song_norm_factor
 
 #	Read noise statistics
 NoiseAbsValues = np.genfromtxt(noise_path, delimiter = ',')
-NoiseAbsValues = NoiseAbsValues * 0.1 #	10% of the song gain
 
 #   Matrix dimensions
 songchannels = Song.ndim
@@ -135,6 +135,8 @@ MSS = W / 2
 ReduceLevelUN = 1.0
 ReduceLevelUN = 1 / (10 ** (float(reduce_gain) / 10))
 times = 0
+noise_threshold = 10 ** (-1.2) #	Based on studies
+noise_level_tests = 50 #	50 values are enough
 
 #	Window
 Window = np.hanning(W)
@@ -144,9 +146,78 @@ iterations = int(math.ceil(songlength / MSS))
 NewSong = np.zeros((songlength + W, songchannels))
 Gains = np.ones((songchannels, iterations, FFTsize))
 Transforms = np.zeros((songchannels, iterations, FFTsize), dtype = complex)
+Levels = np.zeros((songchannels, noise_level_tests))
 
 #	Print status
-#	print('Step 1: Taking statistics from %d samples...' % songlength)
+#	print('Step 1: Calculating optimum gain')
+
+#	Calculate optimum gain
+for j in range(0, songchannels) :
+	count = 0
+
+	for i in range(0, songlength - MSS, MSS) :
+
+		if count < noise_level_tests :
+
+			#	Calculate end of song and noise
+			songend = np.amin((i + W, songlength - 1))
+			
+			#	Sample
+			SongSample = Song[i : songend, j]
+
+			#	If we reached the end
+			if len(SongSample) < W :
+				#	Fill with zeros until size equals W
+				Zeros = np.zeros(W)
+				Zeros[0 : len(SongSample)] = SongSample
+				SongSample = Zeros
+
+			#	Calculate mean (time domain)
+			media_actual = np.mean(SongSample)
+
+			#	Windowed sample
+			WindowedSample = SongSample * Window
+
+			#	Compute FFT
+			SampleTransform = abs(fft(WindowedSample))
+
+			#	If the mean value is below the noise threshold 
+			if media_actual <= noise_threshold :
+
+				numerador = 0
+				denominador = 0
+
+				#	Calculate optimum gain (frequency domain)
+				for k in range(0, len(SongSample)) :
+					numerador = numerador + NoiseAbsValues[k] * SampleTransform[k]
+					denominador = denominador + NoiseAbsValues[k] ** 2
+
+				Levels[j, count] = numerador / denominador
+
+			count = count + 1
+
+		else :
+			break
+
+#	Choose the best calculated gain
+suma = 0
+sumas = 0
+for i in range(0, songchannels) :
+	for j in range(0, len(Levels)) :
+		if Levels[i, j] > 0 :
+			suma = suma + Levels[i, j]
+			sumas = sumas + 1
+
+noise_level = np.max((0.1, np.max(Levels)))
+
+#	Print calculated optimum gain
+print('Estimated noise level: %.4f' % (noise_level))
+
+#	Apply optimum gain to noise statistics
+NoiseAbsValues = NoiseAbsValues * noise_level
+
+#	Print status
+#	print('Step 2: Taking statistics from %d samples...' % songlength)
 
 #	Analyze song
 for j in range(0, songchannels) :
@@ -266,4 +337,5 @@ if not input_original_extension in wav_extensions :
 	print('Conversion to %s took %.4f seconds' % (input_original_format, time.time() - start_time))
 
 print('Saved as %s' % (output_converted_file))
+#print('Elapsed time: %.4f seconds' % (time.time() - start_time_abs))
 sys.exit()
