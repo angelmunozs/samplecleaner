@@ -108,7 +108,7 @@ module.exports.info_profile = function(req, res, next) {
 		return next()
 	})
 }
-//	Retruns an audio file file
+//	Retruns an audio file
 module.exports.audio = function(req, res, next) {
 
 	var allowedYears = ['40', '50', '60', '70', '80', '90']
