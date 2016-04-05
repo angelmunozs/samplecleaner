@@ -129,12 +129,12 @@ CREATE TABLE IF NOT EXISTS `info_years` (
 --
 
 INSERT INTO `info_years` (`idInfo`, `year`, `info`) VALUES
-(1, '40', '40s vinyl discs info'),
-(2, '50', '50s vinyl discs info'),
-(3, '60', '60s vinyl discs info'),
-(4, '70', '70s vinyl discs info'),
-(5, '80', '80s vinyl discs info'),
-(6, '90', '90s vinyl discs info');
+(1, '40', 'Monophonic sound, narrow namdwidth and poor dynamic range'),
+(2, '50', 'Monophonic sound, standarized equalization (RIAA, current standard)'),
+(3, '60', 'First commercialized stereo recordings, improved dynamic range'),
+(4, '70', 'Highly improved dynamic range with AGC, low storage capacity'),
+(5, '80', 'Good dynamic range, few distortion and broad bandwidth'),
+(6, '90', 'Borad bandwidth and great storage capacity (current technology)');
 
 -- --------------------------------------------------------
 
