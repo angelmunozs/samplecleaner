@@ -1,16 +1,16 @@
 {
-  "name": "elfiestote",
+  "name": "samplecleaner",
   "version": "1.0.0",
-  "homepage": "https://github.com/angelmunozs/elfiestote",
+  "private": true,
+  "homepage": "https://github.com/angelmunozs/samplecleaner",
   "authors": [
     "Ángel Muñoz Sagaseta de Ylurdoz <angel.munoz.sagaseta@gmail.com>"
   ],
   "license": "Private",
-  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
-    "components"
+    "bower_components"
   ],
   "dependencies": {
     "jquery": "~1.11.0",
