@@ -200,6 +200,9 @@ b.step-number {
 #step2 {
 	padding-top: 20px;
 }
+#error-modal {
+	margin-left: 20px;
+}
 #file-name {
 	margin-bottom: 10px;
 	color: #444;
@@ -362,6 +365,7 @@ audio {
 	height: 120px;
 	background: #fff;
 	color: #777;
+	resize: vertical;
 	padding: 6px 10px 6px 10px;
 	border: 1px solid #aaa;
 }

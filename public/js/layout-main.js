@@ -228,7 +228,7 @@ $(document).ready(function() {
 			$('#status-icon').fadeOut('slow')
 		}, 2000)
 	})
-	$('.step-tip a').off('click').click(function () {
+	$('#step4-tip1').off('click').click(function () {
 		//	Reset input type 'file'
 		$('#file').replaceWith($('#file').val('').clone(true))
 		//	Reset values
@@ -265,8 +265,58 @@ $(document).ready(function() {
 		$('#step1').show()
 		section1()
 	})
+	$('#modal-button').on('click', function () {
+		//	First, disable button
+		$('#modal-button').attr('disabled', 'disabled')
+		$('#modal-button').html('<i class="fa fa-spinner fa-spin"></i>')
+
+		var message = $('#modal-message').val().replace(/\n/gi, '<br>')
+
+		if(message.length > 4) {
+			//	Build definitive message
+			message = '<p><i>Cleaning failed: ID #' + clean.id + '</i></p><p>' + message + '</p>'
+			//	Call the API
+			$.post("/api/contact", {
+				email : 'Anonymous',
+				message : message
+			})
+			.done(function (data) {
+				if(data.error) {
+					$('#error-modal').css('color', '#ff0000')
+					$('#error-modal').html(data.error)
+					//	Re-enable button
+					$('#modal-button').html('Send')
+				}
+				else {				
+					$('#error-modal').css('color', '#58FA58')
+					$('#error-modal').html('Succesfully sent. Thanks for collaborating!')
+					//	Reset values to avoid multiple equal emails
+					$('#modal-message').val('')
+					//	Re-enable button
+					$('#modal-button').html('Send')
+				}
+			})
+			.fail(function () {
+				$('#error-modal').css('color', '#ff0000')
+				$('#error-modal').html('Something went wrong. please, try again later.')
+				//	Re-enable button
+				$('#modal-button').html('Send')
+			})
+		}
+		else {
+			$('#error-modal').css('color', '#ff0000')
+			$('#error-modal').html('Please, write a message.')
+			//	Re-enable button
+			$('#modal-button').removeAttr('disabled')
+			$('#modal-button').html('Send')
+		}
+	})
+
 	//	Section 1 behavior
 	var section1 = function () {
+		//	Reset textarea value from modal
+		$('#modal-message').val('')
+		$('#error-modal').html('')
 		//	Jump to next section
 		if(name && size != 0 && allowedTypes.indexOf(type.toLowerCase()) != -1) {
 			//	Call to next step
@@ -487,7 +537,7 @@ $(document).ready(function() {
 		$('.step-container').hide()
 		$('#step3').show()
 		//	Reset html
-		$('#section-3-msg').html('We\'re working on it... This process may take about 1-2 minutes')
+		$('#section-3-msg').html('We\'re working on it... This process takes about 12 seconds per minute of audio')
 		$('#step3-icon').removeClass('fa-times')
 		$('#step3-icon').addClass('fa-spinner')
 		$('#step3-icon').addClass('fa-spin')
@@ -544,6 +594,8 @@ $(document).ready(function() {
 		//	Update form action
 		$('#download').attr('href', '/api/song/' + clean.id)
 		$('#download').attr('download', clean.name)
+		//	Enable button from modal
+		$('#modal-button').removeAttr('disabled')
 		//	Update active step title
 		$('.step-header').removeClass('active')
 		$('#step4-header').addClass('active')

@@ -15,7 +15,7 @@ module.exports.send = function(req, res, next) {
 	var email = req.body.email || null
 	var message = req.body.message || null
 
-	if(!validate.email(email)) {
+	if(!validate.email(email) && email != 'Anonymous') {
 		req.error = Errores.EMAIL_INCORRECTO
 		return next()
 	}
