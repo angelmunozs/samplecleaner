@@ -241,7 +241,7 @@ $(document).ready(function() {
 			$('#status-icon').fadeOut('slow')
 		}, 2000)
 	})
-	$('#step4-tip1').off('click').click(function () {
+	$('a.back-to-section1').off('click').click(function () {
 		//	Reset input type 'file'
 		$('#file').replaceWith($('#file').val('').clone(true))
 		//	Reset values

@@ -139,6 +139,15 @@ h2 {
 	margin: 0;
 	padding: 0;
 }
+i.fa-question-circle {
+	cursor: pointer;
+}
+#back-to-step1 {
+	margin-left: 12px;
+	font-size: 14px;
+	color: #FF3337;
+	cursor: pointer;
+}
 b.step-number {
 	font-size: 2em;
 	margin-right: 6px;
