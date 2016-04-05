@@ -135,8 +135,8 @@ MSS = W / 2
 ReduceLevelUN = 1.0
 ReduceLevelUN = 1 / (10 ** (float(reduce_gain) / 10))
 times = 0
-noise_threshold = 10 ** (-1.2) #	Based on studies
-noise_level_tests = 50 #	50 values are enough
+noise_threshold = 10 ** (-1.5) #	Based on studies
+noise_level_tests = 100 #	100 values are enough
 
 #	Window
 Window = np.hanning(W)
@@ -147,9 +147,6 @@ NewSong = np.zeros((songlength + W, songchannels))
 Gains = np.ones((songchannels, iterations, FFTsize))
 Transforms = np.zeros((songchannels, iterations, FFTsize), dtype = complex)
 Levels = np.zeros((songchannels, noise_level_tests))
-
-#	Print status
-#	print('Step 1: Calculating optimum gain')
 
 #	Calculate optimum gain
 for j in range(0, songchannels) :
@@ -208,7 +205,7 @@ for i in range(0, songchannels) :
 			suma = suma + Levels[i, j]
 			sumas = sumas + 1
 
-noise_level = np.max((0.1, np.max(Levels)))
+noise_level = np.max((0.1, np.mean(Levels)))
 
 #	Print calculated optimum gain
 print('Estimated noise level: %.4f' % (noise_level))
@@ -217,7 +214,7 @@ print('Estimated noise level: %.4f' % (noise_level))
 NoiseAbsValues = NoiseAbsValues * noise_level
 
 #	Print status
-#	print('Step 2: Taking statistics from %d samples...' % songlength)
+print('Taking statistics from %d samples...' % songlength)
 
 #	Analyze song
 for j in range(0, songchannels) :
@@ -288,9 +285,6 @@ print('Frequency smoothing took %.4f seconds' % (time.time() - start_time))
 #	Time measure
 start_time = time.time()
 
-#	Print status
-#	print('Step 4: Applying noise gate to %d samples...' % songlength);
-
 #	Process song
 for j in range(0, songchannels) :
 
@@ -324,6 +318,10 @@ for j in range(0, songchannels) :
 		
 		# progress = newprogress
 
+print('Noise reduction took %.4f seconds' % (time.time() - start_time))
+#	Time measure
+start_time = time.time()
+
 #	Write clean song
 ScaledSong = np.int16(NewSong * 32767)
 write(output_original_file, Fs, ScaledSong)
@@ -337,5 +335,5 @@ if not input_original_extension in wav_extensions :
 	print('Conversion to %s took %.4f seconds' % (input_original_format, time.time() - start_time))
 
 print('Saved as %s' % (output_converted_file))
-#print('Elapsed time: %.4f seconds' % (time.time() - start_time_abs))
+#	print('Elapsed time: %.4f seconds' % (time.time() - start_time_abs))
 sys.exit()
