@@ -20,13 +20,11 @@ import time
 import math
 import numpy as np
 from os import path
-from magic import Magic
 from scipy.fftpack import fft
 from scipy.fftpack import ifft
 from scipy.io.wavfile import write
 from scipy.io.wavfile import read
 from pydub import AudioSegment
-mime = Magic(mime = True)
 
 #	=====================================================================
 #	Some validation
@@ -78,7 +76,6 @@ def smooth(Input, npoints) :
 
 #	Input (generally non-WAV)
 input_original_name, input_original_extension = path.splitext(input_original_file)
-input_original_mime = mime.from_file(input_original_file)
 input_original_format = input_original_extension.replace('.', '', 1)
 
 #	Converted input (WAV)

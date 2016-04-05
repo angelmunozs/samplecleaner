@@ -15,7 +15,7 @@ var from 	= 'Sample Cleaner'
 //	Subject
 var subject = 'Welcome to Sample Cleaner!'
 //	Message
-var text 	= 'We are proud to announce that Sample Cleaner will start working in early 2016.'
+var text 	= 'We are proud to announce that Sample Cleaner will start working soon in 2016.'
 //	HTML-formatted message
 var html 	= fs.readFileSync(path.join(__dirname, '../../email/template.html'), 'utf8')
 
