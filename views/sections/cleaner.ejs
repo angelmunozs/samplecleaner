@@ -49,11 +49,11 @@
 					<p>File: <span id="file-name"></span></p>
 					<div class="noise-type">
 						<div class="rslider">
-							<div class="rslider-tip">Decade:</div>
+							<div class="rslider-tip">Decade: <i class="fa fa-question-circle" data-toggle="tooltip" title="You can see the year of manufacture in the back cover of your vinyl record"></i></div>
 							<div id="noise-year" class="rslider-slider"></div>
 						</div>
 						<div class="rslider basic">
-							<div class="rslider-tip">Type of noise:</div>
+							<div class="rslider-tip">Type of noise: <i class="fa fa-question-circle" data-toggle="tooltip" title="Listen to the samples and select the one you think affects your recording"></i></div>
 							<div id="noise-profile" class="rslider-slider"></div>
 						</div>
 						<div class="rslider advanced">
@@ -63,11 +63,11 @@
 							</div>
 							<div>
 								<div class="rslider">
-									<div class="rslider-tip">Reduce gain (dB):</div>
+									<div class="rslider-tip">Attenuation (dB): <i class="fa fa-question-circle" data-toggle="tooltip" title="Attenuation to be applied to the frequency bands containing noise"></i></div>
 									<div id="reduce-gain" class="rslider-slider"></div>
 								</div>
 								<div class="rslider">
-									<div class="rslider-tip">Smoothing bands:</div>
+									<div class="rslider-tip">Smoothing bands: <i class="fa fa-question-circle" data-toggle="tooltip" title="Smoothing is used to avoid abrupt transitions between attenuated bands"></i></div>
 									<div id="smoothing-bands" class="rslider-slider"></div>
 								</div>
 						        <!-- roundSlider Javascript -->
@@ -111,30 +111,30 @@
 			</form>
 		</div>
 	</div>
-</div>
 
-<div id="bad-result" class="modal fade" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"></i></button>
-				 <h2>Please, tell us what happened</h2>
-			</div>
-			<div class="modal-body">
-				<h4>Why aren't you happy with the result?</h4>
-				<div class="form">
-					<textarea id="modal-message"></textarea>
+	<div id="bad-result" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					 <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"></i></button>
+					 <h2>Please, tell us what happened</h2>
 				</div>
-				<div class="form-end">
-					<button id="modal-button" type="button" class="btn btn-send" disabled="disabled">Send</button>
-					<span id="error-modal"></span>
+				<div class="modal-body">
+					<h4>Why aren't you happy with the result?</h4>
+					<div class="form">
+						<textarea id="modal-message"></textarea>
+					</div>
+					<div class="form-end">
+						<button id="modal-button" type="button" class="btn btn-send" disabled="disabled">Send</button>
+						<span id="error-modal"></span>
+					</div>
+					<hr>
+					<p>Sample Cleaner is always working on new features to improve the noise cleaning of your sounds. Please, collaborate on telling us what you didn't like of the clean song, so we can examine the file individually and correct the mistakes.</p>
 				</div>
-				<hr>
-				<p>Sample Cleaner is always working on new features to improve the noise cleaning of your sounds. Please, collaborate on telling us what you didn't like of the clean song, so we can examine the file individually and correct the mistakes.</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
 			</div>
 		</div>
-	</div>
+	</div>	
 </div>

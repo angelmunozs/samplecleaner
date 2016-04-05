@@ -16,6 +16,19 @@ $(document).ready(function() {
 	var navHeight = parseInt($('#nav').css('height'));
 	//	Set checkbox unchecked
 	$('#advanced-settings').attr('checked', false)
+	//	Enable tooltips
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip()
+	})
+	//	Muestra el mensaje de las cookies si no se ha aceptado ya
+	if(!localStorage.cookiesAccepted) {
+		$('#cookie-message').fadeIn()
+	}
+	$('.accept-cookies').on('click', function () {
+		console.log('Cookie policy accepted')
+		localStorage.cookiesAccepted = true
+		$('#cookie-message').fadeOut()
+	})
 	//	Positions of page sections
 	var positions = [
 		{

@@ -340,6 +340,9 @@ audio {
 #step4-tip2 a {
 	color: #999;
 }
+.modal-content {
+	border-radius: 0px !important;
+}
 /* Section 2: How it works */
 .work-step {
 	margin-top: 10px;
@@ -473,4 +476,38 @@ footer {
 #status-icon {
 	font-size: 20px;
 	padding-right: 8px;
+}
+/* Cookie message */
+#cookie-message {
+	padding: 12px;
+	background-color: #F5F6CE;
+	border-top: 1px solid #eee;
+	position: fixed;
+	z-index: 10;
+	width: 100%;
+	bottom: 0;
+	display: none;
+}
+#accept-cookies-i {
+	cursor: pointer;
+}
+#cookie-message a {
+	cursor: pointer;
+	margin-left: 6px;
+}
+.info-block {
+	margin-bottom: 20px;
+}
+.info-block:last-child {
+	margin-bottom: 0px;
+}
+#cookie-policy .modal-body {
+	padding: 6px 20px 0px 20px;
+}
+.info-info {
+	margin-left: 16px;
+	margin-right: 16px;
+}
+.info-header {
+	margin-bottom: 16px;
 }
