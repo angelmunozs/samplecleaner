@@ -50,27 +50,6 @@ if not path.isfile(input_original_file) :
 	sys.exit('File \'%s\' doesn\'t exist' % input_original_file)
 
 #	=====================================================================
-#	Aux functions
-#	=====================================================================
-
-#	Smoothing
-def smooth(Input, npoints) :
-	l = len(Input)
-	span = npoints * 2 + 1
-	Output = np.zeros(l)
-	#	Apply smoothing
-	for i in range(0, l) :
-		if i > npoints - 1 and i < l - npoints :
-			#	y(i) = 1/span * [y(i - N) + ... + y(i) + ... + y(i + N)]
-			factor = 0
-			for j in range(-npoints, npoints + 1) :
-				factor = factor + Input[i + j]
-			Output[i] = factor / span
-		else :
-			Output[i] = Input[i]
-	return Output
-
-#	=====================================================================
 #	Conversion to WAV
 #	=====================================================================
 
@@ -196,7 +175,6 @@ for j in range(0, songchannels) :
 #	Choose the best calculated gain
 suma = 0
 sumas = 0
-print Levels
 for i in range(0, songchannels) :
 	for j in range(0, len(Levels)) :
 		if Levels[i, j] > 0 :
