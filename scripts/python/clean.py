@@ -196,6 +196,7 @@ for j in range(0, songchannels) :
 #	Choose the best calculated gain
 suma = 0
 sumas = 0
+print Levels
 for i in range(0, songchannels) :
 	for j in range(0, len(Levels)) :
 		if Levels[i, j] > 0 :
@@ -332,5 +333,5 @@ if not input_original_extension in wav_extensions :
 	print('Conversion to %s took %.4f seconds' % (input_original_format, time.time() - start_time))
 
 print('Saved as %s' % (output_converted_file))
-#	print('Elapsed time: %.4f seconds' % (time.time() - start_time_abs))
+print('Total elapsed time: %.4f seconds' % (time.time() - start_time_abs))
 sys.exit()

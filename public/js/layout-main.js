@@ -22,12 +22,12 @@ $(document).ready(function() {
 	})
 	//	Muestra el mensaje de las cookies si no se ha aceptado ya
 	if(!localStorage.cookiesAccepted) {
-		$('#cookie-message').fadeIn()
+		$('#cookie-message').show()
 	}
 	$('.accept-cookies').on('click', function () {
 		console.log('Cookie policy accepted')
 		localStorage.cookiesAccepted = true
-		$('#cookie-message').fadeOut()
+		$('#cookie-message').hide()
 	})
 	//	Positions of page sections
 	var positions = [
