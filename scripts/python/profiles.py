@@ -38,7 +38,7 @@ mime = Magic(mime = True)
 output_path = 'files/noise/profiles'
 audio_path = 'files/noise/audio'
 extension = '.wav'
-FFTsizePower = 11
+FFTsizePower = 12
 FFTsize = 2 ** FFTsizePower
 W = FFTsize
 MSS = W / 2
