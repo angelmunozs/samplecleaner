@@ -164,7 +164,7 @@ module.exports.clean = function(req, res, next) {
 				//	Depends on the message shown by the Pyhton console!!
 				req.data.url = messages.split('Saved as ')[1]
 				//	Update file name
-				req.data.name = req.data.name.split('.')[0] + ' (cleaned with ' + config.DOMAIN.replace('http://', '') + ').' + path.extname(req.data.url)
+				req.data.name = req.data.name.split('.')[0] + ' (cleaned with ' + config.DOMAIN.replace('http://', '') + ')' + path.extname(req.data.url)
 				cb(null, error)
 			})
 		},
