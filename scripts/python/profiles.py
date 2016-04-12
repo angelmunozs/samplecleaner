@@ -41,7 +41,7 @@ MSS = W / 2
 print 'FFT size: ', FFTsize
 
 #	Window
-Window = np.hanning(W)
+Window = np.hamming(W)
 
 #	Read files
 folders = [f for f in os.listdir(audio_path) if os.path.isdir(os.path.join(audio_path, f))]
