@@ -552,7 +552,7 @@ $(document).ready(function() {
 		//	Reset html
 		$('#section-3-msg').html('We\'re working on it... This process takes about 12 seconds per minute of audio')
 		$('#step3-icon').removeClass('fa-times')
-		$('#step3-icon').addClass('fa-cog')
+		$('#step3-icon').addClass('fa-circle-o-notch')
 		$('#step3-icon').addClass('fa-spin')
 		$('#step3-tip').hide()
 		$('#section-error-3').html('')
