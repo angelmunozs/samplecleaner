@@ -8,7 +8,7 @@
 
 		<p>The audio signal you upload to the server [1] is windowed and each window is processed individually [2]. For each windowed sample, we take the FFT of size 4096 [3], and then the mean power of each band is calculated. Every frequency band is compared to the same frequency band of the noise you selected (whose statistics are stored in the server), and the noise gate is applied.</p>
 
-		<p>When all the windowed samples have been processed and taken their inverse FFT, the audio signal is pieced together using overlap/add method of 50% the window size [4]. Sample Cleaner uses a <a href="https://en.wikipedia.org/wiki/Hann_function" target="_blank">Hann window</a> of size 4096, the same as the FFT size.</p>
+		<p>When all the windowed samples have been processed and taken their inverse FFT, the audio signal is pieced together using overlap/add method of 50% the window size [4]. Sample Cleaner uses a <a href="https://en.wikipedia.org/wiki/Window_function#Hamming_window" target="_blank">Hamming window</a> of size 4096, the same as the FFT size.</p>
 
 	</div>
 

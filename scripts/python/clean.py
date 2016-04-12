@@ -115,7 +115,7 @@ noise_threshold = 10 ** (-1.5) #	Based on studies
 noise_level_tests = 100 #	100 values are enough
 
 #	Window
-Window = np.hanning(W)
+Window = np.hamming(W)
 
 #	Initialize
 iterations = int(math.ceil(songlength / MSS))
@@ -298,6 +298,8 @@ print('Noise reduction took %.4f seconds' % (time.time() - start_time))
 #	Time measure
 start_time = time.time()
 
+#	Undo scaling by Hamming window
+NewSong = NewSong / 1.08
 #	Write clean song
 ScaledSong = np.int16(NewSong * 32767)
 write(output_original_file, Fs, ScaledSong)
