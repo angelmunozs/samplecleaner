@@ -20,15 +20,11 @@ import time
 import math
 import csv
 import numpy as np
-from os import path
-from os import listdir
-from magic import Magic
+import os
 from scipy.fftpack import fft
 from scipy.fftpack import ifft
-from scipy.io.wavfile import write
 from scipy.io.wavfile import read
 from pydub import AudioSegment
-mime = Magic(mime = True)
 
 #	=====================================================================
 #	Get profiles
@@ -48,14 +44,18 @@ print 'FFT size: ', FFTsize
 Window = np.hanning(W)
 
 #	Read files
-folders = [f for f in listdir(audio_path) if path.isdir(path.join(audio_path, f))]
+folders = [f for f in os.listdir(audio_path) if os.path.isdir(os.path.join(audio_path, f))]
 for l in range(0, len(folders)) :
 
-	files = [g for g in listdir(path.join(audio_path, folders[l])) if path.isfile(path.join(audio_path, folders[l], g))]
+	#	If the folder doesn't exist, create it
+	if not os.path.exists(os.path.join(output_path, folders[l])) :
+		os.mkdir(os.path.join(output_path, folders[l]))
+
+	files = [g for g in os.listdir(os.path.join(audio_path, folders[l])) if os.path.isfile(os.path.join(audio_path, folders[l], g))]
 	for m in range(0, len(files)) :
 
 		#	Read WAV file
-		Fs, Noise = read(path.join(audio_path, folders[l], files[m]))
+		Fs, Noise = read(os.path.join(audio_path, folders[l], files[m]))
 		Noise = Noise.astype(float)
 		noise_norm_factor = np.max(np.abs(Noise))
 		Noise = Noise / noise_norm_factor
@@ -70,7 +70,7 @@ for l in range(0, len(folders)) :
 		NoiseAbsValues = np.zeros((FFTsize, noisechannels))
 		MaxAbsValues = np.zeros(FFTsize)
 
-		print('File %d/%d: %s' % (m + 1 + l * len(files), len(folders) * len(files), path.join(audio_path, folders[l], files[m])))
+		print('File %d/%d: %s' % (m + 1 + l * len(files), len(folders) * len(files), os.path.join(audio_path, folders[l], files[m])))
 
 		#	For every channel of the sound (1 - mono, 2 - stereo, ...)
 		for j in range(0, noisechannels) :
@@ -123,5 +123,6 @@ for l in range(0, len(folders)) :
 				#	Maximum of both channels
 				MaxAbsValues[i] = np.amax(NoiseAbsValues[i])
 
-		profile_name = path.join(output_path, folders[l], files[m].replace('wav', 'csv', 1))
+		#	Save CSV
+		profile_name = os.path.join(output_path, folders[l], files[m].replace('wav', 'csv', 1))
 		np.savetxt(profile_name, MaxAbsValues, delimiter = ',')
