@@ -42,8 +42,6 @@ module.exports.delete_old = function(req, res, next) {
 			console.log('File expired: ' + files[i])
 		}
 	}
-	console.log('Expired files have been deleted')
-
 	return next()
 }
 
@@ -212,7 +210,7 @@ module.exports.clean = function(req, res, next) {
 			var sql = 'UPDATE log_uploads SET error = ?, messages = ?, time = ? WHERE idLog = ?'
 			Query(sql, [JSON.stringify(error), messages, time, req.file.id])
 			.then(function () {
-				cb()
+				cb(error)
 			})
 			.catch(cb)
 		}
