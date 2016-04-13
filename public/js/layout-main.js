@@ -254,7 +254,7 @@ $(document).ready(function() {
 		$("#noise-year").roundSlider('setValue', 90)
 		$("#noise-profile").roundSlider('setValue', 1)
 		$('#reduce-gain').roundSlider('setValue', 20)
-		$('#smoothing-bands').roundSlider('setValue', 2)
+		$('#smoothing-bands').roundSlider('setValue', 0)
 		//	Disable roundSliders
 		$("#noise-year").roundSlider('disable')
 		$("#noise-profile").roundSlider('disable')
@@ -421,7 +421,7 @@ $(document).ready(function() {
 				min: 0,
 				max: 5,
 				step: 1,
-				value: 2,
+				value: 0,
 				sliderType: "min-range",
 				handleShape: "square",
 				handleSize: '12,6',
@@ -504,7 +504,7 @@ $(document).ready(function() {
 					$('.rslider-tip-advanced').css('color', '#aaa')
 					//	Reset values
 					reduceGain.roundSlider('setValue', 20)
-					smoothingBands.roundSlider('setValue', 2)
+					smoothingBands.roundSlider('setValue', 0)
 					//	Disable sliders
 					reduceGain.roundSlider('disable')
 					smoothingBands.roundSlider('disable')
@@ -550,7 +550,14 @@ $(document).ready(function() {
 		$('.step-container').hide()
 		$('#step3').show()
 		//	Reset html
-		$('#section-3-msg').html('We\'re working on it... This process takes about 12 seconds per minute of audio')
+		var steps = '<p>' + 
+					'<b style="color: #444">Step 1: Uploading file</b>' +
+				'</p>' +
+				'<p>' +
+					'Step 2: Reducing noise' +
+				'</p>'
+		var message = 'Noise reduction is taking place at our servers. This process takes a few minutes.'
+		$('#section-3-msg').html(message)
 		$('#step3-icon').removeClass('fa-times')
 		$('#step3-icon').addClass('fa-circle-o-notch')
 		$('#step3-icon').addClass('fa-spin')
