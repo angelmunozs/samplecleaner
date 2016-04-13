@@ -212,7 +212,7 @@ module.exports.clean = function(req, res, next) {
 			var sql = 'UPDATE log_uploads SET error = ?, messages = ?, time = ? WHERE idLog = ?'
 			Query(sql, [JSON.stringify(error), messages, time, req.file.id])
 			.then(function () {
-				cb()
+				cb(error)
 			})
 			.catch(cb)
 		}
