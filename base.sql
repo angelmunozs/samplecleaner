@@ -151,6 +151,7 @@ CREATE TABLE IF NOT EXISTS `log_uploads` (
   `params` text COMMENT 'Parameters for the cleaning process',
   `first_download` datetime DEFAULT NULL COMMENT 'First download date',
   `last_download` datetime DEFAULT NULL COMMENT 'Last download date',
+  `deleted` int(11) NOT NULL DEFAULT '0' COMMENT 'Deleted from srever = 1, Still on server = 0',
   PRIMARY KEY (`idLog`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
