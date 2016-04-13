@@ -149,6 +149,8 @@ CREATE TABLE IF NOT EXISTS `log_uploads` (
   `size` text COMMENT 'File size',
   `type` text COMMENT 'File MIME type',
   `params` text COMMENT 'Parameters for the cleaning process',
+  `first_download` datetime DEFAULT NULL COMMENT 'First download date',
+  `last_download` datetime DEFAULT NULL COMMENT 'Last download date',
   PRIMARY KEY (`idLog`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

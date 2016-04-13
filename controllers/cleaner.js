@@ -168,7 +168,7 @@ module.exports.clean = function(req, res, next) {
 				cb(null, error)
 			})
 		},
-		function logError(error, cb) {
+		function logMessages(error, cb) {
 			//	Time measure
 			endTime = new Date().getTime()
 			var time = endTime - startTime
@@ -176,7 +176,7 @@ module.exports.clean = function(req, res, next) {
 			var sql = 'UPDATE log_uploads SET error = ?, messages = ?, time = ? WHERE idLog = ?'
 			Query(sql, [JSON.stringify(error), messages, time, req.file.id])
 			.then(function () {
-				cb(error)
+				cb()
 			})
 			.catch(cb)
 		}
@@ -199,12 +199,16 @@ module.exports.download = function(req, res, next) {
 
 	var id = req.params.id || null
 
+	var row
 	var file
 
 	async.series([
 		function fileData(cb) {
 			Query('SELECT * FROM log_uploads WHERE idLog = ?', [id])
 			.then(function (rows) {
+
+				row = rows[0][0]
+
 				if(!rows[0].length) {
 					return cb(Errores.NO_FILE_FOUND)
 				}
@@ -230,6 +234,20 @@ module.exports.download = function(req, res, next) {
 				}
 				cb()
 			})
+		},
+		function updateDownloadDates(cb) {
+			var actualDate = date.toMysql(new Date())
+
+			var noHayFirstDate = !row.first_download || row.first_download == null
+
+			var params = noHayFirstDate ? [actualDate, actualDate, id] : [actualDate, id]
+			var sql = 'UPDATE log_uploads SET last_download = ?' + (noHayFirstDate ? ', first_download = ?' : '') + ' WHERE idLog = ?'
+
+			Query(sql, params)
+			.then(function (rows) {
+				cb()
+			})
+			.catch(cb)
 		}
 	], function (error) {
 		if(error) {
