@@ -40,7 +40,7 @@ W = FFTsize
 MSS = W / 2
 print 'FFT size: ', FFTsize
 
-#	Window
+#	Hamming window
 Window = np.hamming(W)
 
 #	Read files
@@ -56,7 +56,9 @@ for l in range(0, len(folders)) :
 
 		#	Read WAV file
 		Fs, Noise = read(os.path.join(audio_path, folders[l], files[m]))
+		#	Type conversion
 		Noise = Noise.astype(float)
+		#	Normalization
 		noise_norm_factor = np.max(np.abs(Noise))
 		Noise = Noise / noise_norm_factor
 
@@ -98,10 +100,8 @@ for l in range(0, len(folders)) :
 
 				#	Compute FFT
 				NoiseTransform = fft(WindowedSample)
-				#	Calculate power
-				AbsValue = abs(NoiseTransform)
-				#	Save
-				AbsValues[count][j] = AbsValue
+				#	Calculate absolute values
+				AbsValues[count][j] = abs(NoiseTransform)
 				
 				#	Print proggress
 				count = count + 1
