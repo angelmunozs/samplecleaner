@@ -556,10 +556,11 @@ $(document).ready(function() {
 				'<p>' +
 					'Step 2: Reducing noise' +
 				'</p>'
-		var message = 'Noise reduction is taking place at our servers. This process takes a few minutes.'
-		$('#section-3-msg').html(message)
+		var success_message = 'Noise reduction is taking place at our servers<br>This process takes a few minutes'
+		var error_message = 'There was an error while processing your request<br>Please, try again later'
+		$('#section-3-msg').html(success_message)
 		$('#step3-icon').removeClass('fa-times')
-		$('#step3-icon').addClass('fa-circle-o-notch')
+		$('#step3-icon').addClass('fa-spinner')
 		$('#step3-icon').addClass('fa-spin')
 		$('#step3-tip').hide()
 		$('#section-error-3').html('')
@@ -583,14 +584,14 @@ $(document).ready(function() {
 				if(data.error) {
 					$('#section-error-3').html(data.error)
 					$('#step3-tip').show()
-					$('#section-3-msg').html('There was an error while processing your request')
+					$('#section-3-msg').html(error_message)
 					$('#step3-icon').removeClass('fa-spinner')
 					$('#step3-icon').removeClass('fa-spin')
 					$('#step3-icon').addClass('fa-times')
 				}
 				else {
 					clean = data.data
-					$('#section-3-msg').html('We\'re working on it... This process may take about 1-2 minutes')
+					$('#section-3-msg').html(success_message)
 					$('#step3-icon').removeClass('fa-times')
 					$('#step3-icon').addClass('fa-spinner')
 					$('#step3-icon').addClass('fa-spin')
@@ -600,7 +601,7 @@ $(document).ready(function() {
 			},
 			error : function (error) {
 				console.log(error)
-				$('#section-error-3').html('There was an error while processing your request. Please, try again later.')
+				$('#section-error-3').html(error_message)
 			},
 			data : formData,
 			cache : false,
