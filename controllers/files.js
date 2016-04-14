@@ -34,15 +34,22 @@ module.exports.delete_old = function(req, res, next) {
 
 	//	Concat arrays of clean fields and dirty files
 	var files = clean_files.concat(dirty_files)
+	var queries = []
 
-	for(var i in files) {
+	async.each(files, function (file, cb1) {
 		var stat = fs.statSync(files[i])
 		if(stat.ctime < expiration_date) {
-			fs.unlinkSync(files[i])
 			console.log('File expired: ' + files[i])
+			//	Update DB
+			Query('UPDATE log_uploads SET deleted = ? WHERE idLog = ?', [1, path.basename(files[i]).split('.')[0]])
+			.then(function () {
+				//	Delete it from server
+				fs.unlinkSync(files[i])
+				cb1()
+			})
+			.catch(cb1)
 		}
-	}
-	console.log('Expired files have been deleted')
+	}, cb)
 
 	return next()
 }
@@ -235,8 +242,7 @@ module.exports.download = function(req, res, next) {
 
 	var id = req.params.id || null
 
-	var row
-	var file
+	var row, file
 
 	async.series([
 		function fileData(cb) {
@@ -251,7 +257,11 @@ module.exports.download = function(req, res, next) {
 				file = {
 					id 		: id,
 					url 	: rows[0][0].messages.split('Saved as ')[1], 	/*	Depends on the message shown by the Pyhton console!! 	*/
-					ip 		: rows[0][0].ip
+					ip 		: rows[0][0].ip,
+					deleted : rows[0][0].deleted
+				}
+				if(file.deleted == 1) {
+					return cb(Errores.FILE_EXPIRED)
 				}
 				if(file.ip != req.ip) {
 					return cb(Errores.DOWNLOAD_FORBIDDEN)
@@ -262,11 +272,8 @@ module.exports.download = function(req, res, next) {
 		},
 		function findFile(cb) {
 			fs.readFile(file.url, function (error, data) {
-				if(error) {
-					return cb(Errores.NO_FILE_FOUND)
-				}
-				if(!data || !data.length) {
-					return cb(Errores.NO_FILE_FOUND)
+				if(error || !data || !data.length) {
+					return cb(Errores.FILE_EXPIRED)
 				}
 				cb()
 			})
