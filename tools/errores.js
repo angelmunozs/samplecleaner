@@ -11,6 +11,7 @@ module.exports = {
 	NO_FILE_UPLOADED : 				{ code : 108, message : 'No file selected' },
 	WRONG_FILE_TYPE : 				{ code : 109, message : 'Wrong file type' },
 	DOWNLOAD_FORBIDDEN : 			{ code : 110, message : 'Download forbidden' },
+	FILE_EXPIRED : 					{ code : 111, message : 'File expired and is no longer available in our servers' },
 	//	Error en la petición
 	PUNTO_ACCESO_DESCONOCIDO : 		{ code : 200, message : 'Unknown access point' },
 	SINTAXIS_INCORRECTA : 			{ code : 201, message : 'Wrong syntax' },
