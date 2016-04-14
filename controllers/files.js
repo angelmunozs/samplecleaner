@@ -37,14 +37,14 @@ module.exports.delete_old = function(req, res, next) {
 	var queries = []
 
 	async.each(files, function (file, cb) {
-		var stat = fs.statSync(files[i])
+		var stat = fs.statSync(file)
 		if(stat.ctime < expiration_date) {
-			console.log('File expired: ' + files[i])
+			console.log('File expired: ' + file)
 			//	Update DB
-			Query('UPDATE log_uploads SET deleted = ? WHERE idLog = ?', [1, path.basename(files[i]).split('.')[0]])
+			Query('UPDATE log_uploads SET deleted = ? WHERE idLog = ?', [1, path.basename(file).split('.')[0]])
 			.then(function () {
 				//	Delete it from server
-				fs.unlinkSync(files[i])
+				fs.unlinkSync(file)
 				cb()
 			})
 			.catch(cb)
