@@ -283,15 +283,18 @@ $(document).ready(function() {
 		$('#modal-button').attr('disabled', 'disabled')
 		$('#modal-button').html('<i class="fa fa-spinner fa-spin"></i>')
 
-		var message = $('#modal-message').val().replace(/\n/gi, '<br>')
+		var contact = {
+			email : $('#modal-email').val(),
+			message : $('#modal-message').val().replace(/\n/gi, '<br>')
+		}
 
-		if(message.length > 4) {
+		if(contact.message.length > 4) {
 			//	Build definitive message
-			message = '<p><i>Cleaning failed: ID #' + clean.id + '</i></p><p>' + message + '</p>'
+			contact.message = '<p><i>Cleaning failed: ID #' + clean.id + '</i></p><p>' + contact.message + '</p>'
 			//	Call the API
 			$.post("/api/contact", {
-				email : 'Anonymous',
-				message : message
+				email : contact.email || 'Anonymous',
+				message : contact.message
 			})
 			.done(function (data) {
 				if(data.error) {

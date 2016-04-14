@@ -1,11 +1,9 @@
 Web
 
 -	Local storage de las preferencias de la última sesión
--	Borrar canción limpia una vez descargada
+-	Asunto de los mensajes de contacto
 
 Noise reduction
 
-- Smoothing
-- Nuevos perfiles de ruido
-- Corregir errores sobre la canción de Cameo (¿ausencia de smoothing?)
-- Elección más correcta de la ganancia óptima, descartando las más lejanas
+- Puerta de ruido en el dominio del tiempo
+
