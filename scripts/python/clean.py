@@ -106,7 +106,7 @@ start_time = time.time()
 if not input_original_extension in wav_extensions :
 	#	Convert to WAV
 	AudioSegment.from_file(input_original_file, input_original_format).export(input_wav_file, format = input_wav_format)
-	print('1. Conversion to WAV: %.4f s' % (time.time() - start_time))
+	print('[*] Conversion to WAV: %.4f s' % (time.time() - start_time))
 	#	Time measure
 	start_time = time.time()
 
@@ -138,6 +138,7 @@ times = 0
 noise_threshold = 10 ** (-1.5) # Based on studies
 noise_level_tests = 100 # 100 values are enough
 min_noise_gain = 0.1 # Minimum noise gain
+min_silence_time = 4096 # Length of analysis window in the time-domain noise gate
 
 #	Hamming window
 Window = np.hamming(W)
@@ -173,7 +174,7 @@ for j in range(0, songchannels) :
 				SongSample = Zeros
 
 			#	Calculate mean (time domain)
-			mean_value = np.mean(SongSample)
+			mean_value = np.mean(abs(SongSample))
 
 			#	Windowed sample
 			WindowedSample = SongSample * Window
@@ -214,7 +215,7 @@ for i in range(0, songchannels) :
 noise_level = np.max((min_noise_gain, level_sum / level_sums))
 
 #	Print calculated optimum gain
-print('2. Noise level estimation (%4f): %.4f s' % (noise_level, time.time() - start_time))
+print('1. Noise level estimation (%4f): %.4f s' % (noise_level, time.time() - start_time))
 #	Time measure
 start_time = time.time()
 
@@ -260,7 +261,7 @@ for j in range(0, songchannels) :
 		#	Increment iterations
 		count = count + 1
 
-print('3. Noise reduction of %d samples: %.4f s' % (songlength, time.time() - start_time))
+print('2. Noise reduction of %d samples: %.4f s' % (songlength, time.time() - start_time))
 #	Time measure
 start_time = time.time()
 
@@ -272,7 +273,7 @@ if not nbands == 0 :
 			SmoothedBandGains = smooth(BandGains, nbands)
 			Gains[j, :, i] = SmoothedBandGains
 
-print('4. Time smoothing: %.4f s' % (time.time() - start_time))
+print('3. Time smoothing: %.4f s' % (time.time() - start_time))
 #	Time measure
 start_time = time.time()
 
@@ -284,7 +285,7 @@ if not nbands == 0 :
 			SmoothedWindowGains = smooth(WindowGains, nbands)
 			Gains[j, i, :] = SmoothedWindowGains
 
-print('5. Frequency smoothing: %.4f s' % (time.time() - start_time))
+print('4. Frequency smoothing: %.4f s' % (time.time() - start_time))
 #	Time measure
 start_time = time.time()
 
@@ -315,19 +316,86 @@ for j in range(0, songchannels) :
 
 #	Undo scaling by Hamming window
 NewSong = NewSong / 1.08
+
+print('5. Signal reconstruction: %.4f s' % (time.time() - start_time))
+#	Time measure
+start_time = time.time()
+
+#	Time domain noise gate (start of the song)
+for j in range(0, songchannels) :
+
+	for i in range(0, songlength, min_silence_time) :
+
+			#	Actual song sample
+			ActualSample = NewSong[i : i + min_silence_time, j]
+
+			#	Calculate mean (time domain) of actual sample
+			actual_mean_value = np.mean(abs(ActualSample))
+
+			#	Next song sample
+			NextSample = NewSong[i + min_silence_time : i + 2 * min_silence_time, j]
+
+			#	Calculate mean (time domain) of next sample
+			next_mean_value = np.mean(abs(NextSample))
+
+			#	Array of zeros
+			Zeros = np.zeros_like(ActualSample)
+
+			#	Noise gate
+			if(actual_mean_value < noise_threshold) :
+
+				NewSong[i : i + min_silence_time, j] = Zeros
+
+				#	If the song starts
+				if(next_mean_value > noise_threshold) :
+					break
+
+#	Time domain noise gate (end of the song)
+for j in range(0, songchannels) :
+
+	for i in range(songlength, 0, -min_silence_time) :
+
+			#	Actual song sample
+			ActualSample = NewSong[i - min_silence_time : i, j]
+
+			#	Calculate mean (time domain) of actual sample
+			actual_mean_value = np.mean(abs(ActualSample))
+
+			#	Previous song sample
+			PreviousSample = NewSong[i - 2 * min_silence_time : i - min_silence_time, j]
+
+			#	Calculate mean (time domain) of previous sample
+			previous_mean_value = np.mean(abs(PreviousSample))
+
+			#	Array of zeros
+			Zeros = np.zeros_like(ActualSample)
+
+			#	Noise gate
+			if(actual_mean_value < noise_threshold) :
+
+				NewSong[i - min_silence_time : i, j] = Zeros
+
+				#	If the song starts
+				if(previous_mean_value > noise_threshold) :
+					break					
+
+print('6. Time-domain noise gating: %.4f s' % (time.time() - start_time))
+#	Time measure
+start_time = time.time()
+
 #	Re-convert to Scipy WAV scale
 ScaledSong = np.int16(NewSong * 32767)
 #	Write WAV file
 write(output_wav_file, Fs, ScaledSong)
 
-print('7. Signal reconstruction and file writing: %.4f s' % (time.time() - start_time))
+print('7. File writing: %.4f s' % (time.time() - start_time))
 #	Time measure
 start_time = time.time()
 
 #	Reconvert to original format or mp3, if necessary
 if not input_original_extension in wav_extensions :
 	AudioSegment.from_file(output_wav_file, input_wav_format).export(output_original_file, format = output_original_format)
-	print('8. Conversion to %s: %.4f s' % (input_original_format, time.time() - start_time))
+	print('[*] Conversion to %s: %.4f s' % (input_original_format, time.time() - start_time))
 
 print('Saved as %s' % output_original_file)
 
