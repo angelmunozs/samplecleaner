@@ -2,5 +2,10 @@ Web
 
 -	Local storage de las preferencias de la última sesión
 -	Asunto de los mensajes de contacto
+-	Obtener link de canción limpia
 
 Noise reduction
+
+-	Avisos cuando la canción subida tiene errores de grabación (valores mayores que 1, etcétera)
+-	Time domain gating de forma más correcta
+-	Análisis por cachos para evitar desbordamiento de memoria
