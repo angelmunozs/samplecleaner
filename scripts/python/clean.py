@@ -212,7 +212,11 @@ for i in range(0, songchannels) :
 			level_sum = level_sum + Levels[i, j]
 			level_sums = level_sums + 1
 
-noise_level = np.max((min_noise_gain, level_sum / level_sums))
+#	If anything was calculated, set the minimum value
+if level_sums = 0 :
+	noise_level = min_noise_gain
+else :
+	noise_level = np.max((min_noise_gain, level_sum / level_sums))
 
 #	Print calculated optimum gain
 print('1. Noise level estimation (%4f): %.4f s' % (noise_level, time.time() - start_time))
