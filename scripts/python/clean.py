@@ -332,23 +332,23 @@ for j in range(0, songchannels) :
 			#	Calculate mean (time domain) of actual sample
 			actual_mean_value = np.mean(abs(ActualSample))
 
-			#	Next song sample
-			NextSample = NewSong[i + min_silence_time : i + 2 * min_silence_time, j]
-
-			#	Calculate mean (time domain) of next sample
-			next_mean_value = np.mean(abs(NextSample))
-
 			#	Array of zeros
 			Zeros = np.zeros_like(ActualSample)
 
 			#	Noise gate
 			if(actual_mean_value < noise_threshold) :
-
 				NewSong[i : i + min_silence_time, j] = Zeros
 
-				#	If the song starts
-				if(next_mean_value > noise_threshold) :
-					break
+			else :
+				#	Attack
+				ramp = Zeros.astype(float)
+				for k in range(0, min_silence_time) :
+					ramp[k] = math.fabs(k) / min_silence_time
+				print ramp
+
+				NewSong[i : i + min_silence_time, j] = NewSong[i : i + min_silence_time, j] * ramp
+
+				break
 
 #	Time domain noise gate (end of the song)
 for j in range(0, songchannels) :
@@ -361,23 +361,23 @@ for j in range(0, songchannels) :
 			#	Calculate mean (time domain) of actual sample
 			actual_mean_value = np.mean(abs(ActualSample))
 
-			#	Previous song sample
-			PreviousSample = NewSong[i - 2 * min_silence_time : i - min_silence_time, j]
-
-			#	Calculate mean (time domain) of previous sample
-			previous_mean_value = np.mean(abs(PreviousSample))
-
 			#	Array of zeros
 			Zeros = np.zeros_like(ActualSample)
 
 			#	Noise gate
 			if(actual_mean_value < noise_threshold) :
-
 				NewSong[i - min_silence_time : i, j] = Zeros
 
-				#	If the song starts
-				if(previous_mean_value > noise_threshold) :
-					break					
+			else:
+				#	Release
+				ramp = Zeros.astype(float)
+				for k in range(0, min_silence_time) :
+					ramp[k] = math.fabs(k - min_silence_time) / min_silence_time
+				print ramp
+
+				NewSong[i - min_silence_time : i, j] = NewSong[i - min_silence_time : i, j] * ramp
+
+				break
 
 print('6. Time-domain noise gating: %.4f s' % (time.time() - start_time))
 #	Time measure
