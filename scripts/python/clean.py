@@ -93,7 +93,7 @@ output_original_file = output_wav_file.replace('.wav', input_original_extension,
 output_original_format = input_original_format
 
 #	Noise info
-noise_path = path.abspath(path.join('files/noise/profiles', year, profile + '.csv'))
+noise_path = path.abspath(path.join('samplecleaner/files/noise/profiles', year, profile + '.csv'))
 
 #	WAV extensions
 wav_extensions = ['.wav']
