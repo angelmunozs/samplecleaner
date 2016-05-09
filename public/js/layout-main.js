@@ -602,9 +602,8 @@ $(document).ready(function() {
 					section4()
 				}
 			},
-			error : function (error) {
-				console.log(error)
-				$('#section-error-3').html(error_message)
+			error : function (jqXHR, textStatus, errorThrown) {
+				$('#section-error-3').html(errorThrown)
 			},
 			data : formData,
 			cache : false,
