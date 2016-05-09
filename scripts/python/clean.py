@@ -213,7 +213,7 @@ for i in range(0, songchannels) :
 			level_sums = level_sums + 1
 
 #	If anything was calculated, set the minimum value
-if level_sums = 0 :
+if level_sums == 0 :
 	noise_level = min_noise_gain
 else :
 	noise_level = np.max((min_noise_gain, level_sum / level_sums))
