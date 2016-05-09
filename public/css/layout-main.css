@@ -15,6 +15,10 @@ a:hover, a:focus {
 	padding-right: 0px;
 }
 /* Navbar */
+.navbar-header {
+	width: 100%;
+	min-width: 1170px;
+}
 #nav {
 	position: fixed;
 	left: 0;
@@ -22,6 +26,23 @@ a:hover, a:focus {
 	top: 0;
 	z-index: 1000;
 	font-family: 'Homenaje';
+}
+.navbar {
+	border-radius: 0px;
+}
+.navbar-header {
+	float: none;
+}
+.navbar-nav {
+	float: left;
+	margin: 0px;
+}
+.navbar-nav li {
+	float: left;
+}
+.container-fluid > .navbar-header, .container > .navbar-collapse, .container-fluid > .navbar-collapse {
+    margin-right: 0px;
+    margin-left: 0px;
 }
 #nav nav.navbar-default {
 	background-color: #262626;
@@ -97,7 +118,7 @@ a:hover, a:focus {
 /* All sections */
 .section {
 	z-index: 1;
-	width: 100%;
+	min-width: 1200px;
 	padding: 30px 15px 50px 15px;
 }
 .row {
@@ -435,6 +456,7 @@ footer {
 	padding: 30px;
 	min-height: 170px;
 	background: #333;
+	min-width: 1200px;
 }
 .footer-col-1 {
 	color: #777;
