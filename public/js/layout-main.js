@@ -602,9 +602,13 @@ $(document).ready(function() {
 					section4()
 				}
 			},
-			error : function (error) {
-				console.log(error)
-				$('#section-error-3').html(error_message)
+			error : function (jqXHR, textStatus, errorThrown) {
+				$('#section-error-3').html(errorThrown)
+				$('#step3-tip').show()
+				$('#section-3-msg').html(error_message)
+				$('#step3-icon').removeClass('fa-spinner')
+				$('#step3-icon').removeClass('fa-spin')
+				$('#step3-icon').addClass('fa-times')
 			},
 			data : formData,
 			cache : false,
