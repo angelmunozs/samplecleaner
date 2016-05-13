@@ -348,7 +348,6 @@ for j in range(0, songchannels) :
 				ramp = Zeros.astype(float)
 				for k in range(0, min_silence_time) :
 					ramp[k] = math.fabs(k) / min_silence_time
-				print ramp
 
 				NewSong[i : i + min_silence_time, j] = NewSong[i : i + min_silence_time, j] * ramp
 
@@ -377,7 +376,6 @@ for j in range(0, songchannels) :
 				ramp = Zeros.astype(float)
 				for k in range(0, min_silence_time) :
 					ramp[k] = math.fabs(k - min_silence_time) / min_silence_time
-				print ramp
 
 				NewSong[i - min_silence_time : i, j] = NewSong[i - min_silence_time : i, j] * ramp
 
