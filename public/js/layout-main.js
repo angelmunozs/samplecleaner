@@ -278,6 +278,20 @@ $(document).ready(function() {
 		$('#step1').show()
 		section1()
 	})
+	//	Video modal
+	$('.modal-video-link').on('click', function () {
+		//	Set header
+		$('#modal-video h2').html($(this).attr('title'))
+		//	Set body
+		$('#modal-video .modal-body').html('<iframe width="560" height="315" src="' + $(this).attr('data-src') + '" frameborder="0" allowfullscreen></iframe>')
+	})
+	//	Reset modal-video content when dismissed
+	$('#modal-video').on('hidden.bs.modal', function () {
+		//	Reset header
+		$('#modal-video h2').html('')
+		//	Reset body
+		$('#modal-video .modal-body').html('')
+	})
 	$('#modal-button').on('click', function () {
 		//	First, disable button
 		$('#modal-button').attr('disabled', 'disabled')
