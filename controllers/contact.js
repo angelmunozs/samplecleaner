@@ -14,8 +14,12 @@ module.exports.send = function(req, res, next) {
 
 	var email = req.body.email || null
 	var message = req.body.message || null
+	var contact_type = 'Contacto web'
+	if(message.indexOf('La reducción de ruido falló: ID #') != -1) {
+		contact_type = "Proceso fallido"
+	}
 
-	if(!validate.email(email) && email != 'Anonymous') {
+	if(!validate.email(email) && email != 'Anónimo') {
 		req.error = Errores.EMAIL_INCORRECTO
 		return next()
 	}
@@ -23,7 +27,7 @@ module.exports.send = function(req, res, next) {
 	async.series([
 		//	Insert into database
 		function isertIntoDatabase (cb) {
-			Query('INSERT INTO contact (email, message, createdAt) VALUES (?, ?, ?)', [email, message, date.toMysql(new Date())])
+			Query('INSERT INTO contact (email, message, type, createdAt) VALUES (?, ?, ?, ?)', [email, message, contact_type, date.toMysql(new Date())])
 			.then(function () {
 				cb()
 			})
@@ -32,7 +36,7 @@ module.exports.send = function(req, res, next) {
 		//	Send e-mail to us
 		function mailUs (cb) {
 
-			var html = '<img style="margin-bottom: 20px; max-height: 33px;" src="http://i.imgur.com/eWEE4zI.png" alt="Sample Cleaner">' +
+			var html = '<img style="margin-bottom: 20px; max-height: 33px;" src="http://samplecleaner.com/img/logo1.small.png" alt="Sample Cleaner">' +
 						'<div style="font-family:Arial; font-size:15px; margin-bottom: 5px;"><b>Remitente</b>: ' + email + '</div>' +
 						'<div style="font-family:Arial; font-size:15px; margin-bottom: 20px;"><b>Fecha</b>: ' + date.toMysql(new Date()) + '</div>' +
 						'<hr style="color: #ddd">' +
@@ -41,7 +45,7 @@ module.exports.send = function(req, res, next) {
 			var mailOptions = {
 				from: email,
 				to: config.EMAIL_USER,
-				subject: 'Contacto web: ' + email,
+				subject: contact_type + ': ' + email,
 				text: message,
 				html: html
 			}

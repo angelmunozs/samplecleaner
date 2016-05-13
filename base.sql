@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `idContact` int(11) NOT NULL AUTO_INCREMENT,
   `email` text,
   `message` text,
+  `type` text,
   `createdAt` datetime DEFAULT NULL,
   PRIMARY KEY (`idContact`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

@@ -304,10 +304,10 @@ $(document).ready(function() {
 
 		if(contact.message.length > 4) {
 			//	Build definitive message
-			contact.message = '<p><i>Cleaning failed: ID #' + clean.id + '</i></p><p>' + contact.message + '</p>'
+			contact.message = '<p><i>La reducción de ruido falló: ID #' + clean.id + '</i></p><p>' + contact.message + '</p>'
 			//	Call the API
 			$.post("/api/contact", {
-				email : contact.email || 'Anonymous',
+				email : contact.email || 'Anónimo',
 				message : contact.message
 			})
 			.done(function (data) {
