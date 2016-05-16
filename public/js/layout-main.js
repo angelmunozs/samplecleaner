@@ -283,7 +283,7 @@ $(document).ready(function() {
 		//	Set header
 		$('#modal-video h2').html($(this).attr('title'))
 		//	Set body
-		$('#modal-video .modal-body').html('<iframe width="560" height="315" src="' + $(this).attr('data-src') + '" frameborder="0" allowfullscreen></iframe>')
+		$('#modal-video .modal-body').html('<iframe width="100%" height="315" src="' + $(this).attr('data-src') + '" frameborder="0" allowfullscreen></iframe>')
 	})
 	//	Reset modal-video content when dismissed
 	$('#modal-video').on('hidden.bs.modal', function () {
