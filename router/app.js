@@ -6,5 +6,7 @@ module.exports = function(app) {
 	//	Autentication
 	app.get('/', controllers.render('index'))
 	//	Quit mailing list:
-	app.get('/list/quit/:email/:token', api.auth.require.not_logged, controllers.mailingList.quit_token, controllers.render('misc/quit-list', { layout : 'layout-misc' }))
+	app.get('/list/quit/:email/:token', controllers.mailingList.quit_token, controllers.render('misc/quit-list', { layout : 'layout-misc' }))
+	//	Admin panel
+	app.get('/admin', controllers.render('admin/index', { layout : 'layout-admin' }))
 }

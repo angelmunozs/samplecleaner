@@ -18,6 +18,7 @@
     "bootstrap": "~3.1.1",
     "fontawesome": "~4.3.0",
     "roundslider": "roundSlider#~1.0.1",
-    "bbplayer": "https://github.com/73rhodes/bbplayer.git"
+    "bbplayer": "https://github.com/73rhodes/bbplayer.git",
+    "AdminLTE": "admin-lte#~2.3.3"
   }
 }
