@@ -18,7 +18,7 @@ module.exports = {
 	//	Errores de autenticación
 	USUARIO_NO_VALIDO : 			{ code : 300, message : 'The user doens\'t exist' },
 	PASSWORD_INCORRECTO : 			{ code : 301, message : 'Wrong password' },
-	ACCESO_DENEGADO : 				{ code : 302, message : 'Denied access' },
+	ACCESO_DENEGADO : 				{ code : 302, message : 'Access denied' },
 	USUARIO_BLOQUEADO : 			{ code : 303, message : 'Access forbidden' },
 	USUARIO_LOGEADO : 				{ code : 304, message : 'You must not be logged' },
 	USUARIO_NO_LOGEADO : 			{ code : 305, message : 'You must be logged' },
