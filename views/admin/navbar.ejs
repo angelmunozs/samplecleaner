@@ -115,15 +115,15 @@
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <img src="/img/users/1.png" class="user-image" alt="User Image">
+                    <img src="/img/users/<%= user.id %>.png" class="user-image" alt="User Image">
                     <span class="hidden-xs">Ángel Muñoz</span>
                 </a>
                 <ul class="dropdown-menu">
                     <!-- User image -->
                     <li class="user-header">
-                        <img src="/img/users/1.png" class="img-circle" alt="User Image">
+                        <img src="/img/users/<%= user.id %>.png" class="img-circle" alt="User Image">
                         <p>
-                            Ángel Muñoz - Administrador
+                            <%= user.name %> - Administrador
                             <small>Miembro desde Mayo de 2016</small>
                         </p>
                     </li>
@@ -133,7 +133,7 @@
                             <a href="#" class="btn btn-default btn-flat"><i class="fa fa-gears"></i> Ajustes</a>
                         </div>
                         <div class="pull-right">
-                            <a href="#" class="btn btn-default btn-flat"><i class="fa fa-sign-out"></i> Salir</a>
+                            <a href="#" class="btn btn-default btn-flat btn-logout"><i class="fa fa-sign-out"></i> Salir</a>
                         </div>
                     </li>
                 </ul>

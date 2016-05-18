@@ -8,7 +8,7 @@ module.exports = function(app) {
 	app.post('/api/logout', controllers.auth.logout, api.common.generic)
 	app.get('/api/user', api.users.info)
 	//	Usuario
-	app.post('/api/user', api.auth.require.not_logged, controllers.users.create, api.common.generic)
+	app.post('/api/user', controllers.users.create, api.common.generic)
 	//	Mailing list
 	app.post('/api/list/enter', api.auth.require.not_logged, controllers.mailingList.enter, api.common.generic)
 	app.post('/api/list/quit', api.auth.require.not_logged, controllers.mailingList.quit, api.common.generic)
@@ -27,6 +27,4 @@ module.exports = function(app) {
 	app.post('/api/clean', controllers.files.delete_old, controllers.files.upload, controllers.files.clean, api.common.data)
 	//	Download a song
 	app.get('/api/song/:id', controllers.files.delete_old, controllers.files.download, api.common.file)
-	//	Admin
-	app.get('/api/table/:table', api.auth.require.admin, controllers.admin.table, api.common.data)
 }

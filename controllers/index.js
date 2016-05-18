@@ -33,6 +33,16 @@ module.exports.render = function(page, data, layout) {
 		res.render(page, data, layout ? layout : false);
 	}
 }
+module.exports.redirect = function(url) {
+	return function(req, res) {
+		return res.redirect(url)
+	}
+}
+
+module.exports.renderError = function(code, req, res) {
+    res.status(code)
+    res.render('errors/' + code, null, 'layout-misc')
+}
 
 //	Pre render
 module.exports.prerender = function(req, res, next) {
@@ -41,7 +51,6 @@ module.exports.prerender = function(req, res, next) {
 	res.locals.page_title 	= req.page_title || config.PAGE_TITLE_DEFAULT
 	res.locals.lang 		= config.DEFAULT_LANG
     res.locals.path 		= req.path
-    res.locals.user 		= req.user || null
     //	Jump to next step in chain
 	next()
 }

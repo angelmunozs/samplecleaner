@@ -4,6 +4,7 @@ var crypt = require('../tools/crypt')
 var utils = require('../tools/utils')
 var async = require('async')
 var passport = require('passport')
+var path = require('path')
 
 //  Log in
 module.exports.login = function(req, res, next) {
@@ -134,4 +135,19 @@ module.exports.deserializeUser = function(id, done) {
     .catch(function(error) {
         done(error)
     })
+}
+//  Authentication Requirements
+module.exports.require = {
+    user : function (req, res, next) {
+        if(req.user) {
+            return next()
+        }
+        return res.redirect('/login?redir=' + req.path)  
+    },
+    admin : function (req, res, next) {
+        if(req.user && req.user.groups.indexOf('admin') != -1) {
+            return next()
+        }
+        return res.redirect('/login?redir=' + req.path)
+    }
 }

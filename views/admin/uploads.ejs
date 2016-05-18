@@ -1,0 +1,108 @@
+<%
+  var uploadsComplete = path.indexOf('uploads/complete') != -1
+  var uploadsIncomplete = path.indexOf('uploads/incomplete') != -1
+%>
+
+<section class="content-header">
+  <h1>
+    Archivos subidos
+    <small>Mostrando <%= limit %></small>
+  </h1>
+</section>
+<section class="content">
+  <div class="box">
+    <div class="box-header">
+      <h3 class="box-title">
+        <% if(uploadsIncomplete) {  %>
+          Archivos procesados con errores
+        <% } else if(uploadsComplete) {  %>
+          Archivos procesados sin errores
+        <% } else {  %>
+          Todos los archivos procesados
+        <% } %>
+      </h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <table id="example1" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>Fecha</th>
+          <th>IP</th>
+          <th>Tiempo (s)</th>
+          <th>Nombre original</th>
+          <th>Tamaño (B)</th>
+          <th>Tipo</th>
+          <th>Parámetros</th>
+          <th>Mensajes</th>
+          <% if (!uploadsComplete) { %>
+            <th>Errores</th>
+          <% } %>
+          <th>Disponible</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (var i in uploads) { 
+
+          var upload = uploads[i]
+          var params = JSON.parse(upload.params) %>
+
+          <tr>
+            <td><%= upload.idLog %></td>
+            <td><%= upload.date.toString().split(' GMT')[0] %></td>
+            <td><%= upload.ip %></td>
+            <td><%= upload.time %></td>
+            <td><%= upload.name %></td>
+            <td><%= upload.size %></td>
+            <td><%= upload.type %></td>
+            <td>
+              <b>Década</b>: <%= params.noiseYear %><br>
+              <b>Perfil</b>: <%= params.noiseProfile %><br>
+              <b>Atenuación</b>: <%= params.reduceGain %><br>
+              <b>Tam. suavizado</b>: <%= params.smoothingBands %>
+            </td>
+            <td><a class="modal-link" href="#" data-toggle="modal" data-target="#modal-generic" data-body="<%= upload.messages %>" data-title="<b>#<%= upload.idLog %></b> Mensajes del <i>script</i>">Ver</a></td>
+            <% if (!uploadsComplete) { %>
+              <td><a class="modal-link" href="#" data-toggle="modal" data-target="#modal-generic" data-body="<%= upload.error || 'No se han encontrado errores' %>" data-title="<b>#<%= upload.idLog %></b> Error del <i>script</i>">Ver</a></td>
+            <% } %>
+            <td><%- upload.deleted == 1 ? '<small class="label bg-red">No</small>' : '<small class="label bg-green">Sí</small>' %></td>
+          </tr>
+
+        <% } %>
+
+        </tbody>
+      </table>
+    </div><!-- /.box-body -->
+
+  <% if (total > 5) { 
+
+    var primera = 34554
+
+    %>
+
+    <div class="box-footer clearfix">
+      <ul class="pagination pagination-sm no-margin pull-right">
+        <li>
+          <a href="/admin/uploads/complete">«</a>
+        </li>
+        <li>
+          <a href="#">1</a>
+        </li>
+        <li>
+          <a href="#">2</a>
+        </li>
+        <li>
+          <a href="#">3</a>
+        </li>
+        <li>
+          <a href="#">»</a>
+        </li>
+      </ul>
+    </div><!-- /.box-footer -->
+
+  <% } %>
+
+  </div>
+  <!-- /.box -->
+</section>

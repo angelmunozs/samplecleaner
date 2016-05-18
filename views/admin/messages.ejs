@@ -1,0 +1,84 @@
+<%
+  var messagesWeb = path.indexOf('contact/web') != -1
+  var messagesErrors = path.indexOf('contact/uploads') != -1
+%>
+
+<section class="content-header">
+  <h1>
+    Mensajes de contacto
+    <small>Mostrando <%= limit %></small>
+  </h1>
+</section>
+<section class="content">
+  <div class="box">
+    <div class="box-header">
+      <h3 class="box-title">
+        <% if(messagesWeb) {  %>
+          Mensajes de contacto web
+        <% } else if(messagesErrors) {  %>
+          Mensajes de error en el proceso de limpieza de ruido
+        <% } else {  %>
+          Todos los mensajes recibidos
+        <% } %>
+      </h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <table id="example1" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>Fecha</th>
+          <th>E-mail</th>
+          <th>Mensaje</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (var i in messages) { 
+
+          var message = messages[i] %>
+
+          <tr>
+            <td><%= message.idContact %></td>
+            <td><%= message.createdAt.toString().split(' GMT')[0] %></td>
+            <td><%= message.email %></td>
+            <td><%- message.message %></td>
+          </tr>
+
+        <% } %>
+
+        </tbody>
+      </table>
+    </div><!-- /.box-body -->
+
+  <% if (total > 5) { 
+
+    var primera = 34554
+
+    %>
+
+    <div class="box-footer clearfix">
+      <ul class="pagination pagination-sm no-margin pull-right">
+        <li>
+          <a href="/admin/messages/complete">«</a>
+        </li>
+        <li>
+          <a href="#">1</a>
+        </li>
+        <li>
+          <a href="#">2</a>
+        </li>
+        <li>
+          <a href="#">3</a>
+        </li>
+        <li>
+          <a href="#">»</a>
+        </li>
+      </ul>
+    </div><!-- /.box-footer -->
+
+  <% } %>
+
+  </div>
+  <!-- /.box -->
+</section>

@@ -175,6 +175,49 @@ CREATE TABLE IF NOT EXISTS `mailing_list` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `templates`
+--
+
+DROP TABLE IF EXISTS `templates`;
+CREATE TABLE IF NOT EXISTS `templates` (
+  `idTemplate` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text,
+  `template` text,
+  `createdAt` datetime DEFAULT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`idList`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- Volcado de datos para la tabla `templates`
+--
+
+INSERT INTO `templates` (`idTemplate`, `name`, `template`, `createdAt`, `updatedAt`) VALUES
+(1, 'Plantilla para envío de correo masivo', '<!-- Logo -->
+<img id="logo" src="http://samplecleaner.com/img/logo1.small.png" style="max-height: 33px;" alt="Sample Cleaner">
+<!-- Separator -->
+<hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ddd; margin-top: 16px; margin-bottom: 16px; padding: 0px;">
+<!-- Text of the message -->
+<div style="font-family: Arial; font-size: 15px; color: #333">
+  <p>   
+    %s
+  </p>
+</div>
+<!-- Separator -->
+<hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ddd; margin-top: 16px; margin-bottom: 16px; padding: 0px;">
+<!-- Quit list link -->
+<div style="font-family:Arial; font-size: 15px;">
+  <p>
+    <a href="%s" style="font-size: 13px; color: #777; font-style: italic; text-decoration: none">
+      Quit mailing list
+    </a>
+  </p>
+</div>
+', '2016-05-18 00:00:00', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `users`
 --
 

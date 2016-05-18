@@ -19,6 +19,8 @@
     "fontawesome": "~4.3.0",
     "roundslider": "roundSlider#~1.0.1",
     "bbplayer": "https://github.com/73rhodes/bbplayer.git",
-    "AdminLTE": "admin-lte#~2.3.3"
+    "AdminLTE": "admin-lte#~2.3.3",
+    "crypto-js": "~3.1.6",
+    "wysihtml5": "~0.3.0"
   }
 }
