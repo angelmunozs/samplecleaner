@@ -27,4 +27,6 @@ module.exports = function(app) {
 	app.post('/api/clean', controllers.files.delete_old, controllers.files.upload, controllers.files.clean, api.common.data)
 	//	Download a song
 	app.get('/api/song/:id', controllers.files.delete_old, controllers.files.download, api.common.file)
+	//	Huerto: marcar una notificación como hecha
+	app.get('/huerto/hecho/:id', controllers.huerto.hecho)
 }
